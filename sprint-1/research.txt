@@ -1,0 +1,80 @@
+
+Potential House Features:
+
+  Things we can build:
+    Remotely open or close a door.
+    Detect if something approaches a door.
+    Track if a door or window is open.
+    Monitor temperature (inside and/or outside).
+
+  Smart Appliances:
+    Thermostat
+    TV
+    Fans
+    Sound system
+    (a lot more)
+
+--------------------
+	
+Project:
+
+  Needs:
+    Sensors/addons/appliances (for house)
+    Raspberry Pi
+    Control program to run on Pi
+      Languages: Probably Java, or C(++).
+    Server*
+    UI**
+
+  *Server Option 1:
+    Raspberry Pi controls and monitors the sensors/appliances. 
+    The Pi is also the central server that users interact with.
+    Pros:
+      May be easier to make the server, because the Pi does not need to export the data.
+    Cons:
+      User needs to be on the same network as the Pi, unless they have a static IP address (or they know the IP).
+        Basically, it is harder to use if you are not on the same network as the PI.
+
+  *Server Option 2:
+    Raspberry Pi still controls and monitors the sensors, but now sends data to an external server.
+    Pi also takes commands from that server.
+    Pros:
+      Pi can send data to server, because it knows the server address.
+      Pi's address will then be known by the server.
+    Cons:
+      Security becomes harder.
+      There is now a lot more data being exchanged. 
+
+  **UI Option 1:
+    Create a website with a UI to control the things in the house.
+    Pros:
+      Pretty portable, just need a web browser to use.
+      May work better with addons we didn't build.
+    Cons:
+      None?
+    Languages:
+      HTML, CSS, PHP, JS, etc
+   
+  **UI Option 2:
+    Create an app with a UI to control the things in the house.
+    Pros:
+      None?
+    Cons:
+      Not portable: Need to target iOS or Android.
+    Language:
+      Probably Java or C#.
+
+  Compatible Addons:
+    I see two categories: Things we can build, and things we can buy and add to the network.
+    Things we build ourselves with LEDS/wires/etc should be built to work with the Pi's pins.
+      Maybe also have templates to allow other users to add their own self-built addons.
+        e.g. LED template - On, Off, status, pins
+    Things we did not build may have their own app, and maybe an API.
+      Best case is if it has its own local webpage a user can visit to control it.
+      The project will be cooler if we can find a way to support these.
+        Maybe some pre-built templates that users can add devices too if they fit.
+
+--------------------
+
+Sources:
+  https://www.pubnub.com/blog/2015-08-04-tutorial-building-raspberry-pi-smart-home-part-1/
