@@ -3,7 +3,10 @@ Wireless Control of Household Appliances using Raspberry Pi
 Joe Danz, Fady Putrus, Alex Manaila, Michael Muller, Stephen Thai, Graham Walker
 
 -- Project Requirements --
-
+Create server on Raspberry Pi
+Host website to control automated components
+Supply enough power to all components
+Create a model home with working automated components
 
 -- Project Plan --
 
