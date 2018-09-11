@@ -13,8 +13,9 @@ Joe Danz, Fady Putrus, Alex Manaila, Michael Muller, Stephen Thai, Graham Walker
 Hardware:
 Raspberry Pi 2 Model B, version 1.0
 External components, such as lights, switches, motion sensors, etc.
+Any computer with access to internet
 
 Software:
 Linux operating system
-Python
-Android Studio
+Python server
+HTML, CSS, PHP for front end
