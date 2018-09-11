@@ -78,3 +78,4 @@ Project:
 
 Sources:
   https://www.pubnub.com/blog/2015-08-04-tutorial-building-raspberry-pi-smart-home-part-1/
+  https://www.sonos.com/en-us/home
