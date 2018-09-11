@@ -10,3 +10,11 @@ Joe Danz, Fady Putrus, Alex Manaila, Michael Muller, Stephen Thai, Graham Walker
 
 -- Technical Aspects --
 
+Hardware:
+Raspberry Pi 2 Model B, version 1.0
+External components, such as lights, switches, motion sensors, etc.
+
+Software:
+Linux operating system
+Python
+Android Studio
