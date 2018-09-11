@@ -1,0 +1,34 @@
+
+Pin Monitor & Control Program
+
+  Goals:
+    1.) Monitor the addons registered to the Pi.
+    2.) Report addon data to the server.
+    3.) Allow external control of pin states.
+      - We to make a protocol to exchange data. ( plan out our packets )
+        i.) Data sent from Pi to server.
+        ii.) Commands sent from server to Pi.
+
+  Tasks:
+    1.) Find a way to exchange data between this program and the server.
+      - Should be reliable.
+      - 2way channel.
+
+--------------------
+
+  Goal 1.) 
+    There are many pins to go through, and each addon may use pins in its own way.
+    Each addon should be registered and have its own object in this program in order to keep track of its parts.
+      - pins, state, etc
+    - Need a way to register new addons to Pi.
+      + Good place for templates.
+      + Keep track of addons with some kind of collection.
+    - Expand the pin monitor loop to work with a collection of addons.
+
+  Goal 2.)
+    Each addon's object should contain its own reporting method, because not all addons will be the same.
+    See Task 1.
+
+  Goal 3.)
+    The main program loop also needs to be extended to take in outside input from the server, and to act on it.
+    See Task 1.
