@@ -1,8 +1,12 @@
 Wireless Control of Household Appliances using Raspberry Pi
+
 Joe Danz, Fady Putrus, Alex Manaila, Michael Muller, Stephen Thai, Graham Walker
 
-Project Requirements
+-- Project Requirements --
 
-Project Plan
 
-Technical Aspects
+-- Project Plan --
+
+
+-- Technical Aspects --
+
