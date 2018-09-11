@@ -10,7 +10,7 @@ Joe Danz, Fady Putrus, Alex Manaila, Michael Muller, Stephen Thai, Graham Walker
 
 -- Technical Aspects --
 
-Hardware:
+Technical Hardware:
 Raspberry Pi 2 Model B, version 1.0
 External components, such as lights, switches, motion sensors, etc.
 Any computer with access to internet
@@ -19,3 +19,6 @@ Software:
 Linux operating system
 Python server
 HTML, CSS, PHP for front end
+
+Model Home Hardware:
+Cardboard, furniture, home accessories
