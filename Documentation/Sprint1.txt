@@ -4,6 +4,10 @@ Joe Danz, Fady Putrus, Alex Manaila, Michael Muller, Stephen Thai, Graham Walker
 
 -- User Project Requirements --
   - Wireless turn devices on or off
+  - Switching between devices
+  - Devices turn off when the app is turned off?
+  - Disconnect connected devices
+  -
 
 -- Technical Requirements --
   - Create server on Raspberry Pi
