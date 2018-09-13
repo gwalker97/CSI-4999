@@ -1,0 +1,22 @@
+from app import app
+
+
+@app.route('/')
+@app.route('/index')
+def index():
+	user = {'username': 'Miguel'}
+	return render_template('index.html', title='Home', user=user)
+
+#Try to create a file on desktop
+from os.path import join
+def write():
+	print('Creating a new file')
+	path = "/home/graham/Desktop"
+	name = raw_input('TestFile')+'.txt'
+
+	try:
+		file.open(join(path, name),'w')
+		file.close
+
+	except:
+		print('Something went wrong!')
