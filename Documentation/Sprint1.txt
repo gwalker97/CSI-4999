@@ -3,11 +3,14 @@ Wireless Control of Household Appliances using Raspberry Pi
 Joe Danz, Fady Putrus, Alex Manaila, Michael Muller, Stephen Thai, Graham Walker
 
 -- User Project Requirements --
-  - Wireless turn devices on or off
-  - Switching between devices
-  - Devices turn off when the app is turned off?
-  - Disconnect connected devices
-  -
+  1. Raspberry Pi must be connected to a network (R1)
+  2. Raspberry Pi must be accessible through a network (R2)
+  3. Raspberry Pi will contain the server code for project (R3)
+  4. User may control Raspberry Pi from phone or computer with a front end solution (R4).
+  5. All appliances connected to the Raspberry Pi are controllable (R5)
+  6. User may access Raspberry Pi while not connected to the same network (R6) (Not sure)
+  7. Raspberry Pi server is accessible through Bluetooth (R7)
+  8. Raspberry Pi will host the website users will go to in order to control applications (R8)
 
 -- Technical Requirements --
   - Create server on Raspberry Pi
@@ -27,7 +30,6 @@ Sprint 1
   - Begin connector for HTML/PHP
   - Setup LAMP stack on Raspberry Pi
   - Documentation
-
 
 -- Technical Aspects --
 
