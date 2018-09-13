@@ -1,0 +1,175 @@
+mkdir FlaskApp
+graham@debian:~$ cd FlaskApp/
+graham@debian:~/FlaskApp$ python3 -m venv venv
+The virtual environment was not created successfully because ensurepip is not
+available.  On Debian/Ubuntu systems, you need to install the python3-venv
+package using the following command.
+
+    apt-get install python3-venv
+
+You may need to use sudo with that command.  After installing the python3-venv
+package, recreate your virtual environment.
+
+Failing command: ['/home/graham/FlaskApp/venv/bin/python3', '-Im', 'ensurepip', '--upgrade', '--default-pip']
+
+graham@debian:~/FlaskApp$ sudo apt-get install python3-venv
+bash: sudo: command not found
+graham@debian:~/FlaskApp$ apt-get install python3-venv
+E: Could not open lock file /var/lib/dpkg/lock - open (13: Permission denied)
+E: Unable to lock the administration directory (/var/lib/dpkg/), are you root?
+graham@debian:~/FlaskApp$ sudo apt-get install python3-venv
+bash: sudo: command not found
+graham@debian:~/FlaskApp$ su root
+Password: 
+su: Authentication failure
+graham@debian:~/FlaskApp$ su root
+Password: 
+root@debian:/home/graham/FlaskApp# apt-get install sudo
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following NEW packages will be installed:
+  sudo
+0 upgraded, 1 newly installed, 0 to remove and 1 not upgraded.
+Need to get 1,055 kB of archives.
+After this operation, 3,108 kB of additional disk space will be used.
+Get:1 http://ftp.us.debian.org/debian stretch/main amd64 sudo amd64 1.8.19p1-2.1 [1,055 kB]
+Fetched 1,055 kB in 0s (2,061 kB/s)
+Selecting previously unselected package sudo.
+(Reading database ... 129057 files and directories currently installed.)
+Preparing to unpack .../sudo_1.8.19p1-2.1_amd64.deb ...
+Unpacking sudo (1.8.19p1-2.1) ...
+Setting up sudo (1.8.19p1-2.1) ...
+Processing triggers for systemd (232-25+deb9u4) ...
+Processing triggers for man-db (2.7.6.1-2) ...
+root@debian:/home/graham/FlaskApp# adduser Graham sudo
+adduser: The user `Graham' does not exist.
+root@debian:/home/graham/FlaskApp# adduser graham sudo
+Adding user `graham' to group `sudo' ...
+Adding user graham to group sudo
+Done.
+root@debian:/home/graham/FlaskApp# exit
+exit
+graham@debian:~/FlaskApp$ sudo apt-get install python3-venv
+
+We trust you have received the usual lecture from the local System
+Administrator. It usually boils down to these three things:
+
+    #1) Respect the privacy of others.
+    #2) Think before you type.
+    #3) With great power comes great responsibility.
+
+[sudo] password for graham: 
+graham is not in the sudoers file.  This incident will be reported.
+graham@debian:~/FlaskApp$ su root
+Password: 
+root@debian:/home/graham/FlaskApp# nano /etc/sudoers
+root@debian:/home/graham/FlaskApp# exit
+exit
+graham@debian:~/FlaskApp$ sudo apt-get install python3-venv
+[sudo] password for graham: 
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following additional packages will be installed:
+  python-pip-whl python3.5-venv
+The following NEW packages will be installed:
+  python-pip-whl python3-venv python3.5-venv
+0 upgraded, 3 newly installed, 0 to remove and 1 not upgraded.
+Need to get 1,413 kB of archives.
+After this operation, 1,671 kB of additional disk space will be used.
+Do you want to continue? [Y/n] y
+Get:1 http://ftp.us.debian.org/debian stretch/main amd64 python-pip-whl all 9.0.1-2 [1,406 kB]
+Get:2 http://ftp.us.debian.org/debian stretch/main amd64 python3.5-venv amd64 3.5.3-1 [5,926 B]
+Get:3 http://ftp.us.debian.org/debian stretch/main amd64 python3-venv amd64 3.5.3-1 [1,066 B]
+Fetched 1,413 kB in 0s (2,336 kB/s)       
+Selecting previously unselected package python-pip-whl.
+(Reading database ... 129168 files and directories currently installed.)
+Preparing to unpack .../python-pip-whl_9.0.1-2_all.deb ...
+Unpacking python-pip-whl (9.0.1-2) ...
+Selecting previously unselected package python3.5-venv.
+Preparing to unpack .../python3.5-venv_3.5.3-1_amd64.deb ...
+Unpacking python3.5-venv (3.5.3-1) ...
+Selecting previously unselected package python3-venv.
+Preparing to unpack .../python3-venv_3.5.3-1_amd64.deb ...
+Unpacking python3-venv (3.5.3-1) ...
+Setting up python-pip-whl (9.0.1-2) ...
+Setting up python3.5-venv (3.5.3-1) ...
+Processing triggers for man-db (2.7.6.1-2) ...
+Setting up python3-venv (3.5.3-1) ...
+graham@debian:~/FlaskApp$ python3 -m venv venv
+graham@debian:~/FlaskApp$ source venv/bin/activate
+(venv) graham@debian:~/FlaskApp$ pip install flask
+Collecting flask
+  Downloading https://files.pythonhosted.org/packages/7f/e7/08578774ed4536d3242b14dacb4696386634607af824ea997202cd0edb4b/Flask-1.0.2-py2.py3-none-any.whl (91kB)
+    100% |████████████████████████████████| 92kB 908kB/s 
+Collecting Werkzeug>=0.14 (from flask)
+  Downloading https://files.pythonhosted.org/packages/20/c4/12e3e56473e52375aa29c4764e70d1b8f3efa6682bef8d0aae04fe335243/Werkzeug-0.14.1-py2.py3-none-any.whl (322kB)
+    100% |████████████████████████████████| 327kB 763kB/s 
+Collecting itsdangerous>=0.24 (from flask)
+  Downloading https://files.pythonhosted.org/packages/dc/b4/a60bcdba945c00f6d608d8975131ab3f25b22f2bcfe1dab221165194b2d4/itsdangerous-0.24.tar.gz (46kB)
+    100% |████████████████████████████████| 51kB 1.6MB/s 
+Collecting click>=5.1 (from flask)
+  Downloading https://files.pythonhosted.org/packages/34/c1/8806f99713ddb993c5366c362b2f908f18269f8d792aff1abfd700775a77/click-6.7-py2.py3-none-any.whl (71kB)
+    100% |████████████████████████████████| 71kB 1.3MB/s 
+Collecting Jinja2>=2.10 (from flask)
+  Downloading https://files.pythonhosted.org/packages/7f/ff/ae64bacdfc95f27a016a7bed8e8686763ba4d277a78ca76f32659220a731/Jinja2-2.10-py2.py3-none-any.whl (126kB)
+    100% |████████████████████████████████| 133kB 1.1MB/s 
+Collecting MarkupSafe>=0.23 (from Jinja2>=2.10->flask)
+  Downloading https://files.pythonhosted.org/packages/4d/de/32d741db316d8fdb7680822dd37001ef7a448255de9699ab4bfcbdf4172b/MarkupSafe-1.0.tar.gz
+Building wheels for collected packages: itsdangerous, MarkupSafe
+  Running setup.py bdist_wheel for itsdangerous ... error
+  Complete output from command /home/graham/FlaskApp/venv/bin/python3 -u -c "import setuptools, tokenize;__file__='/tmp/pip-build-blf_o_c9/itsdangerous/setup.py';f=getattr(tokenize, 'open', open)(__file__);code=f.read().replace('\r\n', '\n');f.close();exec(compile(code, __file__, 'exec'))" bdist_wheel -d /tmp/tmpqfikeud9pip-wheel- --python-tag cp35:
+  usage: -c [global_opts] cmd1 [cmd1_opts] [cmd2 [cmd2_opts] ...]
+     or: -c --help [cmd1 cmd2 ...]
+     or: -c --help-commands
+     or: -c cmd --help
+  
+  error: invalid command 'bdist_wheel'
+  
+  ----------------------------------------
+  Failed building wheel for itsdangerous
+  Running setup.py clean for itsdangerous
+  Running setup.py bdist_wheel for MarkupSafe ... error
+  Complete output from command /home/graham/FlaskApp/venv/bin/python3 -u -c "import setuptools, tokenize;__file__='/tmp/pip-build-blf_o_c9/MarkupSafe/setup.py';f=getattr(tokenize, 'open', open)(__file__);code=f.read().replace('\r\n', '\n');f.close();exec(compile(code, __file__, 'exec'))" bdist_wheel -d /tmp/tmpbodvr_rwpip-wheel- --python-tag cp35:
+  usage: -c [global_opts] cmd1 [cmd1_opts] [cmd2 [cmd2_opts] ...]
+     or: -c --help [cmd1 cmd2 ...]
+     or: -c --help-commands
+     or: -c cmd --help
+  
+  error: invalid command 'bdist_wheel'
+  
+  ----------------------------------------
+  Failed building wheel for MarkupSafe
+  Running setup.py clean for MarkupSafe
+Failed to build itsdangerous MarkupSafe
+Installing collected packages: Werkzeug, itsdangerous, click, MarkupSafe, Jinja2, flask
+  Running setup.py install for itsdangerous ... done
+  Running setup.py install for MarkupSafe ... done
+Successfully installed Jinja2-2.10 MarkupSafe-1.0 Werkzeug-0.14.1 click-6.7 flask-1.0.2 itsdangerous-0.24
+(venv) graham@debian:~/FlaskApp$ import flask
+(venv) graham@debian:~/FlaskApp$ mkdir app
+(venv) graham@debian:~/FlaskApp$ cd app
+(venv) graham@debian:~/FlaskApp/app$ nano __init__.py
+(venv) graham@debian:~/FlaskApp/app$ nano routes.py
+(venv) graham@debian:~/FlaskApp/app$ cd ..
+(venv) graham@debian:~/FlaskApp$ nano FlaskApp.py
+(venv) graham@debian:~/FlaskApp$ export FLASK_APP=FlaskApp.py
+(venv) graham@debian:~/FlaskApp$ flask run
+ * Serving Flask app "FlaskApp.py"
+ * Environment: production
+   WARNING: Do not use the development server in a production environment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+127.0.0.1 - - [13/Sep/2018 13:48:00] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [13/Sep/2018 13:48:01] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [13/Sep/2018 13:48:01] "GET /favicon.ico HTTP/1.1" 404 -
+^C(venv) graham@debian:~/FlaskApp$ pip install python-dotenv
+Collecting python-dotenv
+  Downloading https://files.pythonhosted.org/packages/24/3d/977140bd94bfb160f98a5c02fdfbb72325130f12a325cf993182956e9d0e/python_dotenv-0.9.1-py2.py3-none-any.whl
+Installing collected packages: python-dotenv
+Successfully installed python-dotenv-0.9.1
+(venv) graham@debian:~/FlaskApp$ FLASK_APP=FlaskApp.py
+(venv) graham@debian:~/FlaskApp$ 
+

@@ -1,0 +1,23 @@
+https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world
+
+-Install Python
+-Create directory for flask
+-Install python venv
+-Create virtual environment
+-Active venv
+-Install Flask via pip
+-Import flask
+-Create directory for app
+-Create __init__.py
+-Create routes.py
+-Create FlaskApp.py at root level to call
+-Export FLASK_APP=FlaskApp.py
+-Run flask
+-Install dotenv
+-Set FLASK_APP
+
+-Create "templates" directory
+-Create index.html
+-Update routes.py to display index template
+
+-Deploy to Apache (TODO) http://flask.pocoo.org/docs/0.12/deploying/mod_wsgi/
