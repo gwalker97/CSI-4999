@@ -8,6 +8,55 @@
         <link href="CSS/main.css" type="text/css" rel="stylesheet">
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
+    
+    <script>
+        function fnSwitchClick(clicked_id) {
+            var change = document.getElementById(clicked_id);
+            if (change.classList.contains('fa-unlock') || change.classList.contains('fa-lock'))
+            {
+                if (change.classList.contains('fa-lock'))
+                {
+                    change.classList.remove('fa-lock');
+                    change.classList.add('fa-unlock');
+                    change.classList.remove('btn-off');
+                    change.classList.add('btn-on');
+                }
+                else
+                {
+                    change.classList.remove('fa-unlock');
+                    change.classList.add('fa-lock');   
+                    change.classList.remove('btn-on');
+                    change.classList.add('btn-off');
+                }
+            }
+            else
+            {
+                if (change.innerHTML == "On")
+                {
+                    change.innerHTML = "Off";
+                }
+                else {
+                    change.innerHTML = "On";
+                }
+
+                if (change.classList.contains('btn-on'))
+                {
+                    change.classList.remove('btn-on');
+                    change.classList.add('btn-off');
+                }
+                else
+                {
+                    change.classList.remove('btn-off');
+                    change.classList.add('btn-on');   
+                }
+            }
+        }
+        
+        function fnComponentSettingsRedirect(clicked_id) {
+            window.location.href='/component-settings.html?component-id=' + clicked_id
+        }
+    </script>
+    
     <body class="login-body">
         <div class="main-page-container">
             
@@ -16,8 +65,8 @@
                 <h1 class="text-center h1-main-page">Miami Beach House</h1>
             </div>
             <div class="div-devices">
-                <h4 class="h4-devices">New</h4>
-                <button class="btn-new-component">+</button>
+                <h4 class="h4-devices">New Appliance</h4>
+                <button class="btn-new-component" onclick="window.location.href='/new-component.html'">+</button>
                 <select class="selects">
                     <option value="volvo">All Devices</option>
                     <option value="saab">Lights</option>
@@ -30,8 +79,8 @@
                     <option value="mercedes">Living Room</option>
                     <option value="audi">Front Room</option>
                 </select>
-                <button class="fa fa-sign-out-alt btn-sign-out"></button>
-                <button class="fa fa-cog btn-sign-out btn-cog"></button>
+                <button class="fa fa-sign-out-alt btn-sign-out" onclick="window.location.href='/login.html'"></button>
+                <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='/house-settings.html'"></button>
             </div>
                 
             <div class="col-md-12 component-card-div">
@@ -40,7 +89,7 @@
                         <p class="p-component-main">Light #1</p>
                     </div>
                     <div class="col-md-4">
-                        <button class="btn-component-switch btn-on">On</button>
+                        <button class="btn-component-switch btn-off" id="button1" onclick="fnSwitchClick(this.id)">Off</button>
                     </div>
                     <div class="col-md-8">
                         <p class="p-component-label">Room: Living room</p>
@@ -48,7 +97,7 @@
 
                     </div>
                     <div class="col-md-4">
-                        <button class="btn-component-switch fa fa-cog"></button>
+                        <button class="btn-component-switch fa fa-cog" id="component1" onclick="fnComponentSettingsRedirect(this.id)"></button>
                     </div>
                 </div>
                 <div class="component-card col-md-6">
@@ -56,7 +105,7 @@
                         <p class="p-component-main">Light #2</p>
                     </div>
                     <div class="col-md-4">
-                        <button class="btn-component-switch btn-off">Off</button>
+                        <button class="btn-component-switch btn-off" id="button2" onclick="fnSwitchClick(this.id)">Off</button>
                     </div>
                     <div class="col-md-8">
                         <p class="p-component-label">Room: Bedroom</p>
@@ -64,7 +113,7 @@
 
                     </div>
                     <div class="col-md-4">
-                        <button class="btn-component-switch fa fa-cog"></button>
+                        <button class="btn-component-switch fa fa-cog" id="component2" onclick="fnComponentSettingsRedirect(this.id)"></button>
                     </div>
                 </div>
             </div>
@@ -74,14 +123,14 @@
                         <p class="p-component-main">Door #1</p>
                     </div>
                     <div class="col-md-4">
-                        <button class="btn-component-switch fa fa-unlock btn-on"></button>
+                        <button class="btn-component-switch fa fa-lock btn-off" id="button3" onclick="fnSwitchClick(this.id)"></button>
                     </div>
                     <div class="col-md-8">
                         <p class="p-component-label">Room: Front Room</p>
                         <p class="p-component-label">Description: Front door lock</p>
                     </div>
                     <div class="col-md-4">
-                        <button class="btn-component-switch fa fa-cog"></button>
+                        <button class="btn-component-switch fa fa-cog" id="component3" onclick="fnComponentSettingsRedirect(this.id)"></button>
                     </div>
                 </div>
                 <div class="component-card col-md-6">
@@ -89,14 +138,14 @@
                         <p class="p-component-main">Fan #1</p>
                     </div>
                     <div class="col-md-4">
-                        <button class="btn-component-switch btn-on">On</button>
+                        <button class="btn-component-switch btn-off" id="button4" onclick="fnSwitchClick(this.id)">Off</button>
                     </div>
                     <div class="col-md-8">
                         <p class="p-component-label">Room: Living room</p>
                         <p class="p-component-label">Description: Living room fan</p>
                     </div>
                     <div class="col-md-4">
-                        <button class="btn-component-switch fa fa-cog"></button>
+                        <button class="btn-component-switch fa fa-cog" id="component4" onclick="fnComponentSettingsRedirect(this.id)"></button>
                     </div>
                 </div>
             </div>

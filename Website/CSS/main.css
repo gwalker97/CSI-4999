@@ -40,21 +40,45 @@ h1 {
     margin-top: 10px;
 }
 
+h4 {
+    letter-spacing: 5px;
+    margin-bottom: 20px;
+}
+
+
+/*login styling*/
+
 .h1-login {
     text-shadow: 2px 2px #4682b461;
     font-size: 80px;
 }
 
-h4 {
-    letter-spacing: 5px;
-    margin-bottom: 20px;
+.h1-main-header {
+    text-shadow: 2px 2px #4682b461;
+    font-size: 40px;
 }
 
 .h4-login {
     text-shadow: 1px 1px #4682b461;    
 }
 
-/*login styling*/
+.lbl-login-hidden {
+    display: none;
+}
+
+.lbl-login-visible {
+    display: block;
+    color: red;
+}
+
+.lbl-create-account-hidden {
+    display: none;
+}
+
+.lbl-create-account-visible {
+    display: block;
+    color: red; 
+}
 
 .login-body {
     background-image: url("/Images/home.jpg");
@@ -65,10 +89,21 @@ h4 {
 .login-form-container {
     text-align: center;
     background-color: #ffffffe8;
-    margin: 13% auto;
+    margin: 8% auto;
     padding: 3%;
     width: 90%;
     max-width: 400px;
+    border-radius: 2px;
+    box-shadow: 7px 8px 10px 0px #8888885e;
+}
+
+.create-account-form-container {
+    text-align: center;
+    background-color: #ffffffe8;
+    margin: 6% auto;
+    padding: 3%;
+    width: 100%;
+    max-width: 600px;
     border-radius: 2px;
     box-shadow: 7px 8px 10px 0px #8888885e;
 }
