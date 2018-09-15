@@ -45,11 +45,10 @@
     </script>
     
     <body class="login-body">
-        <div class="login-form-container">
+        <div class="create-account-form-container">
             <form>
-                <h1 class="col-md-12 text-center h1-login">HARP</h1>
-                <h4 class="col-md-12 text-center h4-login">Home Automation: Raspberry Pi</h4>
-                <label id="loginErrorText" class="lbl-login-hidden"></label>
+                <h1 class="text-center h1-main-header">New Account</h1>
+                <label id="loginErrorText" class="lbl-create-account-hidden"></label>
                 <div class="col-md-12">
                     <i class="fa fa-user fa-login"></i>
                     <input type="text" placeholder="Username" class="input-login">
@@ -58,11 +57,24 @@
                     <i class="fa fa-lock fa-login"></i>
                     <input type="text" placeholder="Password" class="input-login">
                 </div>
-                <div class="btn-login-float">
-                    <button formaction="submit" class="btn-login">Login</button>
+                <div class="col-md-12">
+                    <i class="fa fa-lock fa-login"></i>
+                    <input type="text" placeholder="Confirm Password" class="input-login">
+                </div>
+                <div class="col-md-12">
+                    <i class="fa fa-user fa-login"></i>
+                    <input type="text" placeholder="First Name" class="input-login">
+                </div>
+                <div class="col-md-12">
+                    <i class="fa fa-user fa-login"></i>
+                    <input type="text" placeholder="Last Name" class="input-login">
+                </div>
+                <div class="col-md-12">
+                    <i class="fa fa-envelope fa-login"></i>
+                    <input type="text" placeholder="Email Address" class="input-login">
                 </div>
                 <div class="btn-login-float">
-                    <button class="btn-login" formaction="/create-account.html">Create Account</button>
+                    <button formaction="submit" class="btn-login">Create Account</button>
                 </div>
             </form>
         </div>
