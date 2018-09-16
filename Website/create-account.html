@@ -11,28 +11,19 @@
     
     <script>
         window.onload = function(){
-            var loginBehavior = getParameterByName("loginBehavior");
+            var accountBehavior = getParameterByName("accountBehavior");
             
-            if (loginBehavior == "incorrect")
+            if (accountBehavior == "alreadyExists")
             {
-                var errorText = document.getElementById("loginErrorText");
-                if (errorText.classList.contains('lbl-login-hidden'))
-                {
-                    errorText.innerHTML = "Incorrect username or password."
-                    errorText.classList.remove('lbl-login-hidden');
-                    errorText.classList.add('lbl-login-visible');
-                }
+                fnSetNewAccountBehavior("This username already exists. Please choose a new one.")
             }
-            
-            if (loginBehavior == "notExist")
+            else if (accountBehavior == "strongerPassword")
             {
-                var errorText = document.getElementById("loginErrorText");
-                if (errorText.classList.contains('lbl-login-hidden'))
-                {
-                    errorText.innerHTML = "Username does not exist."
-                    errorText.classList.remove('lbl-login-hidden');
-                    errorText.classList.add('lbl-login-visible');
-                }
+                fnSetNewAccountBehavior("Your password must be between 8-30 characters.");
+            }
+            else if (accountBehavior == "notEmail")
+            {
+                fnSetNewAccountBehavior("Please enter an actual email address.");
             }
         };
         
@@ -42,39 +33,49 @@
                 results = regex.exec(location.search);
             return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         }
+        
+        function fnSetNewAccountBehavior(arg) {
+            var errorText = document.getElementById("accountErrorText");
+            if (errorText.classList.contains('lbl-create-account-hidden'))
+            {
+                errorText.innerHTML = arg;
+                errorText.classList.remove('lbl-create-account-hidden');
+                errorText.classList.add('lbl-create-account-visible');
+            }
+        }
     </script>
     
     <body class="login-body">
         <div class="create-account-form-container">
             <form>
                 <h1 class="text-center h1-main-header">New Account</h1>
-                <label id="loginErrorText" class="lbl-create-account-hidden"></label>
+                <label id="accountErrorText" class="lbl-create-account-hidden"></label>
                 <div class="col-md-12">
                     <i class="fa fa-user fa-login"></i>
-                    <input type="text" placeholder="Username" class="input-login">
+                    <input type="text" placeholder="Username" class="input-login" required>
                 </div>
                 <div class="col-md-12">
                     <i class="fa fa-lock fa-login"></i>
-                    <input type="text" placeholder="Password" class="input-login">
+                    <input type="text" placeholder="Password" class="input-login" required>
                 </div>
                 <div class="col-md-12">
                     <i class="fa fa-lock fa-login"></i>
-                    <input type="text" placeholder="Confirm Password" class="input-login">
+                    <input type="text" placeholder="Confirm Password" class="input-login" required>
                 </div>
                 <div class="col-md-12">
                     <i class="fa fa-user fa-login"></i>
-                    <input type="text" placeholder="First Name" class="input-login">
+                    <input type="text" placeholder="First Name" class="input-login" required>
                 </div>
                 <div class="col-md-12">
                     <i class="fa fa-user fa-login"></i>
-                    <input type="text" placeholder="Last Name" class="input-login">
+                    <input type="text" placeholder="Last Name" class="input-login" required>
                 </div>
                 <div class="col-md-12">
                     <i class="fa fa-envelope fa-login"></i>
-                    <input type="text" placeholder="Email Address" class="input-login">
+                    <input type="text" placeholder="Email Address" class="input-login" required>
                 </div>
                 <div class="btn-login-float">
-                    <button formaction="submit" class="btn-login">Create Account</button>
+                    <button formaction="/set-up-house.html" class="btn-login">Next</button>
                 </div>
             </form>
         </div>
