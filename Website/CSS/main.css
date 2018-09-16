@@ -80,6 +80,24 @@ h4 {
     color: red; 
 }
 
+.lbl-setup-house-hidden {
+    display: none;
+}
+
+.lbl-setup-house-visible {
+    display: block;
+    color: red; 
+}
+
+.lbl-new-component-hidden {
+    display: none;
+}
+
+.lbl-new-component-visible {
+    display: block;
+    color: red; 
+}
+
 .login-body {
     background-image: url("/Images/home.jpg");
     background-size: cover;
@@ -177,7 +195,7 @@ h4 {
 .main-page-container {
     background-color: #fffffff5;
     margin: 25px auto;
-    margin-top: 7%;
+    margin-top: 3%;
     padding: 5%;
     width: 90%;
     min-height:550px;

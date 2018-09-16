@@ -8,18 +8,48 @@
         <link href="CSS/main.css" type="text/css" rel="stylesheet">
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
+    
+    <script>
+        window.onload = function(){
+            var houseBehavior = getParameterByName("houseBehavior");
+            
+            if (houseBehavior == "roomExists")
+            {
+                fnSetHouseBehavior("There's already a room with this name.")
+            }
+        };
+        
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+        
+        function fnSetHouseBehavior(arg) {
+            var errorText = document.getElementById("houseErrorText");
+            if (errorText.classList.contains('lbl-setup-house-hidden'))
+            {
+                errorText.innerHTML = arg;
+                errorText.classList.remove('lbl-setup-house-hidden');
+                errorText.classList.add('lbl-setup-house-visible');
+            }
+        }
+    </script>
+    
     <body class="login-body">
         <div class="component-settings-form-container">
             <form>
                 <h1 class="col-md-12 text-center h1-main-header">Almost there!</h1>
                 <h4 class="col-md-12 text-center h4-login">Setup Your House</h4>
+                <label id="houseErrorText" class="lbl-setup-house-hidden"></label>
                 <div class="col-md-12">
                     <i class="fa fa-home fa-login"></i>
-                    <input type="text" placeholder="House Name" class="input-login">
+                    <input type="text" placeholder="House Name" class="input-login" required>
                 </div>
                 <div class="col-md-12">
                     <i class="fa fa-map-marker fa-login"></i>
-                    <input type="text" placeholder="Room Name" class="input-settings">
+                    <input type="text" placeholder="Room Name" class="input-settings" required>
                     <i class="fa fa-plus fa-settings-add-room"></i>
                     <i class="fa fa-minus fa-settings-remove-room"></i>
                 </div>
@@ -36,7 +66,7 @@
                     <i class="fa fa-minus fa-settings-remove-room"></i>
                 </div>
                 <div class="btn-login-float">
-                    <button formaction="submit" class="btn-save-house">Finish</button>
+                    <button formaction="/login.html?loginBehavior=newAccount" class="btn-save-house">Finish</button>
                 </div>
             </form>
         </div>
