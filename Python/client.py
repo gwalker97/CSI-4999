@@ -1,9 +1,29 @@
-import socket, threading, subprocess
+import socket, threading, subprocess, pickle
 
-#class message:
-	#def __init__(self)
+class message(object):
+	Type = ""
+	pin = 0
+	state = ""
+	payload = ""
 
-#Receive data from the server
+#messType holds the type of message that is being sent
+#Types: GPIO - used for power; Noti - notification; end - End connection; conn - Connect to server
+	def __init__(self, Type, pin, state, payload):
+		self.Type = Type
+		self.pin = pin
+		self.state = state
+		self.payload = payload
+	def getType(self):
+		return self.Type
+	def getPin(self):
+		return self.pin
+	def getState(self):
+		return self.state
+	#The payload will contain messages in text to be sent a displayed
+	def getPayload(self):
+		return self.payload	
+
+#Receive data from the server0
 def receive(conn):
 	recData = True
 	print "I am at function receive"
@@ -12,16 +32,19 @@ def receive(conn):
 		if reply == "end!":
 			print "Server has sent escape character!"	
 			recData = False
-		else:
-			print "From the Server: %s." %(reply)
+	
+			#Deserailize the object here
+			
 
 #Send data to the client
 def send(conn):
 	endChat = False
 	while not endChat:
 		mess = raw_input("Message: ")
-		if mess != "end!":	
-			conn.send(mess)
+		if mess != "end!":
+			obj = message("", 18, "on", mess)
+			data = pickle.dumps(obj)
+			conn.send(data)
 		else:
 			conn.send("end!")
 			conn.close()
@@ -46,8 +69,8 @@ def main():
 	t = threading.Thread(target=receive, args=(server,))
 	t.start()
 	send(server)
-	print 'Connecting to IP %s throuhg Port %s' %(serv_ip, port)
-
+	print 'Connecting to IP %s through Port %s' %(serv_ip, port)
+	
 	#Prints the received data from the server up to 1024 byte buffer limit
 	#This is only used for non-threaded test
 
