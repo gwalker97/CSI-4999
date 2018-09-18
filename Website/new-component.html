@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HARP Login</title>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+        <link href="CSS/main.css" type="text/css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    
+    <script>
+        window.onload = function(){
+            var componentBehavior = getParameterByName("componentBehavior");
+            
+            if (componentBehavior == "componentExists")
+            {
+                fnSetComponentBehavior("There's already a component with this name.")
+            }
+        };
+        
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+        
+        function fnSetComponentBehavior(arg) {
+            var errorText = document.getElementById("componentErrorText");
+            if (errorText.classList.contains('lbl-new-component-hidden'))
+            {
+                errorText.innerHTML = arg;
+                errorText.classList.remove('lbl-new-component-hidden');
+                errorText.classList.add('lbl-new-component-visible');
+            }
+        }
+    </script>
+    
+    <body class="login-body">
+        <div class="component-settings-form-container">
+            <form>
+                <h1 class="text-center h1-settings">New Component</h1>
+                <label id="componentErrorText" class="lbl-new-component-hidden"></label>
+                <div class="component-settings-card">
+                    <div class="">
+                        <i class="fa fa-home fa-login"></i>
+                        <input type="text" placeholder="Appliance Name" class="input-login">
+                    </div>
+                    <div class="">
+                        <i class="fa fa-wrench fa-login"></i>
+                        <input type="text" placeholder="Appliance Description" class="input-login">
+                    </div>
+                    <div class="special-row">
+                        <select class="select-rooms">
+                            <option value="saab">Bedroom</option>
+                            <option value="mercedes">Living Room</option>
+                            <option value="audi">Front Room</option>
+                        </select>
+                        <button class="btn-component-switch btn-setting-option btn-save-appliance">Save</button>
+                        <button class="btn-component-switch btn-setting-option btn-cancel">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>    
+</html>
