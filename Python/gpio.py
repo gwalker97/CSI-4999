@@ -11,7 +11,7 @@ hostname = '127.0.0.1'
 username = 'root'
 password = 'root'
 dbname = 'python'
-
+pinCur = 0
 
 #this object will store each appliance? 
 class appliance(object):
@@ -41,15 +41,36 @@ def dbThread( conn ):
 	endconn = "False"
 	while 1:
 		time.sleep(.05)
-		print "Time Update..."
+		#print "Time Update..."
 		doQuery( conn )
 
+#Used to test pin state against current state and then send pin to get changed in GPIO function
 def parseAppliance(id, name, pin, state):
-	if state == 0:
-		print "Appliance %s using PIN %s is 'Off'." %(name, pin)
-	else:
-		print "Appliance %s using PIN %s is 'On'." %(name, pin)
-		
+	global pinCur # Temp variable. Will be removed once we have pi and will use the
+	# getpinState function to get value
+	if state != pinCur:
+		print "Appliance %s using PIN %s has changed to %s." %(name, pin, state)
+		pinCur = state
+
+	#Used for testing the current state of pin against the state from the database to look for changes. (No use without Pi)
+	#oldState = getpinState()
+	#if state != oldState: # Assuming it returns a 0 or 1
+	#	print "Changing appliance %s at PIN %s from %s to %s!" %(name, ping, oldState, state)
+	#	GPIO(pin, state)
+	#else:
+		#Nothing because the state didn't change
+	
+	#Stream of table in database as its refreshed
+	#if state == 0:
+	#	print "Appliance %s using PIN %s is 'Off'." %(name, pin)
+	#else:
+	#	print "Appliance %s using PIN %s is 'On'." %(name, pin)
+
+#Pulls the state of the pin for comparison		
+def getpinState(pinnum):
+	pin = int(pinnum)
+	GPIO.setup(pin, GPIO.IN)
+	return GPIO.input(pin)
 
 def MySQLConnect():
 	print "Using mysql.connector...."
@@ -65,12 +86,10 @@ def GPIO(pinNum, On_Off):
 	not_state = ""
 	#This statement handles the state which the LED is on
 	#Right now the inverse is used to turn the light off.
-	if On_Off == "high":
+	if On_Off == True:
 		state = GPIO.HIGH
-		#not_state = GPIO.LOW
 	else:
 		state = GPIO.LOW
-		#not_state = GPIO.HIGH
 	pin = int(pinNum)
 	GPIO.setup(pin,GPIO.OUT)
 	print "LED on"
