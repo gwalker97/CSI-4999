@@ -1,10 +1,31 @@
 #This python code will run the server on the Raspberry pi and handle the incoming messages from the client. We will be using GPIO pins to control the flow of power in the system. 
 
 import socket, threading, subprocess, pickle
+import mysql.connector
 from mysql.connector import MySQLConnection, Error
-from python_mysql_dbconfig import read_db_config
+
 #import RPi.GPIO as GPIO
 import time
+
+hostname = '127.0.0.1'
+username = 'root'
+appliances = {}
+password = 'root'
+dbname = 'python'
+
+
+#this object will store each appliance? 
+class appliance(object):
+	id = ""
+	name = ""
+	pin = 0
+	state = 0
+
+	def __init__(self, id, name, pin, state):
+		self.id = id
+		self.name = name
+		self.pin = pin
+		self.state = state
 
 class message(object):
 	Type = ""
@@ -29,30 +50,42 @@ class message(object):
 	def getPayload(self):
 		return payload	
 
+def doQuery( conn ):
+	cur = conn.cursor()
+	conn.commit()
+	cur.execute( "SELECT id, name, gpioPin, pinState FROM test" )
+
+	for id, name, gpioPin, pinState  in cur.fetchall() :
+		#print "Id: %s; Name: %s; PIN #%s ; State: %s" %(id, name, gpioPin, pinState)
+		parseAppliance(id, name, gpioPin, pinState)
+		
+
+#this method will pull from the database every half second and update the GPIO pins
+def dbThread( conn ):
+	endconn = "False"
+	while 1:
+		time.sleep(.05)
+		print "Time Update..."
+		doQuery( conn )
+
+def parseAppliance(id, name, pin, state):
+	if state == 0:
+		print "Appliance %s using PIN %s is 'Off'." %(name, pin)
+	else:
+		print "Appliance %s using PIN %s is 'On'." %(name, pin)
+		
+
+def MySQLConnect():
+	print "Using mysql.connector...."
+	myConnection = mysql.connector.connect(host=hostname, user=username, passwd=password, db=dbname)	
+	doQuery( myConnection )
+	t = threading.Thread(target=dbThread, args=(myConnection,))
+	t.start()
+	#myConnection.close()	
 
 #Runs the script that sets up ethernet based on given ip and connection name
 def setupEth(IP, Name):
 	subprocess.call(['./eth0On %s %s sudo' %(IP, Name)], shell=True)
-
-def query_with_fetchall():
-    try:
-        dbconfig = read_db_config()
-        conn = MySQLConnection(**dbconfig)
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM books")
-        rows = cursor.fetchall()
- 
-        print('Total Row(s):', cursor.rowcount)
-        for row in rows:
-            print(row)
- 
-    except Error as e:
-        print(e)
- 
-    finally:
-        cursor.close()
-        conn.close()
-
 
 #Sends messages to the GPIO Pins
 def GPIO(pinNum, On_Off):
@@ -121,10 +154,9 @@ def main():
 	#port = raw_input("Please enter the port you wish to listen on: ")
 	port = 1234
 	#Ask for the ip address of the server. This will be used on the client side as well 	to connect to the server. (type 'str')
-	ip = raw_input("Enter the ip address of the server: ")
+	#ip = raw_input("Enter the ip address of the server: ")
 	#ip = '169.254.152.22'
-	
-	#ip = '127.0.0.1'
+	ip = '127.0.0.1'
 	#Ask for the name of the connection. (eth0, ens, eps, etc...) 
 	#connName = raw_input("Enter the connection name: ")
 	connName = 'ens37'
@@ -159,8 +191,10 @@ def main():
 	#print "here"
 	#GPIO.setmode(GPIO.BOARD)
 	#GPIO.setwarnings(False)
-	t = threading.Thread(target=clientThread, args=(client,))
-	t.start()
+	#t = threading.Thread(target=clientThread, args=(client,))
+	#t.start()
+	#MySQLConnect()
 
 if __name__ =='__main__':
-	main()
+	MySQLConnect()
+	#main()
