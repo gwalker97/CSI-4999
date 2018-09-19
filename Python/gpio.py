@@ -25,11 +25,12 @@ class appliance(object):
 		self.pin = pin
 		self.state = state
 
+#Makes a query request to the database and passes returned data to parser
 def doQuery( conn ):
 	global count
 	cur = conn.cursor(buffered=True)
 	conn.commit()
-	cur.execute( "SELECT id, appname, pin, flag FROM test WHERE EXISTS (Select table_schema,table_name,update_time FROM information_schema.tables WHERE update_time > (NOW() - INTERVAL 2 SECOND) AND table_schema = 'python' AND table_name='test')");
+	cur.execute( "SELECT id, appname, pin, flag FROM test WHERE EXISTS (Select table_schema,table_name,update_time FROM information_schema.tables WHERE update_time > (NOW() - INTERVAL .5 SECOND) AND table_schema = 'python' AND table_name='test')");
 	if cur.rowcount > 0:
 		count = count + 1
 		print "%s ========================================" %(count)
@@ -41,17 +42,11 @@ def doQuery( conn ):
 def dbThread( conn ):
 	endconn = "False"
 	while 1:
-		time.sleep(.5)
+		time.sleep(.1)
 		doQuery( conn )
 
 #Used to test pin state against current state and then send pin to get changed in GPIO function
 def parseAppliance(id, name, pin, state):
-	global pinCur # Temp variable. Will be removed once we have pi and will use the
-	# getpinState function to get value
-	#if state != pinCur:
-	#	print "Appliance %s using PIN %s has changed to %s." %(name, pin, state)
-	#	pinCur = state
-
 	#Used for testing the current state of pin against the state from the database to look for changes. (No use without Pi)
 	#oldState = getpinState()
 	#if state != oldState: # Assuming it returns a 0 or 1
@@ -61,10 +56,7 @@ def parseAppliance(id, name, pin, state):
 		#Nothing because the state didn't change
 	
 	#Stream of table in database as its refreshed
-	if state == 0:
-		print "Appliance %s using PIN %s is 'Off'." %(name, pin)
-	else:
-		print "Appliance %s using PIN %s is 'On'." %(name, pin)
+	print "Flag of appliance %s using PIN %s is %s." %(name, pin, state) 
 
 #Pulls the state of the pin for comparison		
 def getpinState(pinnum):
@@ -82,11 +74,9 @@ def MySQLConnect():
 
 #Sends messages to the GPIO Pins
 def GPIO(pinNum, On_Off):
-	state = ""
-	not_state = ""
 	#This statement handles the state which the LED is on
 	#Right now the inverse is used to turn the light off.
-	if On_Off == True:
+	if On_Off == 1:
 		state = GPIO.HIGH
 	else:
 		state = GPIO.LOW
