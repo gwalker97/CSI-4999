@@ -11,7 +11,7 @@ hostname = '127.0.0.1'
 username = 'root'
 password = 'root'
 dbname = 'python'
-
+count = 0
 #this object will store each appliance? 
 class appliance(object):
 	id = ""
@@ -26,22 +26,22 @@ class appliance(object):
 		self.state = state
 
 def doQuery( conn ):
+	global count
 	cur = conn.cursor(buffered=True)
 	conn.commit()
-	cur.execute( "SELECT id, appname, pin, flag FROM test WHERE EXISTS (Select table_schema,table_name,update_time FROM information_schema.tables WHERE update_time > (NOW() - INTERVAL .5 SECOND) AND table_schema = 'python' AND table_name='test')");
+	cur.execute( "SELECT id, appname, pin, flag FROM test WHERE EXISTS (Select table_schema,table_name,update_time FROM information_schema.tables WHERE update_time > (NOW() - INTERVAL 2 SECOND) AND table_schema = 'python' AND table_name='test')");
 	if cur.rowcount > 0:
-		print "========================================"
+		count = count + 1
+		print "%s ========================================" %(count)
 		for id, appname, pin, flag  in cur.fetchall() :
-			#print "Id: %s; Name: %s; PIN #%s ; State: %s" %(id, name, gpioPin, pinState)
 			parseAppliance(id, appname, pin, flag)
-	else:
-		print "Nothing has changed"
+
 
 #this method will pull from the database every half second and update the GPIO pins
 def dbThread( conn ):
 	endconn = "False"
 	while 1:
-		time.sleep(.05)
+		time.sleep(.5)
 		doQuery( conn )
 
 #Used to test pin state against current state and then send pin to get changed in GPIO function
