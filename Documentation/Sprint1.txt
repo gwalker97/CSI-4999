@@ -1,0 +1,47 @@
+Wireless Control of Household Appliances using Raspberry Pi
+
+Joe Danz, Fady Putrus, Alex Manaila, Michael Muller, Stephen Thai, Graham Walker
+
+-- User Project Requirements --
+  1. Raspberry Pi must be connected to a network (R1)
+  2. Raspberry Pi must be accessible through a network (R2)
+  3. Raspberry Pi will contain the server code for project (R3)
+  4. User may control Raspberry Pi from phone or computer with a front end solution (R4).
+  5. All appliances connected to the Raspberry Pi are controllable (R5)
+  6. User may access Raspberry Pi while not connected to the same network (R6) (Not sure)
+  7. Raspberry Pi server is accessible through Bluetooth (R7)
+  8. Raspberry Pi will host the website users will go to in order to control applications (R8)
+
+-- Technical Requirements --
+  - Create server on Raspberry Pi
+  - Host website to control automated components
+  - Supply enough power to all components
+  - Create a model home with working automated components
+  - Monitor status of all add-ons, disable if not wanted
+  - Templates for different add-ons; what data is needed, how it is controlled
+  - Database table with historical events
+  - Regsiter new devices
+
+-- Project Plan --
+
+Sprint 1
+  - Create base Python script to communicate over sockets
+  - Begin framework to manipulate Rapsberry Pi GPIO pins
+  - Begin connector for HTML/PHP
+  - Setup LAMP stack on Raspberry Pi
+  - Documentation
+
+-- Technical Aspects --
+
+Technical Hardware:
+Raspberry Pi 2 Model B, version 1.0
+External components, such as lights, switches, motion sensors, etc.
+Any computer with access to internet
+
+Software:
+Linux operating system
+Python server
+HTML, CSS, PHP for front end
+
+Model Home Hardware:
+Cardboard, furniture, home accessories

@@ -1,0 +1,4 @@
+
+javac -cp .:classes:/opt/pi4j/lib/'*' -d . PinCheck.java
+
+sudo java -cp .:classes:/opt/pi4j/lib/'*' PinCheck
