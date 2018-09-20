@@ -41,6 +41,7 @@ def doQuery( conn ):
 #this method will pull from the database every half second and update the GPIO pins
 def dbThread( conn ):
 	endconn = "False"
+	
 	while 1:
 		time.sleep(.1)
 		doQuery( conn )
@@ -68,7 +69,7 @@ def MySQLConnect():
 	print "Using mysql.connector...."
 	myConnection = mysql.connector.connect(host=hostname, user=username, passwd=password, db=dbname)	
 	doQuery( myConnection )
-	# Check current states of pins
+	# Pull from the database and sync the pin states to that of the database.
 	t = threading.Thread(target=dbThread, args=(myConnection,))
 	t.start()
 	#myConnection.close()	
