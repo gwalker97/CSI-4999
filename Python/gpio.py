@@ -30,7 +30,7 @@ def doQuery( conn ):
 	global count
 	cur = conn.cursor(buffered=True)
 	conn.commit()
-	cur.execute( "SELECT id, appname, pin, flag FROM test WHERE EXISTS (Select table_schema,table_name,update_time FROM information_schema.tables WHERE update_time > (NOW() - INTERVAL .5 SECOND) AND table_schema = 'python' AND table_name='test')");
+	cur.execute( "SELECT id, appname, pin, flag FROM test WHERE EXISTS (Select table_schema,table_name,update_time FROM information_schema.tables WHERE update_time > (NOW() - INTERVAL .3 SECOND) AND table_schema = 'python' AND table_name='test')");
 	if cur.rowcount > 0:
 		count = count + 1
 		print "%s ========================================" %(count)
@@ -68,6 +68,7 @@ def MySQLConnect():
 	print "Using mysql.connector...."
 	myConnection = mysql.connector.connect(host=hostname, user=username, passwd=password, db=dbname)	
 	doQuery( myConnection )
+	# Check current states of pins
 	t = threading.Thread(target=dbThread, args=(myConnection,))
 	t.start()
 	#myConnection.close()	
