@@ -63,99 +63,102 @@
     
     <body class="login-body">
         <div class="main-page-container">
-            
-            
             <div>
                 <h1 class="text-center h1-main-page">Miami Beach House</h1>
-            </div>
-            <div class="div-devices">
-                <h4 class="h4-devices">New Appliance</h4>
-                <button class="btn-new-component" onclick="window.location.href='/new-component.html?house-id=1'">+</button>
-                <select class="selects">
-                    <option value="volvo">All Devices</option>
-                    <option value="saab">Lights</option>
-                    <option value="mercedes">Doors</option>
-                    <option value="audi">Fans</option>
-                </select>
-                <select class="selects">
-                    <option value="volvo">All Rooms</option>
-                    <option value="saab">Bedroom</option>
-                    <option value="mercedes">Living Room</option>
-                    <option value="audi">Front Room</option>
-                </select>
                 <button class="fa fa-sign-out-alt btn-sign-out" onclick="confirm('Are you sure you want to log out? Logging out will automatically turn off all appliances.') && fnReturnToLogin()"></button>
                 <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='/house-settings.html?house-id=1'"></button>
             </div>
+            <div class="div-devices">
+                <div style="display: inline-block">
+                    <h4 class="h4-devices">New Appliance</h4>
+                    <button class="btn-new-component" onclick="window.location.href='/new-component.html?house-id=1'">+</button>
+                </div>
+                <div style="display: inline-block">
+                    <select class="selects">
+                        <option value="volvo">All Devices</option>
+                        <option value="saab">Lights</option>
+                        <option value="mercedes">Doors</option>
+                        <option value="audi">Fans</option>
+                    </select>
+                    <select class="selects">
+                        <option value="volvo">All Rooms</option>
+                        <option value="saab">Bedroom</option>
+                        <option value="mercedes">Living Room</option>
+                        <option value="audi">Front Room</option>
+                    </select>
+                </div>
+            </div>
                 
-            <div class="col-md-12 component-card-div">
-                <div class="component-card col-md-6">
-                    <div class="col-md-8">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="component-card">
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                         <p class="p-component-main">Light #1</p>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                         <button class="btn-component-switch btn-off" id="button1" onclick="fnSwitchClick(this.id)">Off</button>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                         <p class="p-component-label">Room: Living room</p>
                         <p class="p-component-label">Description: Living room light</p>
 
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                         <button class="btn-component-switch fa fa-cog" id="component1" onclick="fnComponentSettingsRedirect(this.id)"></button>
                     </div>
                 </div>
-                <div class="component-card col-md-6">
-                    <div class="col-md-8">
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="component-card">
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                         <p class="p-component-main">Light #2</p>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                         <button class="btn-component-switch btn-off" id="button2" onclick="fnSwitchClick(this.id)">Off</button>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                         <p class="p-component-label">Room: Bedroom</p>
                         <p class="p-component-label">Description: Bedroom light</p>
 
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                         <button class="btn-component-switch fa fa-cog" id="component2" onclick="fnComponentSettingsRedirect(this.id)"></button>
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 component-card-div">
-                <div class="component-card col-md-6">
-                    <div class="col-md-8">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="component-card">
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                         <p class="p-component-main">Door #1</p>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                         <button class="btn-component-switch fa fa-lock btn-off" id="button3" onclick="fnSwitchClick(this.id)"></button>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                         <p class="p-component-label">Room: Front Room</p>
                         <p class="p-component-label">Description: Front door lock</p>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                         <button class="btn-component-switch fa fa-cog" id="component3" onclick="fnComponentSettingsRedirect(this.id)"></button>
                     </div>
                 </div>
-                <div class="component-card col-md-6">
-                    <div class="col-md-8">
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="component-card">
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                         <p class="p-component-main">Fan #1</p>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                         <button class="btn-component-switch btn-off" id="button4" onclick="fnSwitchClick(this.id)">Off</button>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                         <p class="p-component-label">Room: Living room</p>
                         <p class="p-component-label">Description: Living room fan</p>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                         <button class="btn-component-switch fa fa-cog" id="component4" onclick="fnComponentSettingsRedirect(this.id)"></button>
                     </div>
                 </div>
             </div>
-            
-            
-            
         </div>
     </body>    
 </html>
