@@ -2,6 +2,7 @@
 
 import threading, subprocess, pickle
 import mysql.connector
+import gpiozero
 from mysql.connector import MySQLConnection, Error
 
 #import RPi.GPIO as GPIO
@@ -57,12 +58,12 @@ def parseAppliance(id, name, pin, state):
 		#Nothing because the state didn't change
 	
 	#Stream of table in database as its refreshed
-	print "Flag of appliance %s using PIN %s is %s." %(name, pin, state) 
+	print "Flag of appliance %s using PIN %s is %s." %(name, pin, state)
+	GPIO(pin, state)
 
 #Pulls the state of the pin for comparison		
 def getpinState(pinnum):
-	pin = int(pinnum)
-	GPIO.setup(pin, GPIO.IN)
+	
 	return GPIO.input(pin)
 
 def MySQLConnect():
@@ -76,20 +77,14 @@ def MySQLConnect():
 
 #Sends messages to the GPIO Pins
 def GPIO(pinNum, On_Off):
+	led = LED(pinNum)
 	#This statement handles the state which the LED is on
 	#Right now the inverse is used to turn the light off.
 	if On_Off == 1:
-		state = GPIO.HIGH
+		led.on()
 	else:
-		state = GPIO.LOW
-	pin = int(pinNum)
-	GPIO.setup(pin,GPIO.OUT)
-	print "LED on"
-	GPIO.output(pin,state)
-	#time.sleep(1)
-	#print "LED off"
-	#GPIO.output(pin,state)
-	return "Pin %s has is now %s!" %(pin,state)
+		led.off()
+	return "Pin %s has is now %s!" %(pin, On_Off)
 
 
 if __name__ =='__main__':
