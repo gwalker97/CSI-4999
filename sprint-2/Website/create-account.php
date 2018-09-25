@@ -11,19 +11,19 @@
     
     <script>
         window.onload = function(){
-            var loginBehavior = getParameterByName("loginBehavior");
+            var accountBehavior = getParameterByName("accountBehavior");
             
-            if (loginBehavior == "incorrect")
+            if (accountBehavior == "alreadyExists")
             {
-                fnSetLoginBehavior("Username or password is incorrect.")
+                fnSetNewAccountBehavior("This username already exists. Please choose a new one.")
             }
-            else if (loginBehavior == "notExist")
+            else if (accountBehavior == "strongerPassword")
             {
-                fnSetLoginBehavior("Username does not exist.");
+                fnSetNewAccountBehavior("Your password must be between 8-30 characters.");
             }
-            else if (loginBehavior == "newAccount")
+            else if (accountBehavior == "notEmail")
             {
-                fnSetLoginBehavior("Your account has been created!<br />Please login.");
+                fnSetNewAccountBehavior("Please enter an actual email address.");
             }
         };
         
@@ -34,38 +34,42 @@
             return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         }
         
-        function fnSetLoginBehavior(arg) {
-            var errorText = document.getElementById("loginErrorText");
-            if (errorText.classList.contains('lbl-login-hidden'))
+        function fnSetNewAccountBehavior(arg) {
+            var errorText = document.getElementById("accountErrorText");
+            if (errorText.classList.contains('lbl-create-account-hidden'))
             {
                 errorText.innerHTML = arg;
-                errorText.classList.remove('lbl-login-hidden');
-                errorText.classList.add('lbl-login-visible');
+                errorText.classList.remove('lbl-create-account-hidden');
+                errorText.classList.add('lbl-create-account-visible');
             }
         }
     </script>
     
     <body class="login-body">
-        <div class="login-form-container">
-            <form action="login.php" method="post">
-                <h1 class="col-md-12 text-center h1-login">HARP</h1>
-                <h4 class="col-md-12 text-center h4-login">Home Automation: Raspberry Pi</h4>
-                <label id="loginErrorText" class="lbl-login-hidden"></label>
+        <div class="create-account-form-container">
+            <form action="createAccount.php" method="get">
+                <h1 class="text-center h1-main-header">New Account</h1>
+                <?php
+                    if (!isset($_SESSION['createMsg'])) {
+                        echo '<label id="accountErrorText" class="lbl-create-account-hidden"></label>';
+                    } else { 
+                        echo '<label id="accountErrorText" class="lbl-create-account-visible">' . $_SESSION['createMsg'] . '</label>';
+                    }
+                ?>
                 <div class="col-md-12">
                     <i class="fa fa-user fa-login"></i>
                     <input type="text" placeholder="Username" class="input-login" required name="uname">
                 </div>
                 <div class="col-md-12">
                     <i class="fa fa-lock fa-login"></i>
-                    <input type="text" placeholder="Password" class="input-login" required name="passw">
+                    <input type="password" placeholder="Password" class="input-login" required name="passw1">
+                </div>
+                <div class="col-md-12">
+                    <i class="fa fa-lock fa-login"></i>
+                    <input type="password" placeholder="Confirm Password" class="input-login" required name="passw2">
                 </div>
                 <div class="btn-login-float">
-                    <button class="btn-login" type="submit">Login</button>
-                </div>
-            </form>
-            <form action="create-account.php" method="post">
-                <div class="btn-login-float">
-                    <button class="btn-login" type="submit">Create Account</button>
+                    <button class="btn-login" type="submit">Create</button>
                 </div>
             </form>
         </div>

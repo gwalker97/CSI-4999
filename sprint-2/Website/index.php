@@ -6,6 +6,7 @@
         die();
     } else { 
 ?>
+
         <!DOCTYPE html>
         <html>
             <head>
@@ -86,21 +87,25 @@
             
                         $count = mysqli_num_rows($result);
                     ?>
-
                     <div>
                         <h1 class="text-center h1-main-page"><?php echo $hName; ?></h1>
+                        <button class="fa fa-sign-out-alt btn-sign-out" onclick="phpLogout()"></button>
+                        <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='/house-settings.html?house-id=1'"></button>
                     </div>
                     <div class="div-devices">
-                        <h4 class="h4-devices">New Appliance</h4>
-                        <button class="btn-new-component" onclick="window.location.href='/new-component.html?house-id=1'">+</button>
-                        <select class="selects">
-                            <option value="volvo">All Devices</option>
-                            <option value="saab">Lights</option>
-                            <option value="mercedes">Doors</option>
-                            <option value="audi">Fans</option>
-                        </select>
-                        <select id="roomList" class="selects">
-                            <?php
+                        <div style="display: inline-block">
+                            <h4 class="h4-devices">New Appliance</h4>
+                            <button class="btn-new-component" onclick="window.location.href='/new-component.html?house-id=1'">+</button>
+                        </div>
+                        <div style="display: inline-block">
+                            <select class="selects">
+                                <option value="volvo">All Devices</option>
+                                <option value="saab">Lights</option>
+                                <option value="mercedes">Doors</option>
+                                <option value="audi">Fans</option>
+                            </select>
+                            <select id="roomList" class="selects">
+                                <?php
                                 $sql2 = "select * from Room where House_ID='$hID'";
                                 $result2 = mysqli_query($conn,$sql2);
                                 
@@ -111,10 +116,10 @@
                                     echo '<option value="' . $rID . '">' . $rN . '</option>';
                                 }
                             ?>
-                        </select>
-                        <button class="fa fa-sign-out-alt btn-sign-out" onclick="phpLogout()"></button>
-                        <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='/house-settings.html?house-id=1'"></button>
+                            </select>
+                        </div>
                     </div>
+
                     <?php
                         $sql3 = "SELECT Addon.Addon_Name, Addon.Addon_Description, Addon.Addon_ID, A.Room_Name, Addon.Addon_State 
                                     FROM Addon 
@@ -129,34 +134,24 @@
                             $aID = $row3['Addon_ID'];
                             $rN = $row3['Room_Name'];
                             $aS = $row3['Addon_State'];
+                            echo '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="component-card">
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                            <p class="p-component-main">' . $aN . '</p>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                            <button class="btn-component-switch btn-off" id="b' . $aID . '" onclick="fnSwitchClick(this.id)">Off</button>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                            <p class="p-component-label"><b>Room:</b> ' . $rN . '</p>
+                                            <p class="p-component-label"><b>Description:</b> ' . $aD . '</p>
 
-                            if ($i == -1) {
-                                echo '<div class="col-md-12 component-card-div">';
-                                $i = 0;
-                            }
-
-                            $i++;
-                            echo '<div class="component-card col-md-6">
-                                    <div class="col-md-8">
-                                        <p class="p-component-main">' . $aN . '</p>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <button class="btn-component-switch btn-off" id="b' . $aID . '" onclick="fnSwitchClick(this.id)">Off</button>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <p class="p-component-label">Room: ' . $rN . '</p>
-                                        <p class="p-component-label">Description: ' . $aD . '</p>
-
-                                    </div>
-                                    <div class="col-md-4">
-                                        <button class="btn-component-switch fa fa-cog" id="c' . $aID . '" onclick="fnComponentSettingsRedirect(this.id)"></button>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                            <button class="btn-component-switch fa fa-cog" id="c' . $aID . '" onclick="fnComponentSettingsRedirect(this.id)"></button>
+                                        </div>
                                     </div>
                                   </div>';
-                            
-                            if ($i == 2) {
-                                echo '</div>';
-                                $i = -1;
-                            }
                         }
                     ?>
                 </div>
