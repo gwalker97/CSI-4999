@@ -2,7 +2,7 @@
 
 import threading, subprocess, pickle
 import mysql.connector
-from gpiozero import LED
+#from gpiozero import LED
 from mysql.connector import MySQLConnection, Error
 
 #import RPi.GPIO as GPIO
@@ -11,7 +11,8 @@ import time
 hostname = '127.0.0.1'
 username = 'root'
 password = 'root'
-dbname = 'python'
+dbname = 'SeniorProject'
+dbtable = 'Addon'
 count = 0
 #this object will store each appliance? 
 class appliance(object):
@@ -31,12 +32,12 @@ def doQuery( conn ):
 	global count
 	cur = conn.cursor(buffered=True)
 	conn.commit()
-	cur.execute( "SELECT id, appname, pin, flag FROM test WHERE EXISTS (Select table_schema,table_name,update_time FROM information_schema.tables WHERE update_time > (NOW() - INTERVAL .3 SECOND) AND table_schema = 'python' AND table_name='test')");
+	cur.execute( "SELECT id, appname, pin, flag FROM test WHERE EXISTS (Select table_schema,table_name,update_time FROM information_schema.tables WHERE update_time > (NOW() - INTERVAL .15 SECOND) AND table_schema = '%s' AND table_name='%s')" %(dbname, dbtable));
 	if cur.rowcount > 0:
 		count = count + 1
 		print "%s ========================================" %(count)
-		for id, appname, pin, flag  in cur.fetchall() :
-			parseAppliance(id, appname, pin, flag)
+		for Addon_ID, Addon_Name, Addon_Pin, Addon_State in cur.fetchall() :
+			parseAppliance(Addon_ID, Addon_Name, Addon_Pin, Addon_State)
 
 
 #this method will pull from the database every half second and update the GPIO pins
@@ -59,7 +60,7 @@ def parseAppliance(id, name, pin, state):
 	
 	#Stream of table in database as its refreshed
 	print "Flag of appliance %s using PIN %s is %s." %(name, pin, state)
-	GPIO(pin, state)
+	#GPIO(pin, state)
 
 
 
@@ -74,17 +75,18 @@ def MySQLConnect():
 
 #Sends messages to the GPIO Pins
 def GPIO(pinNum, On_Off):
-	try: 
-		led = LED(pinNum)
+	print "blahj"
+	#try: 
+		#led = LED(pinNum)
 		#This statement handles the state which the LED is on
 		#Right now the inverse is used to turn the light off.
-		if On_Off == 1:
-			led.on()
-		else:
-			led.off()
-		return "Pin %s has is now %s!" %(pin, On_Off)
-	except:	
-		print "Blah"
+		#if On_Off == 1:
+			#led.on()
+		#else:
+			#led.off()
+		#return "Pin %s has is now %s!" %(pin, On_Off)
+	#except:	
+		#print "Blah"
 
 
 if __name__ =='__main__':
