@@ -1,40 +1,83 @@
 <?php
-   require('config.php');
-
-	if($_SERVER["REQUEST_METHOD"] == "POST") {
-
-		$uname = mysqli_real_escape_string($conn,$_POST['uname']);
-		$pass = mysqli_real_escape_string($conn,$_POST['passw']); 
-
-		$sql = "select * from User where Username='$uname' and Password='$pass'";
-		$result = mysqli_query($conn,$sql);
-
-		$row = mysqli_fetch_array($result,MYSQLI_ASSOC);
-
-		$count = mysqli_num_rows($result);
-
-		if($count == 1) {
-
-			$_SESSION['user'] = $row['Username'];
-			$_SESSION['pass'] = $row['Password'];
-            $_SESSION['admin'] = $row['Admin'];
-            $_SESSION['uID'] = $row['User_ID'];
-			$_SESSION['guest'] = false;
-            
-            $id = $row['User_ID'];
-            $sql2 = "select * from House_Assignment where Assign_User_ID = '$id'";
-            $result2 = mysqli_query($conn,$sql2);
-            $row2 = mysqli_fetch_array($result2,MYSQLI_ASSOC);
-            
-            $_SESSION['homes'] = $row2;
-            $_SESSION['home'] = $row2['Assign_House_ID'];
-            
-            header('Location: index.php');
-
-		} else {
-            header('Location: login.html');
-        }
-	} else {
-        header('Location: login.html');
-    }
+    require('config.php');
 ?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HARP Login</title>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+        <link href="CSS/main.css" type="text/css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    
+    <script>
+        window.onload = function(){
+            var loginBehavior = getParameterByName("loginBehavior");
+            
+            if (loginBehavior == "incorrect")
+            {
+                fnSetLoginBehavior("Username or password is incorrect.")
+            }
+            else if (loginBehavior == "notExist")
+            {
+                fnSetLoginBehavior("Username does not exist.");
+            }
+            else if (loginBehavior == "newAccount")
+            {
+                fnSetLoginBehavior("Your account has been created!<br />Please login.");
+            }
+        };
+        
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+        
+        function fnSetLoginBehavior(arg) {
+            var errorText = document.getElementById("loginErrorText");
+            if (errorText.classList.contains('lbl-login-hidden'))
+            {
+                errorText.innerHTML = arg;
+                errorText.classList.remove('lbl-login-hidden');
+                errorText.classList.add('lbl-login-visible');
+            }
+        }
+    </script>
+    
+    <body class="login-body">
+        <div class="login-form-container">
+            <form action="loginScript.php" method="post">
+                <h1 class="col-md-12 text-center h1-login">HARP</h1>
+                <h4 class="col-md-12 text-center h4-login">Home Automation: Raspberry Pi</h4>
+                <?php
+                    if (!isset($_SESSION['loginMsg'])) {
+                        echo '<label id="loginErrorText" class="lbl-login-hidden"></label>';
+                    } else { 
+                        echo '<label id="loginErrorText" class="lbl-login-visible">' . $_SESSION['loginMsg'] . '</label>';
+                        unset($_SESSION['loginMsg']);
+                    }
+                ?>
+                <div class="col-md-12">
+                    <i class="fa fa-user fa-login"></i>
+                    <input type="text" placeholder="Username" class="input-login" required name="uname">
+                </div>
+                <div class="col-md-12">
+                    <i class="fa fa-lock fa-login"></i>
+                    <input type="text" placeholder="Password" class="input-login" required name="passw">
+                </div>
+                <div class="btn-login-float">
+                    <button class="btn-login" type="submit">Login</button>
+                </div>
+            </form>
+            <form action="create-account.php" method="post">
+                <div class="btn-login-float">
+                    <button class="btn-login" type="submit">Create Account</button>
+                </div>
+            </form>
+        </div>
+    </body>    
+</html>
