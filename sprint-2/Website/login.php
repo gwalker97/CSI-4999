@@ -67,7 +67,7 @@
                 </div>
                 <div class="col-md-12">
                     <i class="fa fa-lock fa-login"></i>
-                    <input type="text" placeholder="Password" class="input-login" required name="passw">
+                    <input type="password" placeholder="Password" class="input-login" required name="passw">
                 </div>
                 <div class="btn-login-float">
                     <button class="btn-login" type="submit">Login</button>
