@@ -50,7 +50,7 @@
     
     <body class="login-body">
         <div class="create-account-form-container">
-            <form action="createAccount.php" method="post">
+            <form action="createAccountScript.php" method="post">
                 <h1 class="text-center h1-main-header">New Account</h1>
                 <?php
                     if (!isset($_SESSION['createMsg'])) {
