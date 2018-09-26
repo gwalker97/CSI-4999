@@ -2,7 +2,7 @@
     require('config.php');
     
     if($_SESSION["guest"] == true) {
-        header("Location: login.html");
+        header("Location: login.php");
         die();
     } else { 
 ?>
@@ -88,6 +88,14 @@
                         $count = mysqli_num_rows($result);
                     ?>
                     <div>
+                        <?php
+                            if (!isset($_SESSION['indexMsg'])) {
+                                echo '<center><label id="accountErrorText" class="lbl-create-account-hidden"></label></center>';
+                            } else { 
+                                echo '<center><label id="accountErrorText" class="lbl-create-account-visible">' . $_SESSION['indexMsg'] . '</label></center>';
+                                unset($_SESSION['indexMsg']);
+                            }
+                        ?>
                         <h1 class="text-center h1-main-page"><?php echo $hName; ?></h1>
                         <button class="fa fa-sign-out-alt btn-sign-out" onclick="phpLogout()"></button>
                         <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='/house-settings.html?house-id=1'"></button>
