@@ -1,3 +1,6 @@
+<?php
+    require('config.php');
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -47,13 +50,14 @@
     
     <body class="login-body">
         <div class="create-account-form-container">
-            <form action="createAccount.php" method="get">
+            <form action="createAccount.php" method="post">
                 <h1 class="text-center h1-main-header">New Account</h1>
                 <?php
                     if (!isset($_SESSION['createMsg'])) {
                         echo '<label id="accountErrorText" class="lbl-create-account-hidden"></label>';
                     } else { 
                         echo '<label id="accountErrorText" class="lbl-create-account-visible">' . $_SESSION['createMsg'] . '</label>';
+                        unset($_SESSION['createMsg']);
                     }
                 ?>
                 <div class="col-md-12">
