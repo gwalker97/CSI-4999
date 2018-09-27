@@ -1,3 +1,16 @@
+<!--
+
+I did not write all of this code, please see create-account.html for full author history.
+
+I added lines:
+14-17
+68-75
+
+I modified lines:
+82
+86
+
+-->
 <?php
     require('config.php');
 ?>

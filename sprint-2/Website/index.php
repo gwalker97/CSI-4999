@@ -1,3 +1,26 @@
+<!--
+
+I did not write all of this code, please see index.html for full author history.
+
+I added lines:
+24-31
+95-98
+103-112
+114-120
+139-149
+154-167
+186-187
+191-192
+
+I modified lines:
+122
+147
+171
+174
+177
+178
+
+-->
 <?php
     require('config.php');
     
@@ -71,7 +94,7 @@
                 
                 function phpLogout() {
                     if(confirm('Are you sure you want to log out? Logging out will automatically turn off all appliances.'))
-                        document.location.href = 'logout.php';
+                        document.location.href = 'logoutScript.php';
                 }
             </script>
 
