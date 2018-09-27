@@ -1,0 +1,59 @@
+config.php
+    session_start()    //start session, if there isnt one?
+    $conn              //not in $_SESSION, but a file with   
+                       //require('config.php') will be able to 
+                       //use this variable.
+                       //database connection info
+    $_SESSION["guest"] //TRUE or FALSE
+    
+index.php
+    $conn
+    $_SESSION["guest"]
+    $_SESSION['loginMsg'] //login page msg, STRING
+    $_SESSION['home']     //INT (id)
+    $_SESSION['indexMsg'] //index page msg, STRING
+    
+login.php
+    $conn
+    $_SESSION['guest']
+    $_SESSION['indexMsg']
+    $_SESSION['loginMsg']
+    
+loginScript.php
+    $conn
+    $_SERVER["REQUEST_METHOD"]//not session, from form
+    $_POST['uname']           //not session, from form, STRING
+    $_POST['passw']           //not session, from form, STRING
+    $_SESSION['user']         //username, STRING 
+    $_SESSION['pass']         //password, STRING, delete?
+    $_SESSION['admin']        //adminStatus, 0 or 1
+    $_SESSION['uID']          //userID, INT
+    $_SESSION['guest']
+    $_SESSION['homes']        //houseIDs for userID, INT ARRAY
+    $_SESSION['home']         //houseID for userID, INT
+    $_SESSION['loginMsg']
+    
+create-account.php
+    $conn
+    $_SESSION['createMsg']    //createAcc page msg, STRING
+    
+createAccountScript.php
+    $conn
+    $_SERVER["REQUEST_METHOD"]
+    $_POST['uname']
+    $_POST['passw1']
+    $_POST['passw2']
+    $_SESSION['user']
+    $_SESSION['pass']
+    $_SESSION['admin']
+    $_SESSION['uID']
+    $_SESSION['guest']
+    $_SESSION['home']
+    $_SESSION['indexMsg']
+    $_SESSION['createMsg']
+    
+logoutScript.php
+    $conn
+    session_destroy()  //delete session, everything unset
+                       //new session created when a page is //reloaded tho.
+    
