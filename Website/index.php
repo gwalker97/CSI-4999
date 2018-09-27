@@ -129,12 +129,6 @@ I modified lines:
                             <button class="btn-new-component" onclick="window.location.href='/new-component.html?house-id=1'">+</button>
                         </div>
                         <div style="display: inline-block">
-                            <select class="selects">
-                                <option value="volvo">All Devices</option>
-                                <option value="saab">Lights</option>
-                                <option value="mercedes">Doors</option>
-                                <option value="audi">Fans</option>
-                            </select>
                             <select id="roomList" class="selects">
                                 <?php
                                 $sql2 = "select * from Room where House_ID='$hID'";
