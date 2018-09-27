@@ -13,12 +13,12 @@ I (Alex Manaila) did not write all of this code, please see login.html for full 
 
 I added lines:
 1-9
-70-77
+76-83
 
 I modified lines:
-72
-80
-84
+78
+86
+90
 
 -->
 <!DOCTYPE html>
