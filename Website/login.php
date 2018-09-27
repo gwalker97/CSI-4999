@@ -1,3 +1,17 @@
+<!--
+
+I did not write all of this code, please see login.html for full author history.
+
+I added lines:
+15-17
+70-77
+
+I modified lines:
+72
+80
+84
+
+-->
 <?php
     require('config.php');
 ?>
