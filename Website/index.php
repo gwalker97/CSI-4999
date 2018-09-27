@@ -1,9 +1,17 @@
+<?php
+    require('config.php');
+    
+    if($_SESSION["guest"] == true) {
+        header("Location: login.php");
+        die();
+    } else { 
+?>
 <!--
 
 I did not write all of this code, please see index.html for full author history.
 
 I added lines:
-24-31
+1-8
 95-98
 103-112
 114-120
@@ -21,14 +29,6 @@ I modified lines:
 178
 
 -->
-<?php
-    require('config.php');
-    
-    if($_SESSION["guest"] == true) {
-        header("Location: login.php");
-        die();
-    } else { 
-?>
 
         <!DOCTYPE html>
         <html>

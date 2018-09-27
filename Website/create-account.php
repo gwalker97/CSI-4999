@@ -1,9 +1,13 @@
+<?php
+    require('config.php');
+?>
+<!DOCTYPE html>
 <!--
 
 I did not write all of this code, please see create-account.html for full author history.
 
 I added lines:
-14-17
+1-4
 68-75
 
 I modified lines:
@@ -11,10 +15,6 @@ I modified lines:
 86
 
 -->
-<?php
-    require('config.php');
-?>
-<!DOCTYPE html>
 <html>
     <head>
         <title>HARP Login</title>
