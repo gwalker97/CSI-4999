@@ -1,12 +1,18 @@
 <?php
     require('config.php');
+
+    if($_SESSION["guest"] == false) {
+        $_SESSION['indexMsg'] = "You are already logged in.";
+        header("Location: index.php");
+        die();
+    }
 ?>
 <!--
 
-I did not write all of this code, please see login.html for full author history.
+I (Alex Manaila) did not write all of this code, please see login.html for full author history.
 
 I added lines:
-1-3
+1-9
 70-77
 
 I modified lines:
