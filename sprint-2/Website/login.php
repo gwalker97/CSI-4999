@@ -1,9 +1,12 @@
+<?php
+    require('config.php');
+?>
 <!--
 
 I did not write all of this code, please see login.html for full author history.
 
 I added lines:
-15-17
+1-3
 70-77
 
 I modified lines:
@@ -12,9 +15,6 @@ I modified lines:
 84
 
 -->
-<?php
-    require('config.php');
-?>
 <!DOCTYPE html>
 <html>
     <head>
