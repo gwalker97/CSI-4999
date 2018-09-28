@@ -83,8 +83,21 @@ I modified lines:
                 }
             }
         }
+        
+        function fnComponentSettingsRedirect(clicked_id) {
+            window.location.href='/component-settings.html?component-id=' + clicked_id
+        }
 
-<<<<<<< HEAD
+        function fnReturnToLogin() {
+            window.location.href='/login.html';
+        }
+
+        function phpLogout() {
+            if(confirm('Are you sure you want to log out? Logging out will automatically turn off all appliances.'))
+                document.location.href = 'logoutScript.php';
+        }
+    </script>
+
             <body class="login-body">
                 <div class="main-page-container">
                     <?php
@@ -131,74 +144,6 @@ I modified lines:
                             </select>
                         </div>
                     </div>
-=======
-        function fnComponentSettingsRedirect(clicked_id) {
-            window.location.href='/component-settings.html?component-id=' + clicked_id
-        }
-
-        function fnReturnToLogin() {
-            window.location.href='/login.html';
-        }
-
-        function phpLogout() {
-            if(confirm('Are you sure you want to log out? Logging out will automatically turn off all appliances.'))
-                document.location.href = 'logoutScript.php';
-        }
-    </script>
-
-    <body class="login-body">
-        <div class="main-page-container">
-            <?php
-                $hID = $_SESSION['home'];
-                $sql = "select * from House where House_ID='$hID'";
-                $result = mysqli_query($conn,$sql);
-                $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
-
-                $hName = $row['House_Name'];
->>>>>>> 7909f21ead6ca3a7dfca828bea8cfc56d1ca4517
-
-                $count = mysqli_num_rows($result);
-            ?>
-            <div>
-                <?php
-                    if (!isset($_SESSION['indexMsg'])) {
-                        echo '<center><label id="accountErrorText" class="lbl-create-account-hidden"></label></center>';
-                    } else { 
-                        echo '<center><label id="accountErrorText" class="lbl-create-account-visible">' . $_SESSION['indexMsg'] . '</label></center>';
-                        unset($_SESSION['indexMsg']);
-                    }
-                ?>
-                <h1 class="text-center h1-main-page"><?php echo $hName; ?></h1>
-                <button class="fa fa-sign-out-alt btn-sign-out" onclick="phpLogout()"></button>
-                <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='/house-settings.html?house-id=1'"></button>
-            </div>
-            <div class="div-devices">
-                <div style="display: inline-block">
-                    <h4 class="h4-devices">New Appliance</h4>
-                    <button class="btn-new-component" onclick="window.location.href='/new-component.html?house-id=1'">+</button>
-                </div>
-                <div style="display: inline-block">
-                    <select class="selects">
-                        <option value="volvo">All Devices</option>
-                        <option value="saab">Lights</option>
-                        <option value="mercedes">Doors</option>
-                        <option value="audi">Fans</option>
-                    </select>
-                    <select id="roomList" class="selects">
-                        <?php
-                        $sql2 = "select * from Room where House_ID='$hID'";
-                        $result2 = mysqli_query($conn,$sql2);
-
-                        echo '<option value="0">All Rooms</option>';
-                        while($row2 = mysqli_fetch_array($result2,MYSQLI_ASSOC)) {
-                            $rID = $row2['Room_ID'];
-                            $rN = $row2['Room_Name'];
-                            echo '<option value="' . $rID . '">' . $rN . '</option>';
-                        }
-                    ?>
-                    </select>
-                </div>
-            </div>
 
             <?php
                 $sql3 = "SELECT Addon.Addon_Name, Addon.Addon_Description, Addon.Addon_ID, A.Room_Name, Addon.Addon_State 
