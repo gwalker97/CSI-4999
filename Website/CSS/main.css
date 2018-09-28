@@ -200,9 +200,9 @@ h4 {
     width: 62%;
     min-width: 360px;
     max-width: 1100px;
-    min-height: 800px;
     border-radius: 2px;
     box-shadow: 7px 8px 10px 0px #8888885e;
+    overflow: auto;
 }
 
 .div-devices {
