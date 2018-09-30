@@ -7,33 +7,12 @@
         die();
     }
 ?>
-<!--
-
-I (Alex Manaila) did not write all of this code, please see index.html for full author history.
-
-I added lines:
-1-9
-95-98
-103-112
-114-120
-139-149
-154-167
-186-187
-191-192
-
-I modified lines:
-122
-147
-171
-174
-177
-178
-
--->
 <!DOCTYPE html>
 <html>
     <head>
         <title>HARP</title>
+	<!-- AJAX & jQuery CDN, must go before Bootstrap -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
@@ -66,9 +45,23 @@ I modified lines:
                 if (change.innerHTML == "On")
                 {
                     change.innerHTML = "Off";
+
+			//Sends the button ID and (minus first character) and 0 to PHP
+			$.post("saveDatabase.php",
+			    {
+				id: change.id.substring(1),
+				state: '0',
+			    });
                 }
                 else {
                     change.innerHTML = "On";
+
+			//Sends the button ID (minus first character) and 1 to PHP
+			$.post("saveDatabase.php",
+			    {
+				id: change.id.substring(1),
+				state: '1',
+			    });
                 }
 
                 if (change.classList.contains('btn-on'))
@@ -96,6 +89,7 @@ I modified lines:
             if(confirm('Are you sure you want to log out? Logging out will automatically turn off all appliances.'))
                 document.location.href = 'logoutScript.php';
         }
+
     </script>
 
             <body class="login-body">
@@ -159,13 +153,21 @@ I modified lines:
                     $aID = $row3['Addon_ID'];
                     $rN = $row3['Room_Name'];
                     $aS = $row3['Addon_State'];
+			//Addon_State is reporting as 1 everytime, why?
+			if ($aS = '1') {
+	    			$buttonClass = "btn-component-switch btn-on";
+				$buttonText = "On";
+			} else{
+	    			$buttonClass = "btn-component-switch btn-off";
+				$buttonText = "Off";
+			}
                     echo '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="component-card">
                                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                                     <p class="p-component-main">' . $aN . '</p>
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                    <button class="btn-component-switch btn-off" id="b' . $aID . '" onclick="fnSwitchClick(this.id)">Off</button>
+                                    <button class="'. $buttonClass . '" id="b' . $aID . '" onclick="fnSwitchClick(this.id)">'. $buttonText . '</button>
                                 </div>
                                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                                     <p class="p-component-label"><b>Room:</b> ' . $rN . '</p>
