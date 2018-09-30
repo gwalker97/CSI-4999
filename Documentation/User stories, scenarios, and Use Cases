@@ -1,0 +1,5 @@
+Add an appliance
+  Customers want the ability of adding new lights or automated appliances to the website to be able to control remotely. 
+    Customers navigate to website and click on “New Component”
+    Customers type in name of new device and have the ability to set the location
+    Customers click on submit to add the new device
