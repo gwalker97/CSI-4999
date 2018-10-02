@@ -78,7 +78,7 @@
         }
         
         function fnComponentSettingsRedirect(clicked_id) {
-            window.location.href='/component-settings.html?component-id=' + clicked_id
+            window.location.href='/component-settings.php?component-id=' + clicked_id
         }
 
         function fnReturnToLogin() {
