@@ -153,8 +153,8 @@
                     $aID = $row3['Addon_ID'];
                     $rN = $row3['Room_Name'];
                     $aS = $row3['Addon_State'];
-			//Addon_State is reporting as 1 everytime, why?
-			if ($aS = '1') {
+			//Sets variables based on Addon_State
+			if ($aS == '1') {
 	    			$buttonClass = "btn-component-switch btn-on";
 				$buttonText = "On";
 			} else{
