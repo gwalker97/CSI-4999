@@ -67,4 +67,13 @@ def GPIO(pinNum, On_Off):
 
 
 if __name__ =='__main__':
+	#gpio.setmode(gpio.BCM)
+	#gpio.setwarnings(False)
+	#gpio.setup(pinNum, gpio.OUT)
+	#pwm.gpio.PWM(27, 1000)
+	#count = 0
+	#while 1:
+		#pwm.ChangeDutyCycle(.1 * count)
+		#sleep(1)
+		#count = count + 1
 	MySQLConnect()
