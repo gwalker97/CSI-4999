@@ -29,7 +29,7 @@ def doQuery( conn ):
 				#GPIO(Addon_Pin, Addon_State, Addon_Dim, Addon_dimVal)
 		except:
 			#There was an error, ignore it.
-
+			print "hello"
 
 #this method will pull from the database every half second and update the GPIO pins
 def dbThread( conn ):
@@ -47,14 +47,13 @@ def MySQLConnect():
 	t.start()
 
 #Sends messages to the GPIO Pins
-#def GPIO(pinNum, On_Off, Dim, dimVal): #Use this header if adding Dim.
+#Use this header if adding Dim.
 def GPIO(pinNum, On_Off):
 	#Setting up the GPIO Pin that is being used
 	gpio.setmode(gpio.BCM)
 	gpio.setwarnings(False)
 	gpio.setup(pinNum, gpio.OUT)
 	#Setting up the current pin for dimming
-	#if Dim == True:
 		#pwm=gpio.PWM(pinNum, 1000)
 	#Right now the inverse is used to turn the light off.
 	if On_Off == 1 and gpio.input(pinNum) < 1 :
@@ -63,17 +62,35 @@ def GPIO(pinNum, On_Off):
 		gpio.output(pinNum, gpio.LOW)
 	elif On_Off != 1 and On_Off != 0:
 		#At this point the value might be used for dimming
+		#pwm = gpio.PWM(pinNum, gpio.OUT)
 		#pwm.ChangeDutyCycle(dimVal)
-
+		
+		print "sit"
 
 if __name__ =='__main__':
 	#gpio.setmode(gpio.BCM)
 	#gpio.setwarnings(False)
-	#gpio.setup(pinNum, gpio.OUT)
-	#pwm.gpio.PWM(27, 1000)
+	#gpio.setup(17, gpio.OUT)
+	#gpio.setup(27, gpio.OUT)
+	#gpio.setup(22, gpio.OUT)
+	#gpio.setup(23, gpio.OUT)
+	#pwm1 = gpio.PWM(17, 1000)
+	#pwm2 = gpio.PWM(27, 1000)
+	#pwm3 = gpio.PWM(23, 1000)
+	#pwm4 = gpio.PWM(22, 1000)
+	#pwm1.start(0)
+	#pwm2.start(100)
+	#pwm3.start(0)
+	#pwm4.start(100)
 	#count = 0
+	#frac = 20
 	#while 1:
-		#pwm.ChangeDutyCycle(.1 * count)
-		#sleep(1)
-		#count = count + 1
+	#	if count > 5:
+	#		exit(0)
+	#	pwm1.ChangeDutyCycle(0 + (count * frac))
+	#	pwm2.ChangeDutyCycle(100 - (frac * count))
+	#	pwm3.ChangeDutyCycle(0 + (count * frac))
+	#	pwm4.ChangeDutyCycle(100 - (frac * count))
+	#	time.sleep(3)
+	#	count += 1
 	MySQLConnect()
