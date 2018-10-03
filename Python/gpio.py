@@ -62,9 +62,13 @@ def GPIO(id, pinNum, On_Off):
 	elif On_Off != 1 and On_Off != 0:
 		#At this point the value might be used for dimming (Assume 0 < x < 1)
 		#global dLights
-		#pwm = gpio.PWM(pinNum, gpio.OUT)
-		#pwm.ChangeDutyCycle(On_Off * 100)
-		#dLights[id] = pwm
+		#if dLights[id]:
+			#pwm = dLights[id]
+			#pwm.ChangeDutyCycle(On_Off * 100)
+		#else:
+			#pwm = gpio.PWM(pinNum, gpio.OUT)
+			#pwm.ChangeDutyCycle(On_Off * 100)
+			#dLights[id] = pwm
 
 if __name__ =='__main__':
 	#gpio.setmode(gpio.BCM)
