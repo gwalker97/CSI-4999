@@ -76,9 +76,15 @@
 	function fnReturnToLogin() {
             window.location.href='/login.php';
         }
+        
+        function fnReturnHome() {
+            if(confirm('Are you sure? Any changes you made will not be saved.'))
+                document.location.href = 'index.php';
+        }
     </script>
     
     <body class="login-body">
+        <button class="btn-back" onclick="fnReturnHome()"><i class="fa fa-arrow-left"></i> Home</button>
         <div class="component-settings-form-container">
 	                <?php
                         $hID = $_SESSION['home'];

@@ -89,6 +89,20 @@
             if(confirm('Are you sure you want to log out? Logging out will automatically turn off all appliances.'))
                 document.location.href = 'logoutScript.php';
         }
+        
+        $(function() {
+        $('#roomList').change(function(){
+            var room = $(this).val();
+            room = room.replace(/\s/g,'');
+            if($(this).val() == "All Rooms") {
+                $('.rooms').show();
+            }
+            else {
+                $('.rooms').hide();
+                $('#' + room).show();
+            }
+        });
+    });
 
     </script>
 
@@ -128,11 +142,11 @@
                                 $sql2 = "select * from Room where House_ID='$hID'";
                                 $result2 = mysqli_query($conn,$sql2);
                                 
-                                echo '<option value="0">All Rooms</option>';
+                                echo '<option value="All Rooms">All Rooms</option>';
                                 while($row2 = mysqli_fetch_array($result2,MYSQLI_ASSOC)) {
                                     $rID = $row2['Room_ID'];
                                     $rN = $row2['Room_Name'];
-                                    echo '<option value="' . $rID . '">' . $rN . '</option>';
+                                    echo '<option value="' . $rN . '">' . $rN . '</option>';
                                 }
                             ?>
                             </select>
@@ -153,6 +167,7 @@
                     $aID = $row3['Addon_ID'];
                     $rN = $row3['Room_Name'];
                     $aS = $row3['Addon_State'];
+                    $strippedrN=preg_replace('/\s+/', '', $rN);
 			//Sets variables based on Addon_State
 			if ($aS == '1') {
 	    			$buttonClass = "btn-component-switch btn-on";
@@ -161,7 +176,7 @@
 	    			$buttonClass = "btn-component-switch btn-off";
 				$buttonText = "Off";
 			}
-                    echo '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    echo '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 rooms" id="' . $strippedrN . '">
                             <div class="component-card">
                                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                                     <p class="p-component-main">' . $aN . '</p>

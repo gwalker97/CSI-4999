@@ -391,3 +391,16 @@ h4 {
     width: 90%;
     margin-top: 10px;
 }
+
+.btn-back {
+    margin-top: 20px;
+    margin-left: 30px;
+    margin-bottom: -20px;
+    background-color: #c6e9ff;
+    border-radius: 2px;
+    padding: 5px;
+    width: 80px;
+    border: 1px solid black;
+    font-weight: bold;
+    height: 40px;
+}
