@@ -50,27 +50,61 @@
         <div class="component-settings-form-container">
             <form>
                 <h1 class="col-md-12 text-center h1-settings">House Configuration</h1>
-                <label id="houseErrorText" class="lbl-setup-house-hidden"></label>
+                <?php
+                    if (isset($_SESSION['home'])) {
+                        $hID = $_SESSION['home'];
+                        $sql = "select * from Room where House_ID='$hID'";
+                        $result = mysqli_query($conn,$sql);
+                        $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
+                        $count = mysqli_num_rows($result);
+
+                        $sql2 = "select * from House where House_ID='$hID'";
+                        $result2 = mysqli_query($conn,$sql2);
+                        $row2 = mysqli_fetch_array($result2,MYSQLI_ASSOC);
+                        
+                        if (isset($_SESSION['houseSetMsg'])) {
+                            echo '<label id="houseErrorText" class="lbl-setup-house-hidden">' . $_SESSION['houseSetMsg'] . '</label>';
+                            unset($_SESSION['houseSetMsg']);
+                        } else {
+                            echo '<label id="houseErrorText" class="lbl-setup-house-hidden"></label>';
+                        }
+                ?>
+                
                 <div class="col-md-12">
                     <i class="fa fa-home fa-login"></i>
-                    <input type="text" placeholder="House Name" class="input-login">
+                <?php
+                        if (isset($_SESSION['home'])) {
+                            echo '<input type="text" placeholder="' . $row2['House_Name'] . '" class="input-login">';
+                        } else {
+                            echo '<input type="text" placeholder="House Name" class="input-login">';
+                        }
+                    } else { $_SESSION['houseSetMsg'] = "You are not assigned to a house."; }
+                ?>
                 </div>
                 <?php
-                    $hID = $_SESSION['home'];
-                    $sql = "select * from Rooms where Username='$hID'";
-                    $result = mysqli_query($conn,$sql);
-                    $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
-                    $count = mysqli_num_rows($result);
+                    
                 
                     if ($count == 0) {
                         echo '<div class="col-md-12">
                                 <i class="fa fa-map-marker fa-login"></i>
                                 <input type="text" placeholder="Room Name" class="input-settings">
                                 <i class="fa fa-plus fa-settings-add-room"></i>
-                                <i class="fa fa-minus fa-settings-remove-room"></i>
                               </div>';
                     } else {
-                        
+                        echo '<div class="col-md-12">
+                                    <i class="fa fa-map-marker fa-login"></i>
+                                    <input type="text" placeholder="Room Name" class="input-settings">
+                                    <i class="fa fa-plus fa-settings-add-room"></i>
+                                  </div>';
+                        for ($i=1; $i < $count; $i++) {
+                            $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
+                            echo '<div class="col-md-12">
+                                    <i class="fa fa-map-marker fa-login"></i>
+                                    <input type="text" placeholder="Room Name" class="input-settings">
+                                    <i class="fa fa-plus fa-settings-add-room"></i>
+                                    <i class="fa fa-minus fa-settings-remove-room"></i>
+                                  </div>';
+                        }
                     }
                 ?>
                 <div class="col-md-12">
