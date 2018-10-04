@@ -26,7 +26,7 @@ I modified lines:
     </head>
     
     <script>
-        window.onload = function(){
+        /*window.onload = function(){
             var accountBehavior = getParameterByName("accountBehavior");
             
             if (accountBehavior == "alreadyExists")
@@ -41,7 +41,7 @@ I modified lines:
             {
                 fnSetNewAccountBehavior("Please enter an actual email address.");
             }
-        };
+        };*/
         
         function getParameterByName(name) {
             name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
