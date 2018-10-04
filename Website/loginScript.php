@@ -25,11 +25,13 @@
             $id = $row['User_ID'];
             $sql2 = "select * from House_Assignment where Assign_User_ID = '$id'";
             $result2 = mysqli_query($conn,$sql2);
-            $row2 = mysqli_fetch_array($result2,MYSQLI_ASSOC);
             
-            $_SESSION['homes'] = $row2;
-            $_SESSION['home'] = $row2['Assign_House_ID'];
-            
+            if (mysqli_num_rows($result2) != 0) {
+                
+                $row2 = mysqli_fetch_array($result2,MYSQLI_ASSOC);
+                $_SESSION['homes'] = $row2;
+                $_SESSION['home'] = $row2['Assign_House_ID'];
+            } else { $_SESSION['indexMsg'] = "You are not assigned to a house."; }
 		} else { $_SESSION['loginMsg'] = "Please re-enter your login info."; }
 	} else { $_SESSION['loginMsg'] = "Method was not POST."; }
 
