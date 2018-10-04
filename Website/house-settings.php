@@ -53,68 +53,66 @@
     </script>
     
     <body class="login-body">
-        <button class="btn-back" onclick="fnReturnHome()"><i class="fa fa-arrow-left"></i> Home</button>
         <div class="component-settings-form-container">
-            <form>
-                <h1 class="col-md-12 text-center h1-settings">House Configuration</h1>
-                <?php
-                    if (isset($_SESSION['home'])) {
-                        $hID = $_SESSION['home'];
-                        $sql = "select * from Room where House_ID='$hID'";
-                        $result = mysqli_query($conn,$sql);
-                        $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
-                        $count = mysqli_num_rows($result);
+            <button class="btn-back" onclick="fnReturnHome()"><i class="fa fa-arrow-left" style="font-size: 10px;"></i> <i class="fa fa-home"></i></button>
+            <h1 class="col-md-12 text-center h1-settings">House Configuration</h1>
+            <?php
+                if (isset($_SESSION['home'])) {
+                    $hID = $_SESSION['home'];
+                    $sql = "select * from Room where House_ID='$hID'";
+                    $result = mysqli_query($conn,$sql);
+                    $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
+                    $count = mysqli_num_rows($result);
 
-                        $sql2 = "select * from House where House_ID='$hID'";
-                        $result2 = mysqli_query($conn,$sql2);
-                        $row2 = mysqli_fetch_array($result2,MYSQLI_ASSOC);
-                        
-                        if (isset($_SESSION['houseSetMsg'])) {
-                            echo '<label id="houseErrorText" class="lbl-setup-house-visible">' . $_SESSION['houseSetMsg'] . '</label>';
-                            unset($_SESSION['houseSetMsg']);
-                        } else {
-                            echo '<label id="houseErrorText" class="lbl-setup-house-hidden"></label>';
-                        }
-                ?>
-                
-                <div class="col-md-12">
-                    <i class="fa fa-home fa-login"></i>
-                <?php
-                        echo '<input type="text" placeholder="House Name" value="' . $row2['House_Name'] . '" class="input-login">';
-                ?>
-                </div>
-                <?php
-                        if ($count == 0) {
+                    $sql2 = "select * from House where House_ID='$hID'";
+                    $result2 = mysqli_query($conn,$sql2);
+                    $row2 = mysqli_fetch_array($result2,MYSQLI_ASSOC);
+
+                    if (isset($_SESSION['houseSetMsg'])) {
+                        echo '<label id="houseErrorText" class="lbl-setup-house-visible">' . $_SESSION['houseSetMsg'] . '</label>';
+                        unset($_SESSION['houseSetMsg']);
+                    } else {
+                        echo '<label id="houseErrorText" class="lbl-setup-house-hidden"></label>';
+                    }
+            ?>
+
+            <div class="col-md-12">
+                <i class="fa fa-home fa-login"></i>
+            <?php
+                    echo '<input type="text" placeholder="House Name" value="' . $row2['House_Name'] . '" class="input-login">';
+            ?>
+            </div>
+            <?php
+                    if ($count == 0) {
+
+                        echo '<div class="col-md-12">
+                                <i class="fa fa-map-marker fa-login"></i>
+                                <input type="text" placeholder="Room Name" class="input-settings">
+                                <i class="fa fa-plus fa-settings-add-room"></i>
+                              </div>';
+                    } else {
+
+                        echo '<div class="col-md-12">
+                                    <i class="fa fa-map-marker fa-login"></i>
+                                    <input type="text" placeholder="Room Name" value="' . $row['Room_Name'] . '" class="input-settings">
+                                    <i class="fa fa-plus fa-settings-add-room"></i>
+                                  </div>';
+                        while ($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
 
                             echo '<div class="col-md-12">
                                     <i class="fa fa-map-marker fa-login"></i>
-                                    <input type="text" placeholder="Room Name" class="input-settings">
-                                    <i class="fa fa-plus fa-settings-add-room"></i>
+                                    <input type="text" placeholder="Room Name" value="' . $row['Room_Name'] . '" class="input-settings">
+                                    <i class="fa fa-minus fa-settings-remove-room"></i>
                                   </div>';
-                        } else {
-
-                            echo '<div class="col-md-12">
-                                        <i class="fa fa-map-marker fa-login"></i>
-                                        <input type="text" placeholder="Room Name" value="' . $row['Room_Name'] . '" class="input-settings">
-                                        <i class="fa fa-plus fa-settings-add-room"></i>
-                                      </div>';
-                            while ($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-
-                                echo '<div class="col-md-12">
-                                        <i class="fa fa-map-marker fa-login"></i>
-                                        <input type="text" placeholder="Room Name" value="' . $row['Room_Name'] . '" class="input-settings">
-                                        <i class="fa fa-minus fa-settings-remove-room"></i>
-                                      </div>';
-                            }
                         }
-                    } else { 
-                        echo '<label id="houseErrorText" class="lbl-setup-house-visible">You are not assigned to a house.</label>';
                     }
-                ?>
-                <div class="btn-login-float">
-                    <button formaction="submit" class="btn-save-house">Save</button>
-                </div>
-            </form>
+                } else { 
+                    echo '<label id="houseErrorText" class="lbl-setup-house-visible">You are not assigned to a house.</label>';
+                }
+            ?>
+            <div class="btn-login-float">
+                <button formaction="submit" class="btn-save-house">Save</button>
+            </div>
         </div>
     </body>    
 </html>
