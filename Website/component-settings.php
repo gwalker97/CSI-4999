@@ -90,8 +90,8 @@ var componentBehavior = getParameterByName("componentBehavior");
     </script>
     
     <body class="login-body">
-	<button class="btn-back" onclick="fnReturnHome()"><i class="fa fa-arrow-left"></i> Home</button>
         <div class="component-settings-form-container">
+            <button class="btn-back" onclick="fnReturnHome()"><i class="fa fa-arrow-left" style="font-size: 10px;"></i> <i class="fa fa-home"></i></button>
 	                <?php
                         $hID = $_SESSION['home'];
                         $sql = "select * from House where House_ID='$hID'";
