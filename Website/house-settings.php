@@ -55,7 +55,7 @@
     <body class="login-body">
         <div class="component-settings-form-container">
             <button class="btn-back" onclick="fnReturnHome()"><i class="fa fa-arrow-left" style="font-size: 10px;"></i> <i class="fa fa-home"></i></button>
-            <h1 class="col-md-12 text-center h1-settings">House Configuration</h1>
+            <h1 class="text-center h1-settings">House Configuration</h1>
             <?php
                 if (isset($_SESSION['home'])) {
                     $hID = $_SESSION['home'];
