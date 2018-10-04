@@ -74,6 +74,7 @@ var componentBehavior = getParameterByName("componentBehavior");
         }
 
 	//Update DB
+	f//Update DB
 	function saveComponent(){
 			
 		var urlArray = window.location.search.split('=');
@@ -84,7 +85,25 @@ var componentBehavior = getParameterByName("componentBehavior");
 				id: compId,
 				name: document.getElementById('AppName').value,
 				description: document.getElementById('AppDesc').value,
-			    });
+				roomid: document.getElementById("roomList").options[document.getElementById("roomList").selectedIndex].value,
+			    });	
+			document.location.href = 'index.php';	
+	}
+
+	//Update DB
+	function deleteComponent(){
+			
+		var urlArray = window.location.search.split('=');
+		var compId = urlArray[1].substring(1);
+			
+		var r = confirm("Do you want to delete " + document.getElementById('AppName').value + "?");
+		if (r == true) {
+		    $.post("deleteComponent.php",
+			    {
+				id: compId,
+			    });	
+			document.location.href = 'index.php';		
+		}		
 	}
 
     </script>
