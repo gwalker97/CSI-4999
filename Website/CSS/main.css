@@ -51,6 +51,8 @@ h4 {
 .h1-login {
     text-shadow: 2px 2px #4682b461;
     font-size: 80px;
+    margin-bottom: -15px;
+    margin-top: 0;
 }
 
 .h1-main-header {
@@ -107,7 +109,7 @@ h4 {
 .login-form-container {
     text-align: center;
     background-color: #ffffffe8;
-    margin: 8% auto;
+    margin: 4% auto;
     padding: 3%;
     width: 90%;
     max-width: 400px;
@@ -403,4 +405,8 @@ h4 {
     border: 1px solid black;
     font-weight: bold;
     height: 40px;
+}
+
+.harp-img {
+    width: 120px;
 }

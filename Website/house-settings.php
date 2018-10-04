@@ -15,6 +15,7 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
         <link href="CSS/main.css" type="text/css" rel="stylesheet">
+        <link rel="icon" type="image/png" href="Images/harp_icon.png">
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     
@@ -44,9 +45,15 @@
                 errorText.classList.add('lbl-setup-house-visible');
             }
         }
+        
+        function fnReturnHome() {
+            if(confirm('Are you sure? Any changes you made will not be saved.'))
+                document.location.href = 'index.php';
+        }
     </script>
     
     <body class="login-body">
+        <button class="btn-back" onclick="fnReturnHome()"><i class="fa fa-arrow-left"></i> Home</button>
         <div class="component-settings-form-container">
             <form>
                 <h1 class="col-md-12 text-center h1-settings">House Configuration</h1>
@@ -82,7 +89,11 @@
                 ?>
                 </div>
                 <?php
-                    
+                    $hID = $_SESSION['home'];
+                    $sql = "select * from Room where House_ID='$hID'";
+                    $result = mysqli_query($conn,$sql);
+                    $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
+                    $count = mysqli_num_rows($result);
                 
                     if ($count == 0) {
                         echo '<div class="col-md-12">

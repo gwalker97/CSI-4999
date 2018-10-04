@@ -6,6 +6,7 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
         <link href="CSS/main.css" type="text/css" rel="stylesheet">
+        <link rel="icon" type="image/png" href="Images/harp_icon.png">
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     
@@ -35,6 +36,11 @@
                 errorText.classList.add('lbl-new-component-visible');
             }
         }
+        
+        function fnReturnHome() {
+            if(confirm('Are you sure? Any changes you made will not be saved.'))
+                document.location.href = 'index.php';
+        }
     </script>
     
     <body class="login-body">
@@ -58,7 +64,7 @@
                     </select>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <button class="btn-component-save-cancel btn-setting-option btn-cancel">Cancel</button>
+                    <button type="button" class="btn-component-save-cancel btn-setting-option btn-cancel" onclick="fnReturnHome()">Cancel</button>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                     <button class="btn-component-save-cancel btn-setting-option btn-save-appliance">Save</button>
