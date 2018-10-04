@@ -115,7 +115,7 @@
                         ?>
                         <h1 class="text-center h1-main-page"><?php echo $hName; ?></h1>
                         <button class="fa fa-sign-out-alt btn-sign-out" onclick="phpLogout()"></button>
-                        <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='/house-settings.html?house-id=1'"></button>
+                        <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='house-settings.php'"></button>
                     </div>
                     <div class="div-devices">
                         <div style="display: inline-block">
