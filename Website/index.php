@@ -17,6 +17,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
         <link href="CSS/main.css" type="text/css" rel="stylesheet">
+        <link rel="icon" type="image/png" href="Images/harp_icon.png">
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
 
@@ -91,18 +92,22 @@
         }
         
         $(function() {
-        $('#roomList').change(function(){
-            var room = $(this).val();
-            room = room.replace(/\s/g,'');
-            if($(this).val() == "All Rooms") {
-                $('.rooms').show();
-            }
-            else {
-                $('.rooms').hide();
-                $('#' + room).show();
-            }
+            $('#roomList').change(function(){
+                var room = $(this).val();
+                room = room.replace(/\s/g,'');
+                if($(this).val() == "All Rooms") {
+                    $('.rooms').show();
+                }
+                else {
+                    $('.rooms').hide();
+                    $('.rooms').each(function(i, obj) {
+                        if(this.id == room) {
+                            $('.' + this.id).show();
+                        }
+                    });
+                }
+            });
         });
-    });
 
 	//Function to check button states and update	
 	function checkButtons() {
@@ -226,7 +231,7 @@
 	    			$buttonClass = "btn-component-switch btn-off";
 				$buttonText = "Off";
 			}
-                    echo '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 rooms" id="' . $strippedrN . '">
+                    echo '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 rooms ' . $strippedrN .'" id="' . $strippedrN . '">
                             <div class="component-card">
                                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                                     <p class="p-component-main">' . $aN . '</p>
