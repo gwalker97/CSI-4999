@@ -22,14 +22,15 @@
     
     <script>
         window.onload = function(){
-            var componentBehavior = getParameterByName("componentBehavior");
+           
+var componentBehavior = getParameterByName("componentBehavior");
             
             if (componentBehavior == "componentExists")
             {
                 fnSetComponentBehavior("There's already a component with this name.")
             }
 
-		//Use Database to populate
+		//Use Database to populate Name/Component
 		var urlArray = window.location.search.split('=');
 		var compId = urlArray[1].substring(1);
 
@@ -40,22 +41,11 @@
 				document.getElementById('AppName').value = response.name;
 				document.getElementById('AppDesc').value = response.description;
 
-				/*
-				var ddl = document.getElementByID('RoomList');
-				var opts = ddl.options.length;
-				for (var i=0; i<opts; i++){
-					if (ddl.options[i].value == response.name){
-						ddl.options[i].selected = true;
-						break;
-					}
-				}
-				*/
 			}, 'json'
 		);
 
 
         };
-        
         function getParameterByName(name) {
             name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
             var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -76,15 +66,30 @@
 	function fnReturnToLogin() {
             window.location.href='/login.php';
         }
-        
+
         function fnReturnHome() {
             if(confirm('Are you sure? Any changes you made will not be saved.'))
                 document.location.href = 'index.php';
         }
+
+	//Update DB
+	function saveComponent(){
+			
+		var urlArray = window.location.search.split('=');
+		var compId = urlArray[1].substring(1);
+			
+			$.post("saveComponent.php",
+			    {
+				id: compId,
+				name: document.getElementById('AppName').value,
+				description: document.getElementById('AppDesc').value,
+			    });
+	}
+
     </script>
     
     <body class="login-body">
-        <button class="btn-back" onclick="fnReturnHome()"><i class="fa fa-arrow-left"></i> Home</button>
+	<button class="btn-back" onclick="fnReturnHome()"><i class="fa fa-arrow-left"></i> Home</button>
         <div class="component-settings-form-container">
 	                <?php
                         $hID = $_SESSION['home'];
@@ -112,18 +117,11 @@
                                 <?php
                                 
 				
-				
+				//Get component ID, minus prefix
 				$compNum = substr(htmlspecialchars($_GET['component-id']), 1);
-				/*
-				$roomNum = mysqli_fetch_array(mysqli_query($conn,"SELECT Addon_Room_ID from Addon where Addon_ID='$compNum'"),MYSQLI_ASSOC);
-				
 
-print "[" . $compNum . "]";
-print "[" . $roomNum . "]";
-				$roomName = mysqli_query($conn,"SELECT Room_Name from Room where Room_ID=$roomNum");
-*/
-
-$sql3 = "SELECT A.Addon_Room_ID, Room.Room_Name 
+		//Get room name of current component, insert first into list
+		$sql3 = "SELECT A.Addon_Room_ID, Room.Room_Name 
                             FROM Room
                             INNER JOIN 
                             (select * from Addon where Addon_ID='$compNum') as A
@@ -132,6 +130,7 @@ $sql3 = "SELECT A.Addon_Room_ID, Room.Room_Name
 		$row4 = mysqli_fetch_array($result3,MYSQLI_ASSOC);
 		echo '<option selected="true" value="'.$row4['Addon_Room_ID'].'">'.$row4['Room_Name'].'</option>';
 
+				//Get all room names, minus the one associated with component
 				$sql2 = "select * from Room where House_ID='$hID'";
                                 $result2 = mysqli_query($conn,$sql2);
                                 
@@ -145,10 +144,10 @@ $sql3 = "SELECT A.Addon_Room_ID, Room.Room_Name
                             </select>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <button class="btn-component-switch btn-setting-option btn-cancel">Delete</button>
+                    <button type="button" class="btn-component-switch btn-setting-option btn-cancel">Delete</button>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <button class="btn-component-switch btn-setting-option btn-save-appliance">Save</button>
+                    <button type="button" class="btn-component-switch btn-setting-option btn-save-appliance" onclick="saveComponent()">Save</button>
                 </div>
             </form>
         </div>
