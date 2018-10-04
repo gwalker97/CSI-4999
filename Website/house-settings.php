@@ -96,46 +96,29 @@
                     $count = mysqli_num_rows($result);
                 
                     if ($count == 0) {
+                        
                         echo '<div class="col-md-12">
                                 <i class="fa fa-map-marker fa-login"></i>
                                 <input type="text" placeholder="Room Name" class="input-settings">
                                 <i class="fa fa-plus fa-settings-add-room"></i>
                               </div>';
                     } else {
+                        
                         echo '<div class="col-md-12">
                                     <i class="fa fa-map-marker fa-login"></i>
-                                    <input type="text" placeholder="Room Name" class="input-settings">
+                                    <input type="text" placeholder="' . $row['Room_Name'] . '" class="input-settings">
                                     <i class="fa fa-plus fa-settings-add-room"></i>
                                   </div>';
-                        for ($i=1; $i < $count; $i++) {
-                            $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
+                        while ($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+                            
                             echo '<div class="col-md-12">
                                     <i class="fa fa-map-marker fa-login"></i>
-                                    <input type="text" placeholder="Room Name" class="input-settings">
-                                    <i class="fa fa-plus fa-settings-add-room"></i>
+                                    <input type="text" placeholder="' . $row['Room_Name'] . '" class="input-settings">
                                     <i class="fa fa-minus fa-settings-remove-room"></i>
                                   </div>';
                         }
                     }
                 ?>
-                <div class="col-md-12">
-                    <i class="fa fa-map-marker fa-login"></i>
-                    <input type="text" placeholder="Room Name" class="input-settings">
-                    <i class="fa fa-plus fa-settings-add-room"></i>
-                    <i class="fa fa-minus fa-settings-remove-room"></i>
-                </div>
-                <div class="col-md-12">
-                    <i class="fa fa-map-marker fa-login"></i>
-                    <input type="text" placeholder="Room Name" class="input-settings">
-                    <i class="fa fa-plus fa-settings-add-room"></i>
-                    <i class="fa fa-minus fa-settings-remove-room"></i>
-                </div>
-                <div class="col-md-12">
-                    <i class="fa fa-map-marker fa-login"></i>
-                    <input type="text" placeholder="Room Name" class="input-settings">
-                    <i class="fa fa-plus fa-settings-add-room"></i>
-                    <i class="fa fa-minus fa-settings-remove-room"></i>
-                </div>
                 <div class="btn-login-float">
                     <button formaction="submit" class="btn-save-house">Save</button>
                 </div>
