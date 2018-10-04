@@ -70,7 +70,7 @@
                         $row2 = mysqli_fetch_array($result2,MYSQLI_ASSOC);
                         
                         if (isset($_SESSION['houseSetMsg'])) {
-                            echo '<label id="houseErrorText" class="lbl-setup-house-hidden">' . $_SESSION['houseSetMsg'] . '</label>';
+                            echo '<label id="houseErrorText" class="lbl-setup-house-visible">' . $_SESSION['houseSetMsg'] . '</label>';
                             unset($_SESSION['houseSetMsg']);
                         } else {
                             echo '<label id="houseErrorText" class="lbl-setup-house-hidden"></label>';
@@ -80,43 +80,35 @@
                 <div class="col-md-12">
                     <i class="fa fa-home fa-login"></i>
                 <?php
-                        if (isset($_SESSION['home'])) {
-                            echo '<input type="text" placeholder="' . $row2['House_Name'] . '" class="input-login">';
-                        } else {
-                            echo '<input type="text" placeholder="House Name" class="input-login">';
-                        }
-                    } else { $_SESSION['houseSetMsg'] = "You are not assigned to a house."; }
+                        echo '<input type="text" placeholder="House Name" value="' . $row2['House_Name'] . '" class="input-login">';
                 ?>
                 </div>
                 <?php
-                    $hID = $_SESSION['home'];
-                    $sql = "select * from Room where House_ID='$hID'";
-                    $result = mysqli_query($conn,$sql);
-                    $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
-                    $count = mysqli_num_rows($result);
-                
-                    if ($count == 0) {
-                        
-                        echo '<div class="col-md-12">
-                                <i class="fa fa-map-marker fa-login"></i>
-                                <input type="text" placeholder="Room Name" class="input-settings">
-                                <i class="fa fa-plus fa-settings-add-room"></i>
-                              </div>';
-                    } else {
-                        
-                        echo '<div class="col-md-12">
-                                    <i class="fa fa-map-marker fa-login"></i>
-                                    <input type="text" placeholder="' . $row['Room_Name'] . '" class="input-settings">
-                                    <i class="fa fa-plus fa-settings-add-room"></i>
-                                  </div>';
-                        while ($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-                            
+                        if ($count == 0) {
+
                             echo '<div class="col-md-12">
                                     <i class="fa fa-map-marker fa-login"></i>
-                                    <input type="text" placeholder="' . $row['Room_Name'] . '" class="input-settings">
-                                    <i class="fa fa-minus fa-settings-remove-room"></i>
+                                    <input type="text" placeholder="Room Name" class="input-settings">
+                                    <i class="fa fa-plus fa-settings-add-room"></i>
                                   </div>';
+                        } else {
+
+                            echo '<div class="col-md-12">
+                                        <i class="fa fa-map-marker fa-login"></i>
+                                        <input type="text" placeholder="Room Name" value="' . $row['Room_Name'] . '" class="input-settings">
+                                        <i class="fa fa-plus fa-settings-add-room"></i>
+                                      </div>';
+                            while ($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+
+                                echo '<div class="col-md-12">
+                                        <i class="fa fa-map-marker fa-login"></i>
+                                        <input type="text" placeholder="Room Name" value="' . $row['Room_Name'] . '" class="input-settings">
+                                        <i class="fa fa-minus fa-settings-remove-room"></i>
+                                      </div>';
+                            }
                         }
+                    } else { 
+                        echo '<label id="houseErrorText" class="lbl-setup-house-visible">You are not assigned to a house.</label>';
                     }
                 ?>
                 <div class="btn-login-float">
