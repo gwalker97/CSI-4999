@@ -72,8 +72,16 @@ I modified lines:
     <body class="login-body">
         <div class="login-form-container">
             <form action="loginScript.php" method="post">
+                <svg viewBox="0 0 500 500" style="margin-top: 10px; margin-bottom: -270px; letter-spacing: 75px;">
+                    <path id="curve" d="M73.2,148.6c4-6.1,65.5-96.8,178.6-95.6c111.3,1.2,170.8,90.3,175.1,97" />
+                    <text width="500">
+                      <textPath class="h1-login text-center" xlink:href="#curve">
+                        HARP
+                      </textPath>
+                    </text>
+                  </svg>
+<!--                <h1 class="col-md-12 text-center h1-login">HARP</h1>-->
                 <img src="Images/harp_icon.png" class="harp-img">
-                <h1 class="col-md-12 text-center h1-login">HARP</h1>
                 <h4 class="col-md-12 text-center h4-login">Home Automation: Raspberry Pi</h4>
                 <?php
                     if (!isset($_SESSION['loginMsg'])) {

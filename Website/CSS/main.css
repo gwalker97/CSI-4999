@@ -49,7 +49,7 @@ h4 {
 /*login styling*/
 
 .h1-login {
-    text-shadow: 2px 2px #4682b461;
+    text-shadow: 4px 4px #4682b461;
     font-size: 80px;
     margin-bottom: -15px;
     margin-top: 0;
@@ -61,6 +61,7 @@ h4 {
 }
 
 .h4-login {
+    font-size: 20px;
     text-shadow: 1px 1px #4682b461;    
 }
 
@@ -110,7 +111,7 @@ h4 {
     text-align: center;
     background-color: #ffffffe8;
     margin: 4% auto;
-    padding: 3%;
+    padding: 26px 3%;
     width: 90%;
     max-width: 400px;
     border-radius: 2px;
@@ -143,6 +144,24 @@ h4 {
     margin-top: 10px;
 }
 
+.btn-create {
+    border-radius: 2px;
+    padding: 10px;
+    width: 100%;
+    border: 1px solid black;
+    font-weight: bold;
+    width: 90%;
+    margin-top: 10px;
+}
+
+.btn-create-disabled {
+    background-color: gray;
+}
+
+.btn-create-enabled {
+    background-color: #31708f66;
+}
+
 .input-login {
     border-top-right-radius: 2px;
     border-bottom-right-radius: 2px;
@@ -153,6 +172,9 @@ h4 {
 }
 
 .fa-login {
+    width: 42px;
+    height: 42px;
+    margin-bottom: -16px;
     border: 1px solid #0000003d;
     border-top-left-radius: 2px;
     border-bottom-left-radius: 2px;
@@ -412,3 +434,7 @@ h4 {
 }
 
 button:focus {outline:0;}
+
+path {
+  fill: transparent;
+}
