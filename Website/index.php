@@ -104,6 +104,56 @@
         });
     });
 
+	//Function to check button states and update	
+	function checkButtons() {
+		//Find all buttons, store
+		var className = document.getElementsByClassName('btn-component-switch');
+		    var classnameCount = className.length;
+		    var IdStore = new Array();
+		    for(var j = 0; j < classnameCount; j++){
+			IdStore.push(className[j].id);
+		    }
+			//For buttons with prefix "b", store just number
+			var idArr = new Array();			
+			var arrayLength = IdStore.length;
+			for (var i = 0; i < arrayLength; i++) {			    
+				if (IdStore[i].substring(0,1) == "b"){
+					idArr.push(IdStore[i]);
+				}
+			}
+			
+
+			//Use idArr to check database
+			var arrayLength2 = idArr.length;
+			for (var i = 0; i < arrayLength2; i++){					
+				//"let" is better than "for" for AJAX						
+				let tempButton = idArr[i];	
+				$.post(
+					"readButton.php",
+					{ id: (tempButton.substring(1)) },
+					function(response) {
+						if (response.state == '1'){							
+							document.getElementById(tempButton).innerHTML = "On";
+                    					document.getElementById(tempButton).classList.remove('btn-off');
+                    					document.getElementById(tempButton).classList.add('btn-on');
+						}
+						else if (response.state == '0'){
+							document.getElementById(tempButton).innerHTML = "Off";
+                    					document.getElementById(tempButton).classList.remove('btn-on');
+                    					document.getElementById(tempButton).classList.add('btn-off');
+						}
+
+					}, 'json'
+				);
+			}
+
+	}
+
+	//Execute checkButtons every 2 seconds
+	window.setInterval(function(){
+	  	checkButtons();
+	}, 2000);
+
     </script>
 
             <body class="login-body">
@@ -129,7 +179,7 @@
                         ?>
                         <h1 class="text-center h1-main-page"><?php echo $hName; ?></h1>
                         <button class="fa fa-sign-out-alt btn-sign-out" onclick="phpLogout()"></button>
-                        <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='/house-settings.html?house-id=1'"></button>
+                        <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='house-settings.php'"></button>
                     </div>
                     <div class="div-devices">
                         <div style="display: inline-block">
