@@ -110,55 +110,65 @@
         });
 
 	//Function to check button states and update	
-	function checkButtons() {
-		//Find all buttons, store
-		var className = document.getElementsByClassName('btn-component-switch');
-		    var classnameCount = className.length;
-		    var IdStore = new Array();
-		    for(var j = 0; j < classnameCount; j++){
-			IdStore.push(className[j].id);
-		    }
-			//For buttons with prefix "b", store just number
-			var idArr = new Array();			
-			var arrayLength = IdStore.length;
-			for (var i = 0; i < arrayLength; i++) {			    
-				if (IdStore[i].substring(0,1) == "b"){
-					idArr.push(IdStore[i]);
-				}
-			}
-			
+        function checkButtons() {
+            //Find all buttons, store
+            var className = document.getElementsByClassName('btn-component-switch');
+                var classnameCount = className.length;
+                var IdStore = new Array();
+                for(var j = 0; j < classnameCount; j++){
+                IdStore.push(className[j].id);
+                }
+                //For buttons with prefix "b", store just number
+                var idArr = new Array();			
+                var arrayLength = IdStore.length;
+                for (var i = 0; i < arrayLength; i++) {			    
+                    if (IdStore[i].substring(0,1) == "b"){
+                        idArr.push(IdStore[i]);
+                    }
+                }
 
-			//Use idArr to check database
-			var arrayLength2 = idArr.length;
-			for (var i = 0; i < arrayLength2; i++){					
-				//"let" is better than "for" for AJAX						
-				let tempButton = idArr[i];	
-				$.post(
-					"readButton.php",
-					{ id: (tempButton.substring(1)) },
-					function(response) {
-						if (response.state == '1'){							
-							document.getElementById(tempButton).innerHTML = "On";
-                    					document.getElementById(tempButton).classList.remove('btn-off');
-                    					document.getElementById(tempButton).classList.add('btn-on');
-						}
-						else if (response.state == '0'){
-							document.getElementById(tempButton).innerHTML = "Off";
-                    					document.getElementById(tempButton).classList.remove('btn-on');
-                    					document.getElementById(tempButton).classList.add('btn-off');
-						}
 
-					}, 'json'
-				);
-			}
+                //Use idArr to check database
+                var arrayLength2 = idArr.length;
+                for (var i = 0; i < arrayLength2; i++){					
+                    //"let" is better than "for" for AJAX						
+                    let tempButton = idArr[i];	
+                    $.post(
+                        "readButton.php",
+                        { id: (tempButton.substring(1)) },
+                        function(response) {
+                            if (Number(response.state) > Number(0)){							
+                                document.getElementById(tempButton).innerHTML = "On";
+                                            document.getElementById(tempButton).classList.remove('btn-off');
+                                            document.getElementById(tempButton).classList.add('btn-on');
+                            }
+                            else {
+                                document.getElementById(tempButton).innerHTML = "Off";
+                                            document.getElementById(tempButton).classList.remove('btn-on');
+                                            document.getElementById(tempButton).classList.add('btn-off');
+                            }
 
-	}
+                        }, 'json'
+                    );
+                }
 
-	//Execute checkButtons every 2 seconds
-	window.setInterval(function(){
-	  	checkButtons();
-	}, 2000);
+        }
 
+        //Execute checkButtons every 2 seconds
+        window.setInterval(function(){
+            checkButtons();
+        }, 2000);
+
+        //When a slider moves
+        $(document).ready(function(){
+            $("[type=range]").change(function(){
+                $.post("saveDatabase.php", {
+                    id: $(this).attr("id").substring(1),
+                    state: $(this).val(),
+                });
+            });
+        });
+        
     </script>
 
             <body class="login-body">
@@ -209,7 +219,7 @@
                     </div>
 
             <?php
-                $sql3 = "SELECT Addon.Addon_Name, Addon.Addon_Description, Addon.Addon_ID, A.Room_Name, Addon.Addon_State 
+                $sql3 = "SELECT Addon.Addon_Name, Addon.Addon_Description, Addon.Addon_ID, A.Room_Name, Addon.Addon_State, Addon.Addon_IsDim 
                             FROM Addon 
                             INNER JOIN 
                             (select * from Room where House_ID=1) as A
@@ -222,15 +232,18 @@
                     $aID = $row3['Addon_ID'];
                     $rN = $row3['Room_Name'];
                     $aS = $row3['Addon_State'];
+                    $isD = $row3['Addon_IsDim'];
                     $strippedrN=preg_replace('/\s+/', '', $rN);
 			//Sets variables based on Addon_State
-			if ($aS == '1') {
+			if ($aS > '0') {
 	    			$buttonClass = "btn-component-switch btn-on";
 				$buttonText = "On";
 			} else{
 	    			$buttonClass = "btn-component-switch btn-off";
 				$buttonText = "Off";
 			}
+                    if ($isD == 0)
+                    {
                     echo '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 rooms ' . $strippedrN .'" id="' . $strippedrN . '">
                             <div class="component-card">
                                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
@@ -249,8 +262,39 @@
                                 </div>
                             </div>
                           </div>';
+                    }
+                    else
+                    {
+                       echo '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 rooms ' . $strippedrN . '" id="' . $strippedrN . '">
+                                <div class="component-card-slider">
+                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                        <div class="row">
+                                            <p class="p-component-main">' . $aN . '</p>
+                                        </div>
+
+                                        <div class="row">
+                                            <p class="p-component-label"><b>Room:</b> ' . $rN . '</p>
+                                            <p class="p-component-label"><b>Description:</b> ' . $aD . '</p>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                        <input type="range" class="vertical-range" min="0" max="1" step=".05" value="'. $aS .'" id="s' . $aID .'" onchange="fnUpdateSlider(this.id)">
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 special-slider-btns">
+                                        <div class="row">
+                                            <button class="'. $buttonClass . '" id="b' . $aID . '" onclick="fnSwitchClick(this.id)">'. $buttonText . '</button>
+                                        </div>
+                                        <div class="row">
+                                            <button class="btn-component-switch fa fa-cog" id="c' . $aID . '" onclick="fnComponentSettingsRedirect(this.id)"></button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>'; 
+                    }
                 }
-            ?>
+            ?> 
         </div>
     </body>    
 </html>

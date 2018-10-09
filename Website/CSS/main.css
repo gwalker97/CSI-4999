@@ -249,6 +249,17 @@ h4 {
     box-shadow: 7px 8px 10px 0px #8888885e;
 }
 
+.component-card-slider {
+    margin: 1% 0;
+    background-color: #ffffffe8;
+    min-width: 260px;
+    max-width: 400px;
+    min-height: 125px;
+    padding: 6%;
+    border-radius: 2px;
+    box-shadow: 7px 8px 10px 0px #8888885e;
+}
+
 .btn-component-switch {
     float: right;
     border-radius: 2px;
@@ -278,7 +289,7 @@ h4 {
     background-color: #c6e9ffb5;
     border: 1px solid black;
     font-weight: bold;
-    margin-right: 20px;
+    margin-right: 10px;
 }
 
 .btn-on {
@@ -437,4 +448,22 @@ button:focus {outline:0;}
 
 path {
   fill: transparent;
+}
+
+.vertical-range {
+/*
+    width: 60px !important;
+    margin-top: -68px;
+    margin-left: 252px;
+*/
+    width: 82px !important;
+    margin-left: -44px;
+    margin-top: 28px;
+    transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+}
+
+.special-slider-btns {
+    margin-top: -50px;
+    margin-left: 18px;
 }
