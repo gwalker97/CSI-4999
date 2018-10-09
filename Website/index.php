@@ -166,6 +166,17 @@
                     id: $(this).attr("id").substring(1),
                     state: $(this).val(),
                 });
+                var tempButton = 'b' + $(this).attr("id").substring(1);
+                if ($(this).val() > 0) {
+                    document.getElementById(tempButton).innerHTML = "On";
+                    document.getElementById(tempButton).classList.remove('btn-off');
+                    document.getElementById(tempButton).classList.add('btn-on');
+                }
+                else {
+                    document.getElementById(tempButton).innerHTML = "Off";
+                    document.getElementById(tempButton).classList.remove('btn-on');
+                    document.getElementById(tempButton).classList.add('btn-off');
+                }
             });
         });
         
