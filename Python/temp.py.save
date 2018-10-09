@@ -37,18 +37,19 @@ def read_temp():
 def mysqlConn():
 	myconn = mysql.connector.connect(host=hostname, user=username, passwd=password, db=dbname)
 	return myconn
-def reading():
-	conn = mysqlConn()
-	cur = conn.cursor(buffered=True)
-	while True:
+
+def reading():	
+	while True:	
 		temps = read_temp()
-		print "%s C / %s F" %(int(temps[0]),int(temps[1]))
+		print "%s C / %s F" %(int(temps[0]),int(temps[1]))	
+		cur = conn.cursor(buffered=True)
 		conn.commit()
-		print "Sending Update"
 		cur.execute( "Update temp set celsius = %s, fahr = %s" %(int(temps[0]), int(temps[1])))
 		time.sleep(.5)
+	
+
 def main():
-	reading()
+	mysqlConn()
 
 if __name__ == '__main__':
-	main()	
+	main()
