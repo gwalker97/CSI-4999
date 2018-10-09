@@ -154,9 +154,48 @@
 
         }
 
-        //Execute checkButtons every 2 seconds
+	//Function to check slider states and update	
+        function checkSliders() {
+            //Find all sliders, store
+            var className = document.getElementsByClassName('vertical-range');
+                var classnameCount = className.length;
+                var IdStore = new Array();
+                for(var j = 0; j < classnameCount; j++){
+                IdStore.push(className[j].id);
+                }
+                //For sliders with prefix "s", store just number
+                var idArr = new Array();			
+                var arrayLength = IdStore.length;
+                for (var i = 0; i < arrayLength; i++) {			    
+                    if (IdStore[i].substring(0,1) == "s"){
+                        idArr.push(IdStore[i]);
+                    }
+                }
+
+                //Use idArr to check database
+                var arrayLength2 = idArr.length;
+                for (var i = 0; i < arrayLength2; i++){					
+                    //"let" is better than "for" for AJAX						
+                    let tempButton = idArr[i];	    
+			//If slider is not active                
+			if (SliderActive == 0){
+				$.post(
+		                "readButton.php",
+		                { id: (tempButton.substring(1)) },
+		                function(response) {			
+		                        document.getElementById(tempButton).value = Number(response.state);
+
+		                }, 'json'
+		            );
+			}
+                }
+
+        }
+
+        //Execute functions every 2 seconds
         window.setInterval(function(){
             checkButtons();
+		checkSliders();
         }, 2000);
 
         //When a slider moves
@@ -180,6 +219,18 @@
             });
         });
         
+	//Sets variable if mouse is interacting with any slider
+	var SliderActive = 0;
+	$(document).ready(function(){
+	$( "[type=range]" )
+	  .mouseenter(function() {
+		SliderActive = 1;    
+	  })
+	  .mouseleave(function() {
+	    	SliderActive = 0;
+	  });
+	});
+
     </script>
 
             <body class="login-body">
@@ -309,3 +360,4 @@
         </div>
     </body>    
 </html>
+
