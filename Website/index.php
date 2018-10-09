@@ -324,7 +324,7 @@
                 $sql3 = "SELECT Addon.Addon_Name, Addon.Addon_Description, Addon.Addon_ID, A.Room_Name, Addon.Addon_State, Addon.Addon_IsDim 
                             FROM Addon 
                             INNER JOIN 
-                            (select * from Room where House_ID=1) as A
+                            (select * from Room where House_ID=" . $_SESSION['home'] . ") as A
                             ON A.Room_ID=Addon.Addon_Room_ID;";
                 $result3 = mysqli_query($conn,$sql3);
                 $i = -1;
