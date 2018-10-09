@@ -78,6 +78,46 @@
             }
         }
         
+        function fnSwitchClickSlider(clicked_id) {
+            var change = document.getElementById(clicked_id);
+            var sliderID = "s" + change.id.substring(1);
+            var sliderChange = document.getElementById(sliderID);
+
+            if (change.innerHTML == "On")
+            {
+                change.innerHTML = "Off";
+
+			//Sends the button ID and (minus first character) and 0 to PHP
+                $.post("saveDatabase.php",
+			    {
+				    id: change.id.substring(1),
+				    state: '0',
+			    });
+            }
+            else {
+                change.innerHTML = "On";
+
+                //Sends the button ID (minus first character) and 1 to PHP
+                $.post("saveDatabase.php",
+			    {
+				    id: change.id.substring(1),
+				    state: '1',
+			    });
+            }
+            if (change.classList.contains('btn-on'))
+            {
+                change.classList.remove('btn-on');
+                change.classList.add('btn-off');
+                sliderChange.value = "0.00";
+            }
+            else
+            {
+                change.classList.remove('btn-off');
+                change.classList.add('btn-on');   
+                sliderChange.value = "1.00";
+            }
+        }
+        
         function fnComponentSettingsRedirect(clicked_id) {
             window.location.href='/component-settings.php?component-id=' + clicked_id
         }
@@ -345,7 +385,7 @@
                                     </div>
                                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 special-slider-btns">
                                         <div class="row">
-                                            <button class="'. $buttonClass . '" id="b' . $aID . '" onclick="fnSwitchClick(this.id)">'. $buttonText . '</button>
+                                            <button class="'. $buttonClass . '" id="b' . $aID . '" onclick="fnSwitchClickSlider(this.id)">'. $buttonText . '</button>
                                         </div>
                                         <div class="row">
                                             <button class="btn-component-switch fa fa-cog" id="c' . $aID . '" onclick="fnComponentSettingsRedirect(this.id)"></button>
