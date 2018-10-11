@@ -149,7 +149,7 @@
             });
         });
 
-	//Function to check button states and update	
+	   //Function to check button states and update	
         function checkButtons() {
             //Find all buttons, store
             var className = document.getElementsByClassName('btn-component-switch');
@@ -194,7 +194,7 @@
 
         }
 
-	//Function to check slider states and update	
+	   //Function to check slider states and update	
         function checkSliders() {
             //Find all sliders, store
             var className = document.getElementsByClassName('vertical-range');
@@ -259,17 +259,17 @@
             });
         });
         
-	//Sets variable if mouse is interacting with any slider
-	var SliderActive = 0;
-	$(document).ready(function(){
-	$( "[type=range]" )
-	  .mouseenter(function() {
-		SliderActive = 1;    
-	  })
-	  .mouseleave(function() {
-	    	SliderActive = 0;
-	  });
-	});
+        //Sets variable if mouse is interacting with any slider
+        var SliderActive = 0;
+        $(document).ready(function(){
+        $( "[type=range]" )
+          .mouseenter(function() {
+            SliderActive = 1;    
+          })
+          .mouseleave(function() {
+                SliderActive = 0;
+          });
+        });
 
     </script>
 
