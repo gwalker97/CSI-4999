@@ -114,7 +114,7 @@ h4 {
     padding: 26px 3%;
     width: 90%;
     max-width: 400px;
-    border-radius: 2px;
+    border-radius: 10px;
     box-shadow: 7px 8px 10px 0px #8888885e;
 }
 
@@ -125,7 +125,7 @@ h4 {
     padding: 3%;
     width: 98%;
     max-width: 600px;
-    border-radius: 2px;
+    border-radius: 10px;
     box-shadow: 7px 8px 10px 0px #8888885e;
 }
 
@@ -232,7 +232,7 @@ h4 {
     width: 62%;
     min-width: 360px;
     max-width: 1100px;
-    border-radius: 2px;
+    border-radius: 10px;
     box-shadow: 7px 8px 10px 0px #8888885e;
     overflow: auto;
 }
@@ -330,7 +330,7 @@ h4 {
     width: 90%;
     min-width: 320px;
     max-width: 550px;
-    border-radius: 2px;
+    border-radius: 10px;
     box-shadow: 7px 8px 10px 0px #8888885e;
 }
 
