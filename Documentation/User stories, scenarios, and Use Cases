@@ -3,3 +3,18 @@ Add an appliance
     Customers navigate to website and click on “New Component”
     Customers type in name of new device and have the ability to set the location
     Customers click on submit to add the new device
+Remove an appliance
+  Customers want the ability of removing lights or appliances from the website
+    Customers navigate to system component overview page
+    Customers click on the gear icon of the desired component
+    Customer then clicks on remove device to delete the device
+See the status of a device
+  Customers want the ability to see the current status of the appliance, whether it is on or off
+    Customers navigate to the system overview page
+    Customers can view a visual that shows if a light is turned on or off
+    The color green will mean on
+    The color red will mean off
+Change the status of a device
+  Customers want the ability to change the status
+    Customers navigate to the system overview page
+    Customers click on the name of the device
