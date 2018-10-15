@@ -254,7 +254,7 @@ h4 {
     min-height: 125px;
     padding: 3%;
     padding-top: 14px;
-    border-radius: 2px;
+    border-radius: 10px;
     box-shadow: 7px 8px 10px 0px #8888885e;
 }
 
@@ -265,7 +265,7 @@ h4 {
     max-width: 400px;
     min-height: 125px;
     padding: 6%;
-    border-radius: 2px;
+    border-radius: 10px;
     box-shadow: 7px 8px 10px 0px #8888885e;
 }
 
@@ -294,11 +294,14 @@ h4 {
 
 .btn-new-component {
     display: inline-block;
-    border-radius: 100%;
-    background-color: #91c9ec99;
+    border-radius: 10px;
+    background-color: #91c9ec;
     border: 1px solid black;
-    font-weight: bold;
+    margin-top: 10px;
     margin-right: 20px;
+    height: 28px;
+    padding: 0px 12px;
+    letter-spacing: 2px;
 }
 
 .btn-on {
@@ -478,7 +481,7 @@ path {
 }
 
 .temp-display {
-    margin-top: 15px;
+    margin-top: -12px;
     display: block;
     text-align: center;
     font-size: 32px;
@@ -503,6 +506,7 @@ path {
 }
 
 .btn-temp-selected {
+    font-weight: bold;
     background-color: #91c9ec;
 }
 
@@ -526,4 +530,77 @@ path {
 
 .temp-container-inside {
     position: relative;
+}
+
+.scene-container {
+    display: inline-block;
+    width: fit-content;
+    height: 35px;
+    margin-left: 18px;
+    margin-bottom: 12px;
+}
+
+.btn-scene-settings {
+    height: 34px;
+    margin-left: -6px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.scene-name {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    height: 34px;
+    margin-left: -4px;
+    padding: 5px 10px;
+    padding-right: 13px;
+    letter-spacing: 2px;
+}
+
+.fa-info-circle-scene {
+    font-size: 18px;
+}
+
+.scene-yellow {
+    background-color: yellow;
+}
+
+.scene-black {
+    background-color: black;
+    color: white;
+}
+
+.scene-blue {
+    background-color: #0a91c7;
+    color: white;
+}
+
+.scene-red {
+    background-color: #ff4f4f;
+}
+
+.fa-lightbulb {
+    color: #ffa901;
+    margin-right: 20px;
+    font-size: 28px;
+}
+
+.fa-plus {
+    margin-left: 10px;
+}
+
+.fan-icon {
+    width: 26px;
+    margin-right: 13px;
+}
+
+.slider-icon {
+    width: 32px;
+    margin-top: -1px;
+    margin-right: 13px;
+}
+
+.fa-thermometer-half {
+    font-size: 24px;
+    color: #000000a3;
 }
