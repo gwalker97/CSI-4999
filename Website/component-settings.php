@@ -74,7 +74,6 @@ var componentBehavior = getParameterByName("componentBehavior");
         }
 
 	//Update DB
-	//Update DB
 	function saveComponent(){
 			
 		var urlArray = window.location.search.split('=');
