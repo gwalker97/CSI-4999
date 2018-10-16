@@ -373,11 +373,11 @@
                     </div>
                     <div class="div-devices">
                         <div style="display: inline-block">
-                            <button class="btn-new-component" onclick="window.location.href='/new-component.html'">New<i class="fa fa-plus"></i></button>
+                            <button class="btn-new-component" onclick="window.location.href='/new-component.php'">New<i class="fa fa-plus"></i></button>
                         </div>
                         <div style="display: inline-block">
                             <select id="roomList" class="selects">
-                                <?php
+                            <?php
                                 $sql2 = "select * from Room where House_ID='$hID'";
                                 $result2 = mysqli_query($conn,$sql2);
                                 
