@@ -446,7 +446,7 @@
                         
                         <div style="display: inline-block">
                             <select id="roomList" class="selects">
-                                <?php
+                            <?php
                                 $sql2 = "select * from Room where House_ID='$hID'";
                                 $result2 = mysqli_query($conn,$sql2);
                                 
