@@ -25,63 +25,70 @@
     <script>
         function fnSwitchClick(clicked_id) {
             var change = document.getElementById(clicked_id);
-            if (change.classList.contains('fa-unlock') || change.classList.contains('fa-lock'))
+            var changeID = change.id.substring(1);
+            //Sends the button ID and (minus first character) and 0 to PHP
+            $.post("saveDatabase.php",
             {
-                if (change.classList.contains('fa-lock'))
+                id: change.id.substring(1),
+                state: '0',
+            });
+            if (change.innerHTML == "On")
+            {
+                change.innerHTML = "Off";
+            }
+            else {
+                change.innerHTML = "On";
+
+                //Sends the button ID (minus first character) and 1 to PHP
+                $.post("saveDatabase.php",
                 {
-                    change.classList.remove('fa-lock');
-                    change.classList.add('fa-unlock');
-                    change.classList.remove('btn-off');
-                    change.classList.add('btn-on');
+                    id: change.id.substring(1),
+                    state: '1',
+                });
+            }
+
+            var type = change.id.substring(0, 1)
+
+            if (change.classList.contains('btn-on'))
+            {
+                if(type == "f") {
+                    var elementID = 'f-image-' + changeID;
+                    document.getElementById(elementID).classList.remove('spin');
                 }
-                else
-                {
-                    change.classList.remove('fa-unlock');
-                    change.classList.add('fa-lock');   
-                    change.classList.remove('btn-on');
-                    change.classList.add('btn-off');
+                else if(type == "l") {
+                    var elementID = 'l-image-' + changeID;
+                    document.getElementById(elementID).classList.remove('fa-lightbulb-on');
                 }
+                else if(type == "s") {
+                    var elementID = 's-image-' + changeID;
+                    document.getElementById(elementID).classList.remove('slider-icon-flipped');
+                }
+                change.classList.remove('btn-on');
+                change.classList.add('btn-off');
             }
             else
             {
-                if (change.innerHTML == "On")
-                {
-                    change.innerHTML = "Off";
-
-			//Sends the button ID and (minus first character) and 0 to PHP
-			$.post("saveDatabase.php",
-			    {
-				id: change.id.substring(1),
-				state: '0',
-			    });
+                if(type == "f") {
+                    var elementID = 'f-image-' + changeID;
+                    document.getElementById(elementID).classList.add('spin');
                 }
-                else {
-                    change.innerHTML = "On";
-
-			//Sends the button ID (minus first character) and 1 to PHP
-			$.post("saveDatabase.php",
-			    {
-				id: change.id.substring(1),
-				state: '1',
-			    });
+                else if(type == "l") {
+                    var elementID = 'l-image-' + changeID;
+                    document.getElementById(elementID).classList.add('fa-lightbulb-on');
                 }
-
-                if (change.classList.contains('btn-on'))
-                {
-                    change.classList.remove('btn-on');
-                    change.classList.add('btn-off');
+                else if(type == "s") {
+                    var elementID = 's-image-' + changeID;
+                    document.getElementById(elementID).classList.add('slider-icon-flipped');
                 }
-                else
-                {
-                    change.classList.remove('btn-off');
-                    change.classList.add('btn-on');   
-                }
+                change.classList.remove('btn-off');
+                change.classList.add('btn-on');   
             }
         }
         
         function fnSwitchClickSlider(clicked_id) {
             var change = document.getElementById(clicked_id);
-            var sliderID = "s" + change.id.substring(1);
+            var changeID = change.id.substring(1);
+            var sliderID = "s" + changeID;
             var sliderChange = document.getElementById(sliderID);
 
             if (change.innerHTML == "On")
@@ -163,7 +170,7 @@
             var idArr = new Array();			
             var arrayLength = IdStore.length;
             for (var i = 0; i < arrayLength; i++) {			    
-                if (IdStore[i].substring(0,1) == "b"){
+                if (IdStore[i].substring(0,1) == "l" || IdStore[i].substring(0,1) == "f" || IdStore[i].substring(0,1) == "b"){
                     idArr.push(IdStore[i]);
                 }
             }
@@ -172,21 +179,51 @@
             var arrayLength2 = idArr.length;
             for (var i = 0; i < arrayLength2; i++){					
                 //"let" is better than "for" for AJAX						
-                let tempButton = idArr[i];	
+                let tempButton = idArr[i];
+                let type = tempButton.substring(0, 1);
+
                 $.post(
                     "readButton.php",
                     { id: (tempButton.substring(1)) },
                     function(response) {
                         if (Number(response.state) > Number(0)){							
+                            if(type == "f") {
+                                var elementID = 'f-image-' + tempButton.substring(1);
+                                document.getElementById(elementID).classList.add('spin');
+                            }
+                            else if(type == "l") {
+                                var elementID = 'l-image-' + tempButton.substring(1);
+                                document.getElementById(elementID).classList.add('fa-lightbulb-on');
+                            }
+                            else if(type == "b") {
+                                var elementID = 's-image-' + tempButton.substring(1);
+                                document.getElementById(elementID).classList.add('slider-icon-flipped');
+                            }
+                            
                             document.getElementById(tempButton).innerHTML = "On";
                             document.getElementById(tempButton).classList.remove('btn-off');
                             document.getElementById(tempButton).classList.add('btn-on');
                         }
-                        else {
+                        else {                            
+                            if(type == "f") {
+                                var elementID = 'f-image-' + tempButton.substring(1);
+                                document.getElementById(elementID).classList.remove('spin');
+                            }
+                            else if(type == "l") {
+                                var elementID = 'l-image-' + tempButton.substring(1);
+                                document.getElementById(elementID).classList.remove('fa-lightbulb-on');
+                            }
+                            else if(type == "b") {
+                                var elementID = 's-image-' + tempButton.substring(1);
+                                document.getElementById(elementID).classList.remove('slider-icon-flipped');
+                            }
+                            
                             document.getElementById(tempButton).innerHTML = "Off";
                             document.getElementById(tempButton).classList.remove('btn-on');
                             document.getElementById(tempButton).classList.add('btn-off');
                         }
+                        
+                        
 
                     }, 'json'
                 );
@@ -215,14 +252,16 @@
             var arrayLength2 = idArr.length;
             for (var i = 0; i < arrayLength2; i++){					
                 //"let" is better than "for" for AJAX						
-                let tempButton = idArr[i];	    
+                let tempButton = idArr[i];
+                var sliderSwitch = "b" + tempButton.substring(1);
+
                 //If slider is not active                
                 if (SliderActive == 0){
 				    $.post(
 		                "readButton.php",
 		                { id: (tempButton.substring(1)) },
 		                function(response) {			
-		                        document.getElementById(tempButton).value = Number(response.state);
+                            document.getElementById(tempButton).value = Number(response.state);
 
 		                }, 'json'
 		            );
@@ -331,7 +370,6 @@
                 "setScene.php",
                 { id: (SceneID) },
                 function(response) {			
-                        document.getElementById(tempButton).value = Number(response.state);
 
                 }, 'json'
             );
@@ -351,6 +389,10 @@
                 }, 850);
             }
         }
+        
+        $('#input_starttime').pickatime({
+            twelvehour: true,
+        });
     </script>
 
             <body class="login-body">
@@ -372,16 +414,37 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">New Scene</h4>
                       </div>
-                      <div class="modal-body">
-                          <form>
-                              
-                          </form>
-                      </div>
-                      <!--<div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                      </div>-->
+                        <!-- Modal body-->
+                        <div class="modal-body">
+                            <!-- Modal form-->
+                            
+                            <form class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <i class="fa fa-home fa-login"></i>
+                                    <input type="text" placeholder="Scene Name" class="input-login">
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <label>Start Time</label>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <label>End Time</label>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <input placeholder="Start time" type="text" id="input_starttime" class="form-control timepicker">
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <input placeholder="End time" type="text" id="input_starttime" class="form-control timepicker">
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <button type="button" class="btn-component-save-cancel btn-setting-option btn-cancel" onclick="fnReturnHome()">Cancel</button>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <button class="btn-component-save-cancel btn-setting-option btn-save-appliance">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                        
                     </div>
-
                   </div>
                 </div>
                 
@@ -525,10 +588,10 @@
                         echo '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 rooms ' . $strippedrN .'" id="' . $strippedrN . '">
                                 <div class="component-card">
                                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                                        <p class="p-component-main"><i class="fa fa-lightbulb"></i>' . $aN . '</p>
+                                        <p class="p-component-main"><i id="l-image-' . $aID .'" class="fa fa-lightbulb"></i>' . $aN . '</p>
                                     </div>
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                        <button class="'. $buttonClass . '" id="b' . $aID . '" onclick="fnSwitchClick(this.id)">'. $buttonText . '</button>
+                                        <button class="'. $buttonClass . '" id="l' . $aID . '" onclick="fnSwitchClick(this.id)">'. $buttonText . '</button>
                                     </div>
                                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                                         <p class="p-component-label"><b>Room:</b> ' . $rN . '</p>
@@ -536,7 +599,7 @@
 
                                     </div>
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                        <button class="btn-component-switch fa fa-cog" id="c' . $aID . '" onclick="fnComponentSettingsRedirect(this.id)"></button>
+                                        <button class="btn-component-switch btn-component-switch-settings fa fa-cog" id="c' . $aID . '" onclick="fnComponentSettingsRedirect(this.id)"></button>
                                     </div>
                                 </div>
                               </div>';
@@ -547,7 +610,7 @@
                                 <div class="component-card-slider">
                                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                                         <div class="row">
-                                            <p class="p-component-main"><img class="slider-icon" src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0ZWQgYnkgSWNvTW9vbi5pbyAtLT4KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHdpZHRoPSIxNnB4IiBoZWlnaHQ9IjE2cHgiIHZpZXdCb3g9IjAgMCAxNiAxNiI+CjxwYXRoIGZpbGw9IiNmZmQ1MDAiIGQ9Ik0xNiA2aC0zLjZjLTAuNy0xLjItMi0yLTMuNC0ycy0yLjggMC44LTMuNCAyaC01LjZ2NGg1LjZjMC43IDEuMiAyIDIgMy40IDJzMi44LTAuOCAzLjQtMmgzLjZ2LTR6TTEgOXYtMmg0LjFjMCAwLjMtMC4xIDAuNy0wLjEgMXMwLjEgMC43IDAuMSAxaC00LjF6TTkgMTFjLTEuNyAwLTMtMS4zLTMtM3MxLjMtMyAzLTMgMyAxLjMgMyAzYzAgMS43LTEuMyAzLTMgM3oiLz4KPC9zdmc+Cg==" />' . $aN . '</p>
+                                            <p class="p-component-main"><img id="s-image-' . $aID .'" class="slider-icon" src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0ZWQgYnkgSWNvTW9vbi5pbyAtLT4KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHdpZHRoPSIxNnB4IiBoZWlnaHQ9IjE2cHgiIHZpZXdCb3g9IjAgMCAxNiAxNiI+CjxwYXRoIGZpbGw9IiNmZmQ1MDAiIGQ9Ik0xNiA2aC0zLjZjLTAuNy0xLjItMi0yLTMuNC0ycy0yLjggMC44LTMuNCAyaC01LjZ2NGg1LjZjMC43IDEuMiAyIDIgMy40IDJzMi44LTAuOCAzLjQtMmgzLjZ2LTR6TTEgOXYtMmg0LjFjMCAwLjMtMC4xIDAuNy0wLjEgMXMwLjEgMC43IDAuMSAxaC00LjF6TTkgMTFjLTEuNyAwLTMtMS4zLTMtM3MxLjMtMyAzLTMgMyAxLjMgMyAzYzAgMS43LTEuMyAzLTMgM3oiLz4KPC9zdmc+Cg==" />' . $aN . '</p>
                                         </div>
 
                                         <div class="row">
@@ -564,7 +627,7 @@
                                             <button class="'. $buttonClass . '" id="b' . $aID . '" onclick="fnSwitchClickSlider(this.id)">'. $buttonText . '</button>
                                         </div>
                                         <div class="row">
-                                            <button class="btn-component-switch fa fa-cog" id="c' . $aID . '" onclick="fnComponentSettingsRedirect(this.id)"></button>
+                                            <button class="btn-component-switch btn-component-switch-settings fa fa-cog" id="c' . $aID . '" onclick="fnComponentSettingsRedirect(this.id)"></button>
                                         </div>
                                     </div>
 
@@ -576,10 +639,10 @@
                         echo'<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 rooms ' . $strippedrN . '" id="' . $strippedrN . '">
                                 <div class="component-card">
                                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                                        <p class="p-component-main"><img class="fan-icon" src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTguMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDI5NS4xODIgMjk1LjE4MiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMjk1LjE4MiAyOTUuMTgyOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjUxMnB4IiBoZWlnaHQ9IjUxMnB4Ij4KPHBhdGggaWQ9IlhNTElEXzNfIiBkPSJNMjAwLjQ5OSwxMjQuNGM3Ljk3LTIuNzk3LDE2LjMxOC0xLjQ3NCwyNS4yNTgsMC40OWM1LjkwMSwxLjMsMTIuMDA2LDIuNjQ4LDE4Ljg1NCwyLjY0OCAgYzkuMTY1LDAsMTcuNzQ1LTIuNTEsMjYuMjMyLTcuNjY5YzEzLjA4MS03Ljk1NCwyMi4wMy0yMi4xODMsMjMuOTQtMzguMDYxYzIuMTc4LTE4LjE0My00LjYxOS0zNi4xNDItMTkuMTQ2LTUwLjY2NyAgYy0xNC40Mi0xNC40Mi0zMy42Ny0yMi4zNTctNTQuMjAzLTIyLjM1N2MtMjAuOTU1LDAtNDAuNzE1LDguMjItNTUuNjQyLDIzLjE0M2MtMTguNjU2LDE4LjY1Ny0zMC43OTMsNDguNDAzLTMxLjAwMyw3NS42ODQgIGMtNC40MzktMy4yMzEtOC4zNy03LjE4OS0xMC4zODktMTIuOTI5Yy0zLjEyNS04Ljg3Ny0xLjQ0OS0xNi40NjksMC40ODgtMjUuMjU5YzIuNjU4LTEyLjA0LDUuOTYtMjcuMDI1LTUuMDE5LTQ1LjA4NyAgQzExMC43NDMsOS4zMzQsOTMuNjU3LDAuMDExLDc1LjI3NCwwLjAxMWMtMTUuODU4LDAtMzEuNTMsNi45MzgtNDQuMTMxLDE5LjUzNEMxLjA3Niw0OS42MjIsMS40MzYsOTguODk4LDMxLjkzNCwxMjkuMzkgIGMxOC40MTEsMTguNDE2LDQ4LjY2NSwzMC44MTYsNzUuNjAxLDMxLjExOWMtMy4yMjEsNC4zOTUtNy4xNTksOC4yNjYtMTIuODUxLDEwLjI3MmMtNy45NTcsMi44MDgtMTYuMzA2LDEuNDkzLTI1LjI2MS0wLjQ4OSAgYy01Ljg5OS0xLjI5OS0xMi4wMDQtMi42NDktMTguODU2LTIuNjQ5Yy05LjE2MSwwLTE3Ljc0MiwyLjUwOC0yNi4yMjgsNy42NjdjLTEzLjA4MSw3Ljk1Ni0yMi4wMywyMi4xODQtMjMuOTQsMzguMDYzICBjLTIuMTc5LDE4LjE0Myw0LjYyMiwzNi4xNDMsMTkuMTQ1LDUwLjY2NmMxNC40MTksMTQuNDIsMzMuNjcxLDIyLjM1Niw1NC4yMDUsMjIuMzU2YzIwLjk1NCwwLDQwLjcxNi04LjIyLDU1LjY0Mi0yMy4xNDIgIGMxOC42NTYtMTguNjU3LDMwLjc5Mi00OC40MDIsMzEuMDA0LTc1LjY4M2M0LjQzNiwzLjIzLDguMzY3LDcuMTg5LDEwLjM4OSwxMi45MjdjMy4xMjQsOC44NzcsMS40NDksMTYuNDY5LTAuNDksMjUuMjYgIGMtMi42NTgsMTIuMDM5LTUuOTYsMjcuMDI1LDUuMDIsNDUuMDg3YzkuMTI2LDE1LjAwNCwyNi4yMTMsMjQuMzI3LDQ0LjU5NiwyNC4zMjdjMTUuODU5LDAsMzEuNTMxLTYuOTM5LDQ0LjEzMi0xOS41MzQgIGMzMC4wNjEtMzAuMDcxLDI5LjcwOC03OS4zNDctMC43OTItMTA5Ljg0NWMtMTguNDExLTE4LjQxOC00OC42NjYtMzAuODE3LTc1LjU5OS0zMS4xMTggIEMxOTAuODY5LDEzMC4yNzcsMTk0LjgwOSwxMjYuNDA2LDIwMC40OTksMTI0LjR6IE0xNjAuMTg3LDE2MC4xODdjLTYuNzI3LDYuNzI3LTE4LjQ2NSw2LjcyNy0yNS4xOTIsMCAgYy02Ljk0My02Ljk0OC02Ljk0My0xOC4yNDQsMC0yNS4xOTJjMy4zNjMtMy4zNjMsNy44MzYtNS4yMTUsMTIuNTk2LTUuMjE1YzQuNzYxLDAsOS4yMzIsMS44NTIsMTIuNTk3LDUuMjE1ICBDMTY3LjEyOSwxNDEuOTQzLDE2Ny4xMjksMTUzLjIzOSwxNjAuMTg3LDE2MC4xODd6IiBmaWxsPSIjMGE5MWM3Ii8+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=" />' . $aN . '</p>
+                                        <p class="p-component-main"><img id="f-image-' . $aID .'" class="fan-icon" src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTguMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDI5NS4xODIgMjk1LjE4MiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMjk1LjE4MiAyOTUuMTgyOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjUxMnB4IiBoZWlnaHQ9IjUxMnB4Ij4KPHBhdGggaWQ9IlhNTElEXzNfIiBkPSJNMjAwLjQ5OSwxMjQuNGM3Ljk3LTIuNzk3LDE2LjMxOC0xLjQ3NCwyNS4yNTgsMC40OWM1LjkwMSwxLjMsMTIuMDA2LDIuNjQ4LDE4Ljg1NCwyLjY0OCAgYzkuMTY1LDAsMTcuNzQ1LTIuNTEsMjYuMjMyLTcuNjY5YzEzLjA4MS03Ljk1NCwyMi4wMy0yMi4xODMsMjMuOTQtMzguMDYxYzIuMTc4LTE4LjE0My00LjYxOS0zNi4xNDItMTkuMTQ2LTUwLjY2NyAgYy0xNC40Mi0xNC40Mi0zMy42Ny0yMi4zNTctNTQuMjAzLTIyLjM1N2MtMjAuOTU1LDAtNDAuNzE1LDguMjItNTUuNjQyLDIzLjE0M2MtMTguNjU2LDE4LjY1Ny0zMC43OTMsNDguNDAzLTMxLjAwMyw3NS42ODQgIGMtNC40MzktMy4yMzEtOC4zNy03LjE4OS0xMC4zODktMTIuOTI5Yy0zLjEyNS04Ljg3Ny0xLjQ0OS0xNi40NjksMC40ODgtMjUuMjU5YzIuNjU4LTEyLjA0LDUuOTYtMjcuMDI1LTUuMDE5LTQ1LjA4NyAgQzExMC43NDMsOS4zMzQsOTMuNjU3LDAuMDExLDc1LjI3NCwwLjAxMWMtMTUuODU4LDAtMzEuNTMsNi45MzgtNDQuMTMxLDE5LjUzNEMxLjA3Niw0OS42MjIsMS40MzYsOTguODk4LDMxLjkzNCwxMjkuMzkgIGMxOC40MTEsMTguNDE2LDQ4LjY2NSwzMC44MTYsNzUuNjAxLDMxLjExOWMtMy4yMjEsNC4zOTUtNy4xNTksOC4yNjYtMTIuODUxLDEwLjI3MmMtNy45NTcsMi44MDgtMTYuMzA2LDEuNDkzLTI1LjI2MS0wLjQ4OSAgYy01Ljg5OS0xLjI5OS0xMi4wMDQtMi42NDktMTguODU2LTIuNjQ5Yy05LjE2MSwwLTE3Ljc0MiwyLjUwOC0yNi4yMjgsNy42NjdjLTEzLjA4MSw3Ljk1Ni0yMi4wMywyMi4xODQtMjMuOTQsMzguMDYzICBjLTIuMTc5LDE4LjE0Myw0LjYyMiwzNi4xNDMsMTkuMTQ1LDUwLjY2NmMxNC40MTksMTQuNDIsMzMuNjcxLDIyLjM1Niw1NC4yMDUsMjIuMzU2YzIwLjk1NCwwLDQwLjcxNi04LjIyLDU1LjY0Mi0yMy4xNDIgIGMxOC42NTYtMTguNjU3LDMwLjc5Mi00OC40MDIsMzEuMDA0LTc1LjY4M2M0LjQzNiwzLjIzLDguMzY3LDcuMTg5LDEwLjM4OSwxMi45MjdjMy4xMjQsOC44NzcsMS40NDksMTYuNDY5LTAuNDksMjUuMjYgIGMtMi42NTgsMTIuMDM5LTUuOTYsMjcuMDI1LDUuMDIsNDUuMDg3YzkuMTI2LDE1LjAwNCwyNi4yMTMsMjQuMzI3LDQ0LjU5NiwyNC4zMjdjMTUuODU5LDAsMzEuNTMxLTYuOTM5LDQ0LjEzMi0xOS41MzQgIGMzMC4wNjEtMzAuMDcxLDI5LjcwOC03OS4zNDctMC43OTItMTA5Ljg0NWMtMTguNDExLTE4LjQxOC00OC42NjYtMzAuODE3LTc1LjU5OS0zMS4xMTggIEMxOTAuODY5LDEzMC4yNzcsMTk0LjgwOSwxMjYuNDA2LDIwMC40OTksMTI0LjR6IE0xNjAuMTg3LDE2MC4xODdjLTYuNzI3LDYuNzI3LTE4LjQ2NSw2LjcyNy0yNS4xOTIsMCAgYy02Ljk0My02Ljk0OC02Ljk0My0xOC4yNDQsMC0yNS4xOTJjMy4zNjMtMy4zNjMsNy44MzYtNS4yMTUsMTIuNTk2LTUuMjE1YzQuNzYxLDAsOS4yMzIsMS44NTIsMTIuNTk3LDUuMjE1ICBDMTY3LjEyOSwxNDEuOTQzLDE2Ny4xMjksMTUzLjIzOSwxNjAuMTg3LDE2MC4xODd6IiBmaWxsPSIjMGE5MWM3Ii8+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=" />' . $aN . '</p>
                                     </div>
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                        <button class="'. $buttonClass . '" id="b' . $aID . '" onclick="fnSwitchClick(this.id)">'. $buttonText . '</button>
+                                        <button class="'. $buttonClass . '" id="f' . $aID . '" onclick="fnSwitchClick(this.id)">'. $buttonText . '</button>
                                     </div>
                                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                                         <p class="p-component-label"><b>Room:</b>  ' . $rN . '</p>
@@ -587,7 +650,7 @@
 
                                     </div>
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                        <button class="btn-component-switch fa fa-cog" id="c' . $aID . '" onclick="fnComponentSettingsRedirect(this.id)"></button>
+                                        <button class="btn-component-switch btn-component-switch-settings fa fa-cog" id="c' . $aID . '" onclick="fnComponentSettingsRedirect(this.id)"></button>
                                     </div>
                                 </div>
                             </div>';
