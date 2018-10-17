@@ -401,6 +401,19 @@
         $('#input_starttime').pickatime({
             twelvehour: true,
         });
+        
+        function fnHideShowAutomation(arg) {
+            var checkBox = document.getElementById(arg)
+            
+            if (checkBox.checked == true) {
+                document.getElementById('automate-times').classList.remove('dont-display');
+                document.getElementById('automate-times').classList.add('display');
+            }
+            else {
+                document.getElementById('automate-times').classList.remove('display');
+                document.getElementById('automate-times').classList.add('dont-display');
+            }
+        }
     </script>
 
             <body class="login-body">
@@ -427,24 +440,35 @@
                             <!-- Modal form-->
                             
                             <form class="row">
+                                <div class="automate-div">
+                                    <label class="automate-error dont-display">Test</label>
+                                </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <i class="fa fa-home fa-login"></i>
                                     <input type="text" placeholder="Scene Name" class="input-login">
                                 </div>
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                    <label>Start Time</label>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="automate-div">
+                                        <label class="lbl-automate">Would you like to automate this scene?</label>
+                                        <input id="automate-checkbox" type="checkbox" onclick="fnHideShowAutomation(this.id)" class="automate-checkbox">
+                                    </div>
+                                </div>
+                                <div id="automate-times" class="dont-display">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <label>Start Time</label>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <label>End Time</label>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <input placeholder="Start time" type="text" id="input_starttime" class="form-control timepicker">
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <input placeholder="End time" type="text" id="input_starttime" class="form-control timepicker">
+                                    </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                    <label>End Time</label>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                    <input placeholder="Start time" type="text" id="input_starttime" class="form-control timepicker">
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                    <input placeholder="End time" type="text" id="input_starttime" class="form-control timepicker">
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                    <button type="button" class="btn-component-save-cancel btn-setting-option btn-cancel" onclick="fnReturnHome()">Cancel</button>
+                                    <button type="button" class="btn-component-save-cancel btn-setting-option btn-cancel" data-dismiss="modal">Cancel</button>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                     <button class="btn-component-save-cancel btn-setting-option btn-save-appliance">Save</button>

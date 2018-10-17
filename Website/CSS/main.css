@@ -659,6 +659,10 @@ path {
     position: relative;
 }
 
+.all-scenes-container {
+    margin-bottom: 8px;
+}
+
 .scene-container {
     display: inline-block;
     width: fit-content;
@@ -825,4 +829,37 @@ path {
     padding: 0;
     background-color: #91c9ec;
     border-radius: 10px;
+}
+
+.automate-div {
+    margin: auto;
+    text-align: center;
+}
+
+.automate-checkbox {
+    display: inline-block;
+    margin-left: 5px !important;
+}
+
+.lbl-automate {
+    font-weight: normal;
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.automate-error {
+    color: red;
+    font-size: 16px;
+}
+
+.timepicker {
+    margin-bottom: 10px;
+}
+
+.display {
+    display: block;
+}
+
+.dont-display {
+    display: none;
 }
