@@ -6,6 +6,34 @@ body {
     animation: fadein 1s;
 }
 
+#loading {
+   width: 100%;
+   height: 100%;
+   top: 0;
+   left: 0;
+   position: fixed;
+   display: block;
+   opacity: 0.7;
+   background-color: #fff;
+   z-index: 99;
+   text-align: center;
+}
+
+.loading-box {
+    margin: auto;
+    width: 100px;
+    height: 100%;
+}
+
+#loading-image {
+    margin: auto;
+    margin-left: -45px;
+    top: 45%;
+    width: 100px;
+    z-index: 100;
+    position: absolute;
+}
+
 @keyframes fadein {
   from { opacity: 0; }
   to   { opacity: 1; }
@@ -301,6 +329,12 @@ h4 {
     letter-spacing: 2px;
 }
 
+.btn-new-component:hover {
+    color: white;
+    background-color: #57a1d4;
+    text-decoration: none; 
+}
+
 .btn-on {
     background-color: #91c9ec99;
 }
@@ -553,12 +587,17 @@ path {
     letter-spacing: 2px;
 }
 
-.fa-info-circle-scene {
+.fa-setting-scene {
     font-size: 18px;
+    color: gray;
 }
 
 .scene-yellow {
     background-color: yellow;
+}
+
+.scene-yellow:hover {
+    background-color: #ffee00;
 }
 
 .scene-black {
@@ -566,13 +605,25 @@ path {
     color: white;
 }
 
+.scene-black:hover {
+    background-color: #404040;
+}
+
 .scene-blue {
     background-color: #0a91c7;
     color: white;
 }
 
+.scene-blue:hover {
+    background-color: #0d7ba7;
+}
+
 .scene-red {
-    background-color: #ff4f4f;
+    background-color: #f74949;
+}
+
+.scene-red:hover {
+    background-color: #ff7070;
 }
 
 .fa-lightbulb {
@@ -599,4 +650,24 @@ path {
 .fa-thermometer-half {
     font-size: 24px;
     color: #000000a3;
+}
+
+.new-dropdown {
+    display: block;
+    color: black;
+    padding: 8px 18px;
+    border-radius: 10px;
+}
+
+.new-dropdown:hover {
+    color: white;
+    background-color: #57a1d4;
+    text-decoration: none;
+}
+
+.new-dropdown-menu {
+    min-width: 100px;
+    padding: 0;
+    background-color: #91c9ec;
+    border-radius: 10px;
 }

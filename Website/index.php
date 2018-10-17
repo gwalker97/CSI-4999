@@ -257,7 +257,7 @@
             checkButtons();
             checkSliders();
             checkTemp();
-        }, 2000);
+        }, 1000);
 
         //When a slider moves
         $(document).ready(function(){
@@ -322,9 +322,69 @@
                 displayC.classList.remove('temp-display');
             }
         }
+        
+        function fnSetScene(arg) {
+            fnLoad(true);
+            //scene-x --> x
+            var SceneID = arg.substring(6);
+            $.post(
+                "setScene.php",
+                { id: (SceneID) },
+                function(response) {			
+                        document.getElementById(tempButton).value = Number(response.state);
+
+                }, 'json'
+            );
+            fnLoad(false);
+        }
+        
+        window.onload = function () { document.getElementById('loading').style.display = "none" }
+        
+        function fnLoad(arg) {
+            if (arg) {
+                document.getElementById('loading').style.display = "block";
+            }
+            else
+            {
+                setTimeout(function () {
+                    document.getElementById('loading').style.display = "none";
+                }, 850);
+            }
+        }
     </script>
 
             <body class="login-body">
+                
+                <!--loading content-->
+                <div id="loading">
+                    <div class="loading-box">
+                        <img id="loading-image" src="images/loader.gif" alt="Loading..." />
+                    </div>
+                </div>
+                
+                <!-- Modal content -->
+                <div id="myModal" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">New Scene</h4>
+                      </div>
+                      <div class="modal-body">
+                          <form>
+                              
+                          </form>
+                      </div>
+                      <!--<div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      </div>-->
+                    </div>
+
+                  </div>
+                </div>
+                
                 <div class="main-page-container">
                     <div class="temp-container">
                         <div class="temp-container-inside">
@@ -373,8 +433,17 @@
                     </div>
                     <div class="div-devices">
                         <div style="display: inline-block">
-                            <button class="btn-new-component" onclick="window.location.href='/new-component.html'">New<i class="fa fa-plus fa-plus-main"></i></button>
+                            <div class="dropdown">
+                              <button class="dropdown-toggle btn-new-component" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                New<i class="fa fa-plus fa-plus-main"></i>
+                              </button>
+                              <div class="dropdown-menu new-dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item new-dropdown" href="/new-component.php">Appliance</a>
+                                <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#myModal">Scene</a>
+                              </div>
+                            </div>
                         </div>
+                        
                         <div style="display: inline-block">
                             <select id="roomList" class="selects">
                             <?php
@@ -398,33 +467,28 @@
                     
                     <hr>
 <!--                    SCENES-->
-                    <div class="scene-container">
-                        <button class="scene-name scene-yellow">Morning
-                        <button id="btnSceneSetting" class="btn-scene-settings" onclick="fnTempChange(this.id)"><span class="fa fa-info-circle fa-info-circle-scene"></span></button></button>
-                    </div>
-                    <div class="scene-container">
-                        <div class="scene-container-inside">
-                            <button class="scene-name scene-black">Night</button>
-                            <button id="btnSceneSetting" class="btn-scene-settings" onclick="fnTempChange(this.id)"><span class="fa fa-info-circle fa-info-circle-scene"></span></button>
-                        </div>
-                    </div>
-                    <div class="scene-container">
-                        <div class="scene-container-inside">
-                            <button class="scene-name scene-blue">Relax</button>
-                            <button id="btnSceneSetting" class="btn-scene-settings" onclick="fnTempChange(this.id)"><span class="fa fa-info-circle fa-info-circle-scene"></span></button>
-                        </div>
-                    </div>
-                    <div class="scene-container">
-                        <div class="scene-container-inside">
-                            <button class="scene-name">Study</button>
-                            <button id="btnSceneSetting" class="btn-scene-settings" onclick="fnTempChange(this.id)"><span class="fa fa-info-circle fa-info-circle-scene"></span></button>
-                        </div>
-                    </div>
-                    <div class="scene-container">
-                        <div class="scene-container-inside">
-                            <button class="scene-name scene-red">Movie</button>
-                            <button id="btnSceneSetting" class="btn-scene-settings" onclick="fnTempChange(this.id)"><span class="fa fa-info-circle fa-info-circle-scene"></span></button>
-                        </div>
+                    <div class="all-scenes-container">
+                        
+                        <?php
+                            $sql = "SELECT Scene_ID, Scene_Name, Scene_Order, Scene_Color FROM Scenes WHERE House_ID = " . $_SESSION['home'] . "";
+                            $result = mysqli_query($conn,$sql);
+                            $i = -1;
+                            while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+                                $sID = $row['Scene_ID'];
+                                $sN = $row['Scene_Name'];
+                                $sO = $row['Scene_Order'];
+                                $sC = $row['Scene_Color'];
+                                
+                                
+                                echo '<div class="scene-container">
+                                        <button id="scene-' . $sID . '" class="scene-name scene-' . $sC . '" onclick="fnSetScene(this.id)">' . $sN . '
+                                            <button id="scene-' . $sID . '" class="btn-scene-settings" onclick="fnSceneSettings(this.id)">
+                                                <i class="fa fa-cog fa-setting-scene"></i>
+                                            </button>
+                                        </button>
+                                    </div>';
+                            }
+                        ?>
                     </div>
 <!--                    END SCENES-->
                     
@@ -445,34 +509,37 @@
                     $aS = $row3['Addon_State'];
                     $aT = $row3['Addon_Type'];
                     $strippedrN=preg_replace('/\s+/', '', $rN);
-			//Sets variables based on Addon_State
-			if ($aS > '0') {
-	    			$buttonClass = "btn-component-switch btn-on";
-				$buttonText = "On";
-			} else{
-	    			$buttonClass = "btn-component-switch btn-off";
-				$buttonText = "Off";
-			}
+                    
+                    //Sets variables based on Addon_State
+                    if ($aS > '0') {
+                            $buttonClass = "btn-component-switch btn-on";
+                        $buttonText = "On";
+                    } else{
+                            $buttonClass = "btn-component-switch btn-off";
+                        $buttonText = "Off";
+                    }
+                    
+                    //dynamically adds component divs
                     if ($aT == "L")
                     {
-                    echo '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 rooms ' . $strippedrN .'" id="' . $strippedrN . '">
-                            <div class="component-card">
-                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                                    <p class="p-component-main"><i class="fa fa-lightbulb"></i>' . $aN . '</p>
-                                </div>
-                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                    <button class="'. $buttonClass . '" id="b' . $aID . '" onclick="fnSwitchClick(this.id)">'. $buttonText . '</button>
-                                </div>
-                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                                    <p class="p-component-label"><b>Room:</b> ' . $rN . '</p>
-                                    <p class="p-component-label"><b>Description:</b> ' . $aD . '</p>
+                        echo '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 rooms ' . $strippedrN .'" id="' . $strippedrN . '">
+                                <div class="component-card">
+                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                        <p class="p-component-main"><i class="fa fa-lightbulb"></i>' . $aN . '</p>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                        <button class="'. $buttonClass . '" id="b' . $aID . '" onclick="fnSwitchClick(this.id)">'. $buttonText . '</button>
+                                    </div>
+                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                        <p class="p-component-label"><b>Room:</b> ' . $rN . '</p>
+                                        <p class="p-component-label"><b>Description:</b> ' . $aD . '</p>
 
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                        <button class="btn-component-switch fa fa-cog" id="c' . $aID . '" onclick="fnComponentSettingsRedirect(this.id)"></button>
+                                    </div>
                                 </div>
-                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                    <button class="btn-component-switch fa fa-cog" id="c' . $aID . '" onclick="fnComponentSettingsRedirect(this.id)"></button>
-                                </div>
-                            </div>
-                          </div>';
+                              </div>';
                     }
                     else if ($aT == "S")
                     {
