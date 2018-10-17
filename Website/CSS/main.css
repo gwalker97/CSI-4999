@@ -14,6 +14,14 @@ body {
     animation: spin 1s;
 }
 
+.anti-spin {
+    -webkit-animation: anti-spin 1s; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: anti-spin 1s; /* Firefox < 16 */
+    -ms-animation: anti-spin 1s; /* Internet Explorer */
+    -o-animation: anti-spin 1s; /* Opera < 12.1 */
+    animation: anti-spin 1s;
+}
+
 #loading {
    width: 100%;
    height: 100%;
@@ -82,6 +90,19 @@ body {
 @keyframes spin {
     from {transform:rotate(0deg);}
     to {transform:rotate(360deg);}
+}
+
+@-moz-keyframes anti-spin {
+    from { -moz-transform: rotate(0deg); }
+    to { -moz-transform: rotate(-360deg); }
+}
+@-webkit-keyframes anti-spin {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(-360deg); }
+}
+@keyframes anti-spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(-360deg);}
 }
 
 h1 {
@@ -587,6 +608,14 @@ path {
 
 .temp-display-off {
     display: none;
+}
+
+.btn-temp:hover {
+    box-shadow: inset 0px -2px 12px 2px #4e86c34f; 
+}
+
+.btn-temp:active {
+    box-shadow: inset 0px -2px 12px 2px #4e86c34f; 
 }
 
 .btn-temp-left {

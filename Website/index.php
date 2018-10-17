@@ -54,6 +54,7 @@
                 if(type == "f") {
                     var elementID = 'f-image-' + changeID;
                     document.getElementById(elementID).classList.remove('spin');
+                    document.getElementById(elementID).classList.add('anti-spin');
                 }
                 else if(type == "l") {
                     var elementID = 'l-image-' + changeID;
@@ -71,6 +72,7 @@
                 if(type == "f") {
                     var elementID = 'f-image-' + changeID;
                     document.getElementById(elementID).classList.add('spin');
+                    document.getElementById(elementID).classList.remove('anti-spin');
                 }
                 else if(type == "l") {
                     var elementID = 'l-image-' + changeID;
@@ -190,6 +192,7 @@
                             if(type == "f") {
                                 var elementID = 'f-image-' + tempButton.substring(1);
                                 document.getElementById(elementID).classList.add('spin');
+                                document.getElementById(elementID).classList.remove('anti-spin');
                             }
                             else if(type == "l") {
                                 var elementID = 'l-image-' + tempButton.substring(1);
@@ -207,7 +210,9 @@
                         else {                            
                             if(type == "f") {
                                 var elementID = 'f-image-' + tempButton.substring(1);
-                                document.getElementById(elementID).classList.remove('spin');
+                                if(document.getElementById(elementID).classList.contains('spin')) {
+                                    document.getElementById(elementID).classList.remove('spin');               document.getElementById(elementID).classList.add('anti-spin');
+                                }
                             }
                             else if(type == "l") {
                                 var elementID = 'l-image-' + tempButton.substring(1);
@@ -468,8 +473,8 @@
                                 echo '<span id="displayTempC" class="temp-display-off">' . $C . '°</span>';
                             ?>
 
-                            <button id="btnTempF" class="btn-temp-left btn-temp-selected" onclick="fnTempChange(this.id)">F</button>
-                            <button id="btnTempC" class="btn-temp-right btn-temp-not-selected" onclick="fnTempChange(this.id)">C</button>
+                            <button id="btnTempF" class="btn-temp btn-temp-left btn-temp-selected" onclick="fnTempChange(this.id)">F</button>
+                            <button id="btnTempC" class="btn-temp btn-temp-right btn-temp-not-selected" onclick="fnTempChange(this.id)">C</button>
                         </div>
                     </div>
                     <?php
