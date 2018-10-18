@@ -56,9 +56,9 @@ def read_temp():
         			temp_string = lines[1][equals_pos+2:]
         			c = float(temp_string) / 1000.0
         			f = temp_c * 9.0 / 5.0 + 32.0
+		return c, f
 	except:
-		print "Something went wrong"
-        return c, f
+		print read_sensor()
 
 def mysqlConn():
 	myconn = mysql.connector.connect(host=hostname, user=username, passwd=password, db=dbname)
