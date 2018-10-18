@@ -19,6 +19,7 @@
 			$_SESSION['pass'] = $row['Password'];
             $_SESSION['admin'] = $row['Admin'];
             $_SESSION['uID'] = $row['User_ID'];
+            $_SESSION['gID'] = $row['User_gID'];
 			$_SESSION['guest'] = false;
             $success = true;
             
