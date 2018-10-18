@@ -54,11 +54,11 @@ def read_temp():
 			equals_pos = lines[1].find('t=')
     			if equals_pos != -1:
         			temp_string = lines[1][equals_pos+2:]
-        			temp_c = float(temp_string) / 1000.0
-        			temp_f = temp_c * 9.0 / 5.0 + 32.0
+        			c = float(temp_string) / 1000.0
+        			f = temp_c * 9.0 / 5.0 + 32.0
 	except:
 		print "Something went wrong"
-        return temp_c, temp_f
+        return c, f
 
 def mysqlConn():
 	myconn = mysql.connector.connect(host=hostname, user=username, passwd=password, db=dbname)

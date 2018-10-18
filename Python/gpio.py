@@ -5,6 +5,7 @@ import mysql.connector
 import RPi.GPIO as gpio
 from mysql.connector import MySQLConnection, Error
 import time
+import temp
 
 hostname = '127.0.0.1'
 username = 'root'
@@ -31,6 +32,7 @@ def doQuery( conn ):
 def dbThread( conn ):
 	while 1:
 		time.sleep(.1)
+		#print "Celsius: %s / Far: %s" %(temp.c, temp.f)
 		doQuery( conn )
 
 
