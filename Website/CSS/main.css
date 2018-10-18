@@ -708,6 +708,42 @@ path {
     letter-spacing: 2px;
 }
 
+.all-on-off {
+    padding: 6px;
+    position: relative;
+    top: 1px;
+}
+
+.all-off {
+    position: relative;
+    top: 1px;
+    margin-left: -2px;
+    border-radius: 0;
+    background-color: #b7b7b7;
+    padding: 0 7px;
+}
+
+.all-off:hover {
+    box-shadow: inset 0px -2px 12px 0px #4e86c3
+}
+
+.all-off:active {
+    box-shadow: inset 0px -2px 12px 0px #4e86c3
+}
+
+.all-on {
+    margin-left: -6px;
+    background-color: #91c9ec;
+}
+
+.all-on:hover {
+    box-shadow: inset 0px -2px 12px 0px #4e86c3
+}
+
+.all-on:active {
+    box-shadow: inset 0px -2px 12px 0px #4e86c3
+}
+
 .fa-setting-scene {
     font-size: 18px;
     color: gray;
@@ -788,7 +824,6 @@ path {
 
 .fa-lightbulb {
     color: #ffa901;
-    margin-right: 20px;
     font-size: 28px;
 }
 
