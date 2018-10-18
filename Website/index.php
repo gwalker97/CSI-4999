@@ -558,6 +558,20 @@
                 }
             }
         }
+        
+        function fnAllOn() {
+            $.post(
+                "allOffOn.php",
+                { OnOff: (1.00),  },
+            );
+        }
+        
+        function fnAllOff() {
+            $.post(
+                "allOffOn.php",
+                { OnOff: (0.00),  },
+            );
+        }
     </script>
 
             <body class="login-body">
@@ -829,7 +843,12 @@
                     <hr>
 <!--                    SCENES-->
                     <div id="all-scenes" class="all-scenes-container">
-                        
+                        <div class="scene-container">
+                            <button id="" class="scene-name all-on-off" type="button">All
+                                <button id="all-off" class="btn-scene-settings all-off" onclick="fnAllOff()">Off</button>
+                                <button id="all-on" class="btn-scene-settings all-on" onclick="fnAllOn()">On</button>
+                            </button>
+                        </div>
                         <?php
                             $sql = "SELECT Scene_ID, Scene_Name, Scene_Order, Scene_Color FROM Scenes WHERE House_ID = " . $_SESSION['home'] . "";
                             $result = mysqli_query($conn,$sql);
@@ -886,7 +905,7 @@
                         echo '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 rooms ' . $strippedrN .'" id="' . $strippedrN . '">
                                 <div class="component-card">
                                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                                        <p class="p-component-main"><i id="l-image-' . $aID .'" class="fa fa-lightbulb"></i>' . $aN . '</p>
+                                        <p class="p-component-main"><i id="l-image-' . $aID .'" class="fa fa-lightbulb" style="margin-right: 20px;"></i>' . $aN . '</p>
                                     </div>
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                                         <button class="'. $buttonClass . '" id="l' . $aID . '" onclick="fnSwitchClick(this.id)">'. $buttonText . '</button>
