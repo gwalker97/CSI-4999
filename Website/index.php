@@ -163,23 +163,31 @@
             $('#colorSelect').change(function(){
                 var color = $(this).val().toLowerCase();
                 if(color == "color") {
-                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-black').removeClass('scene-blue');
+                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-black').removeClass('scene-blue').removeClass('scene-green').removeClass('scene-orange');
                 }
                 else if(color == "blue") {
-                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-black');
+                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-black').removeClass('scene-green').removeClass('scene-orange');
                     $('#color-brush').addClass('scene-blue');
                 }
                 else if (color == "red") {
-                    $('#color-brush').removeClass('scene-blue').removeClass('scene-yellow').removeClass('scene-black');
+                    $('#color-brush').removeClass('scene-blue').removeClass('scene-yellow').removeClass('scene-black').removeClass('scene-green').removeClass('scene-orange');
                     $('#color-brush').addClass('scene-red');
                 }
                 else if (color == "yellow") {
-                    $('#color-brush').removeClass('scene-red').removeClass('scene-blue').removeClass('scene-black');
+                    $('#color-brush').removeClass('scene-red').removeClass('scene-blue').removeClass('scene-black').removeClass('scene-green').removeClass('scene-orange');
                     $('#color-brush').addClass('scene-yellow');                   
                 }
                 else if (color == "black") {
-                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-blue');
+                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-blue').removeClass('scene-green').removeClass('scene-orange');
                     $('#color-brush').addClass('scene-black');                    
+                }
+                else if (color == "green") {
+                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-blue').removeClass('scene-black').removeClass('scene-orange');
+                    $('#color-brush').addClass('scene-green'); 
+                }
+                else if (color == "orange") {
+                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-blue').removeClass('scene-black').removeClass('scene-green');
+                    $('#color-brush').addClass('scene-orange'); 
                 }
             });
         });
@@ -456,6 +464,8 @@
             document.getElementById('color-brush').classList.remove('scene-yellow');
             document.getElementById('color-brush').classList.remove('scene-black');
             document.getElementById('color-brush').classList.remove('scene-blue');
+            document.getElementById('color-brush').classList.remove('scene-green');
+            document.getElementById('color-brush').classList.remove('scene-orange');
             
             document.getElementById('automate-times').classList.add('dont-display');
             
@@ -576,7 +586,9 @@
                                         <select id="colorSelect" class="selects color-select">
                                             <option value="color">Color</option>
                                             <option value="blue">Blue</option>
+                                            <option value="green">Green</option>
                                             <option value="yellow">Yellow</option>
+                                            <option value="orange">Orange</option>
                                             <option value="red">Red</option>
                                             <option value="black">Black</option>
                                         </select>
@@ -628,10 +640,7 @@
                                     </ul>
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <button type="button" class="btn-component-save-cancel btn-setting-option btn-cancel" data-dismiss="modal" onclick="fnClearSceneModal()">Cancel</button>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene()">Save</button>
                                     </div>
                                 </div>
@@ -832,7 +841,7 @@
                     {
                         echo'<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 rooms ' . $strippedrN . '" id="' . $strippedrN . '">
                                 <div class="component-card">
-                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="margin-top: 7px;">
                                         <p class="p-component-main"><img id="f-image-' . $aID .'" class="fan-icon" src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTguMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDI5NS4xODIgMjk1LjE4MiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMjk1LjE4MiAyOTUuMTgyOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjUxMnB4IiBoZWlnaHQ9IjUxMnB4Ij4KPHBhdGggaWQ9IlhNTElEXzNfIiBkPSJNMjAwLjQ5OSwxMjQuNGM3Ljk3LTIuNzk3LDE2LjMxOC0xLjQ3NCwyNS4yNTgsMC40OWM1LjkwMSwxLjMsMTIuMDA2LDIuNjQ4LDE4Ljg1NCwyLjY0OCAgYzkuMTY1LDAsMTcuNzQ1LTIuNTEsMjYuMjMyLTcuNjY5YzEzLjA4MS03Ljk1NCwyMi4wMy0yMi4xODMsMjMuOTQtMzguMDYxYzIuMTc4LTE4LjE0My00LjYxOS0zNi4xNDItMTkuMTQ2LTUwLjY2NyAgYy0xNC40Mi0xNC40Mi0zMy42Ny0yMi4zNTctNTQuMjAzLTIyLjM1N2MtMjAuOTU1LDAtNDAuNzE1LDguMjItNTUuNjQyLDIzLjE0M2MtMTguNjU2LDE4LjY1Ny0zMC43OTMsNDguNDAzLTMxLjAwMyw3NS42ODQgIGMtNC40MzktMy4yMzEtOC4zNy03LjE4OS0xMC4zODktMTIuOTI5Yy0zLjEyNS04Ljg3Ny0xLjQ0OS0xNi40NjksMC40ODgtMjUuMjU5YzIuNjU4LTEyLjA0LDUuOTYtMjcuMDI1LTUuMDE5LTQ1LjA4NyAgQzExMC43NDMsOS4zMzQsOTMuNjU3LDAuMDExLDc1LjI3NCwwLjAxMWMtMTUuODU4LDAtMzEuNTMsNi45MzgtNDQuMTMxLDE5LjUzNEMxLjA3Niw0OS42MjIsMS40MzYsOTguODk4LDMxLjkzNCwxMjkuMzkgIGMxOC40MTEsMTguNDE2LDQ4LjY2NSwzMC44MTYsNzUuNjAxLDMxLjExOWMtMy4yMjEsNC4zOTUtNy4xNTksOC4yNjYtMTIuODUxLDEwLjI3MmMtNy45NTcsMi44MDgtMTYuMzA2LDEuNDkzLTI1LjI2MS0wLjQ4OSAgYy01Ljg5OS0xLjI5OS0xMi4wMDQtMi42NDktMTguODU2LTIuNjQ5Yy05LjE2MSwwLTE3Ljc0MiwyLjUwOC0yNi4yMjgsNy42NjdjLTEzLjA4MSw3Ljk1Ni0yMi4wMywyMi4xODQtMjMuOTQsMzguMDYzICBjLTIuMTc5LDE4LjE0Myw0LjYyMiwzNi4xNDMsMTkuMTQ1LDUwLjY2NmMxNC40MTksMTQuNDIsMzMuNjcxLDIyLjM1Niw1NC4yMDUsMjIuMzU2YzIwLjk1NCwwLDQwLjcxNi04LjIyLDU1LjY0Mi0yMy4xNDIgIGMxOC42NTYtMTguNjU3LDMwLjc5Mi00OC40MDIsMzEuMDA0LTc1LjY4M2M0LjQzNiwzLjIzLDguMzY3LDcuMTg5LDEwLjM4OSwxMi45MjdjMy4xMjQsOC44NzcsMS40NDksMTYuNDY5LTAuNDksMjUuMjYgIGMtMi42NTgsMTIuMDM5LTUuOTYsMjcuMDI1LDUuMDIsNDUuMDg3YzkuMTI2LDE1LjAwNCwyNi4yMTMsMjQuMzI3LDQ0LjU5NiwyNC4zMjdjMTUuODU5LDAsMzEuNTMxLTYuOTM5LDQ0LjEzMi0xOS41MzQgIGMzMC4wNjEtMzAuMDcxLDI5LjcwOC03OS4zNDctMC43OTItMTA5Ljg0NWMtMTguNDExLTE4LjQxOC00OC42NjYtMzAuODE3LTc1LjU5OS0zMS4xMTggIEMxOTAuODY5LDEzMC4yNzcsMTk0LjgwOSwxMjYuNDA2LDIwMC40OTksMTI0LjR6IE0xNjAuMTg3LDE2MC4xODdjLTYuNzI3LDYuNzI3LTE4LjQ2NSw2LjcyNy0yNS4xOTIsMCAgYy02Ljk0My02Ljk0OC02Ljk0My0xOC4yNDQsMC0yNS4xOTJjMy4zNjMtMy4zNjMsNy44MzYtNS4yMTUsMTIuNTk2LTUuMjE1YzQuNzYxLDAsOS4yMzIsMS44NTIsMTIuNTk3LDUuMjE1ICBDMTY3LjEyOSwxNDEuOTQzLDE2Ny4xMjksMTUzLjIzOSwxNjAuMTg3LDE2MC4xODd6IiBmaWxsPSIjMGE5MWM3Ii8+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=" />' . $aN . '</p>
                                     </div>
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
