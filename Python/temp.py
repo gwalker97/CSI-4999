@@ -18,26 +18,17 @@ os.system('modprobe w1-therm')
  
 base_dir = '/sys/bus/w1/devices/'
 #device_folder;
-#device_file;
-done = False;
-while not done:
-	#try:
-		device_folder = glob.glob(base_dir + '28*')[0]
-		device_file = device_folder + '/w1_slave'
-		done = True;
-	#except:
-		print "not done";
 
 def read_sensor():
-	done = False;
+	done = False
 	while not done:
 		try:
 			device_folder = glob.glob(base_dir + '28*')[0]
 			device_file = device_folder + '/w1_slave'
-			done = True;
+			done = True
 		except:	
-			done = False; 
- 	return done
+			done = False 
+	return done
 
 def read_temp_raw():
     f = open(device_file, 'r')
@@ -46,19 +37,22 @@ def read_temp_raw():
     return lines
  
 def read_temp():
-	try:
+	global c, f
+	#try:
     		lines = read_temp_raw()
-     	  	while lines[0].strip()[-3:] != 'YES':
+     		while lines[0].strip()[-3:] != 'YES':
        			time.sleep(0.2)
 			lines = read_temp_raw()
 			equals_pos = lines[1].find('t=')
-    			if equals_pos != -1:
+			print "While"
+			if equals_pos != -1:
+				print "if"
         			temp_string = lines[1][equals_pos+2:]
         			c = float(temp_string) / 1000.0
         			f = temp_c * 9.0 / 5.0 + 32.0
-		return c, f
-	except:
-		print read_sensor()
+	return 0, 0
+	#except:
+		#print read_sensor()
 
 def mysqlConn():
 	myconn = mysql.connector.connect(host=hostname, user=username, passwd=password, db=dbname)
@@ -72,7 +66,7 @@ def reading():
 		print "%s C / %s F" %(int(temps[0]),int(temps[1]))
 		conn.commit()
 		print "Sending Update"
-		cur.execute( "Update temp set celsius = %s, fahr = %s" %(int(temps[0]), int(temps[1])))
+		cur.execute( "Update Temp set C = %s, F = %s" %(int(temps[0]), int(temps[1])))
 		time.sleep(.5)
 def main():
 	initBool = False;
