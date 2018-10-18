@@ -554,7 +554,7 @@
                 <!--loading content-->
                 <div id="loading">
                     <div class="loading-box">
-                        <img id="loading-image" src="images/loader.gif" alt="Loading..." />
+                        <img id="loading-image" src="Images/loader.gif" alt="Loading..." />
                     </div>
                 </div>
                 
