@@ -1,15 +1,7 @@
 import os
 import glob
 import time
-import mysql.connector
-from mysql.connector import MySQLConnection, Error
-
-hostname = '127.0.0.1'
-username = 'root'
-password = 'root'
-dbname = 'SeniorProject'
-dbtable = 'Addon'
-
+ 
 os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
  
@@ -34,22 +26,8 @@ def read_temp():
         temp_c = float(temp_string) / 1000.0
         temp_f = temp_c * 9.0 / 5.0 + 32.0
         return temp_c, temp_f
-def mysqlConn():
-	myconn = mysql.connector.connect(host=hostname, user=username, passwd=password, db=dbname)
-	return myconn
-
-def reading():	
-	while True:	
-		temps = read_temp()
-		print "%s C / %s F" %(int(temps[0]),int(temps[1]))	
-		cur = conn.cursor(buffered=True)
-		conn.commit()
-		cur.execute( "Update temp set celsius = %s, fahr = %s" %(int(temps[0]), int(temps[1])))
-		time.sleep(.5)
 	
-
-def main():
-	mysqlConn()
-
-if __name__ == '__main__':
-	main()
+while True:
+	print(read_temp())	
+	time.sleep(1)
+	

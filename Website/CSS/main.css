@@ -6,6 +6,50 @@ body {
     animation: fadein 1s;
 }
 
+.spin {
+    -webkit-animation: spin 1s; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: spin 1s; /* Firefox < 16 */
+    -ms-animation: spin 1s; /* Internet Explorer */
+    -o-animation: spin 1s; /* Opera < 12.1 */
+    animation: spin 1s;
+}
+
+.anti-spin {
+    -webkit-animation: anti-spin 1s; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: anti-spin 1s; /* Firefox < 16 */
+    -ms-animation: anti-spin 1s; /* Internet Explorer */
+    -o-animation: anti-spin 1s; /* Opera < 12.1 */
+    animation: anti-spin 1s;
+}
+
+#loading {
+   width: 100%;
+   height: 100%;
+   top: 0;
+   left: 0;
+   position: fixed;
+   display: block;
+   opacity: 0.7;
+   background-color: #fff;
+   z-index: 99;
+   text-align: center;
+}
+
+.loading-box {
+    margin: auto;
+    width: 100px;
+    height: 100%;
+}
+
+#loading-image {
+    margin: auto;
+    margin-left: -45px;
+    top: 45%;
+    width: 100px;
+    z-index: 100;
+    position: absolute;
+}
+
 @keyframes fadein {
   from { opacity: 0; }
   to   { opacity: 1; }
@@ -33,6 +77,32 @@ body {
 @-o-keyframes fadein {
   from { opacity: 0; }
   to   { opacity: 1; }
+}
+
+@-moz-keyframes spin {
+    from { -moz-transform: rotate(0deg); }
+    to { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
+}
+
+@-moz-keyframes anti-spin {
+    from { -moz-transform: rotate(0deg); }
+    to { -moz-transform: rotate(-360deg); }
+}
+@-webkit-keyframes anti-spin {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(-360deg); }
+}
+@keyframes anti-spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(-360deg);}
 }
 
 h1 {
@@ -102,6 +172,14 @@ h4 {
 }
 
 .login-body {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#4184ad+0,2aa3d3+23,0895db+78,32c3ef+100 */
+    
+    /*FF3.6-15, Chrome10-25,Safari5.1-6, W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+, IE6-9 fallback on horizontal gradient */ 
+    /*background: -moz-linear-gradient(45deg, #4184ad 0%, #2aa3d3 23%, #0895db 78%, #32c3ef 100%);
+    background: -webkit-linear-gradient(45deg, #4184ad 0%,#2aa3d3 23%,#0895db 78%,#32c3ef 100%);
+    background: linear-gradient(45deg, #4184ad 0%,#2aa3d3 23%,#0895db 78%,#32c3ef 100%); 
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4184ad', endColorstr='#32c3ef',GradientType=1 );*/
+
     background-image: url("/Images/home.jpg");
     background-size: cover;
     background-attachment: fixed;
@@ -223,7 +301,7 @@ h4 {
 
 .main-page-container {
     position: relative;
-    background-color: #fffffff5;
+    background-color: #fffffffa;
     margin: 25px auto;
     margin-top: 3%;
     padding: 3%;
@@ -232,6 +310,7 @@ h4 {
     max-width: 1100px;
     border-radius: 10px;
     overflow: auto;
+    box-shadow: 0px 0px 8px 0px #8888885e;
 }
 
 .div-devices {
@@ -244,7 +323,7 @@ h4 {
 }
 
 .component-card {
-    margin: 1% 0;
+    margin-bottom: 2%;
     background-color: #ffffffe8;
     min-width: 260px;
     max-width: 400px;
@@ -252,18 +331,26 @@ h4 {
     padding: 3%;
     padding-top: 14px;
     border-radius: 10px;
-    box-shadow: 7px 8px 10px 0px #8888885e;
+    box-shadow: 0px 0px 8px 0px #8888885e;
+}
+
+.component-card:hover {
+    box-shadow: 0px 0px 8px 0px #a3aeb5;
 }
 
 .component-card-slider {
-    margin: 1% 0;
+    margin-bottom: 2%;
     background-color: #ffffffe8;
     min-width: 260px;
     max-width: 400px;
     min-height: 125px;
     padding: 6%;
     border-radius: 10px;
-    box-shadow: 7px 8px 10px 0px #8888885e;
+    box-shadow: 0px 0px 8px 0px #8888885e;
+}
+
+.component-card-slider:hover {
+    box-shadow: 0px 0px 8px 0px #a3aeb5;
 }
 
 .btn-component-switch {
@@ -276,6 +363,22 @@ h4 {
     font-weight: bold;
     height: 40px;
     margin-bottom: 3px;
+}
+
+.btn-component-switch:hover { 
+    box-shadow: inset 0px -2px 12px 2px #4e86c34f; 
+}
+
+.btn-component-switch:active { 
+    box-shadow: inset 0px -2px 12px 2px #4e86c34f; 
+}
+
+.btn-component-switch-settings:hover {
+    box-shadow: inset 0px -2px 12px 2px #d4d4d44f; 
+}
+
+.btn-component-switch-settings:active {
+    box-shadow: inset 0px -2px 12px 2px #d4d4d44f; 
 }
 
 .btn-component-save-cancel {
@@ -301,6 +404,18 @@ h4 {
     letter-spacing: 2px;
 }
 
+.btn-new-component:hover {
+    color: white;
+    background-color: #57a1d4;
+    text-decoration: none; 
+}
+
+.btn-new-component:active {
+    color: white;
+    background-color: #57a1d4;
+    text-decoration: none; 
+}
+
 .btn-on {
     background-color: #91c9ec99;
 }
@@ -309,11 +424,38 @@ h4 {
     background-color: #80808063;
 }
 
+.color-select {
+    padding: 10px;
+    margin-right: 0 !important;
+    width: 70%;
+    display: inline-block;
+    margin-top: 4px;
+    height: 42px !important;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0px;
+}
+
+.color-caret {
+    right: 45px;
+    top: 18px;
+    position: absolute;
+}
+
 .selects {
+    background-color: white;
     height: 28px;
     margin-right: 16px;
 }
 
+.selects:hover {
+    background-color: #fafaff;
+}
+
+.selects:active {
+    background-color: #fafaff;
+}
 
 /*component settings*/
 
@@ -487,6 +629,14 @@ path {
     display: none;
 }
 
+.btn-temp:hover {
+    box-shadow: inset 0px -2px 12px 2px #4e86c34f; 
+}
+
+.btn-temp:active {
+    box-shadow: inset 0px -2px 12px 2px #4e86c34f; 
+}
+
 .btn-temp-left {
     margin-left: 15px;
     border: none;
@@ -528,6 +678,10 @@ path {
     position: relative;
 }
 
+.all-scenes-container {
+    margin-bottom: 8px;
+}
+
 .scene-container {
     display: inline-block;
     width: fit-content;
@@ -553,12 +707,21 @@ path {
     letter-spacing: 2px;
 }
 
-.fa-info-circle-scene {
+.fa-setting-scene {
     font-size: 18px;
+    color: gray;
 }
 
 .scene-yellow {
     background-color: yellow;
+}
+
+.scene-yellow:hover {
+    background-color: #ffee00;
+}
+
+.scene-yellow:active {
+    background-color: #ffee00;
 }
 
 .scene-black {
@@ -566,19 +729,47 @@ path {
     color: white;
 }
 
+.scene-black:hover {
+    background-color: #404040;
+}
+
+.scene-black:active {
+    background-color: #404040;
+}
+
 .scene-blue {
     background-color: #0a91c7;
     color: white;
 }
 
+.scene-blue:hover {
+    background-color: #0d7ba7;
+}
+
+.scene-blue:active {
+    background-color: #0d7ba7;
+}
+
 .scene-red {
-    background-color: #ff4f4f;
+    background-color: #f74949;
+}
+
+.scene-red:hover {
+    background-color: #ff7070;
+}
+
+.scene-red:active {
+    background-color: #ff7070;
 }
 
 .fa-lightbulb {
     color: #ffa901;
     margin-right: 20px;
     font-size: 28px;
+}
+
+.fa-lightbulb-on {
+    color: #ffd801f2 !important;
 }
 
 .fa-plus-main {
@@ -594,9 +785,165 @@ path {
     width: 32px;
     margin-top: -1px;
     margin-right: 13px;
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+}
+
+.slider-icon-flipped {
+    -moz-transform: scaleX(1);
+    -o-transform: scaleX(1);
+    -webkit-transform: scaleX(1);
+    transform: scaleX(1);
 }
 
 .fa-thermometer-half {
     font-size: 24px;
     color: #000000a3;
+}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.new-dropdown {
+    display: block;
+    color: black;
+    padding: 8px 18px;
+}
+
+.new-dropdown:hover {
+    color: white;
+    background-color: #57a1d4;
+    text-decoration: none;
+}
+
+.new-dropdown:first-child:hover {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.new-dropdown:last-child:hover {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.new-dropdown:active {
+    color: white;
+    background-color: #57a1d4;
+    text-decoration: none;
+}
+
+.new-dropdown:first-child:active {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.new-dropdown:last-child:active {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.new-dropdown-menu {
+    min-width: 100px;
+    padding: 0;
+    background-color: #91c9ec;
+    border-radius: 10px;
+}
+
+.automate-div {
+    margin: 15px auto;
+    text-align: center;
+}
+
+.automate-checkbox {
+    display: inline-block;
+    margin-left: 5px !important;
+}
+
+.lbl-automate {
+    display: block;
+    font-weight: normal;
+    font-size: 16px;
+    margin-top: 22px;
+    margin-bottom: 10px;
+}
+
+.lbl-choose-appliances {
+    font-weight: normal;
+    font-size: 16px;
+    margin-top: 22px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.automate-error {
+    text-align: center;
+    color: red;
+    font-size: 14px;
+}
+
+#automate-times {
+    margin-bottom: 10px;
+}
+
+.timepicker {
+    margin-bottom: 10px;
+}
+
+.display {
+    display: block;
+}
+
+.dont-display {
+    display: none;
+}
+
+.paint-brush {
+    position: unset;
+    margin-right: -5px;
+    z-index: 100;
+}
+
+.scene-name-input {
+    width: 70%;
+}
+
+.appliance-list-selector {
+    text-align: center;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+.ul-appliance-list {
+    width: 50%;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px auto;
+    list-style: none;
+    background-color: #ffffffe8;
+    box-shadow: 0px 0px 8px 0px #8888885e;
+}
+
+.li-appliance {
+    margin: 1px 0;
+    border-radius: 10px;
+    padding: 5px 0;
+}
+
+.li-appliance:hover {
+    cursor: pointer;
+}
+
+.input-time {
+    width: 100%;
+    border-radius: 2px;
+    padding: 10px;
+    margin: 0;
+    border: 1px solid #0000003d;
+}
+
+.appliance-selected {
+    background-color: #bcdff4;
 }
