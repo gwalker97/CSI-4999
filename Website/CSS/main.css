@@ -424,6 +424,25 @@ h4 {
     background-color: #80808063;
 }
 
+.color-select {
+    padding: 10px;
+    margin-right: 0 !important;
+    width: 70%;
+    display: inline-block;
+    margin-top: 4px;
+    height: 42px !important;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0px;
+}
+
+.color-caret {
+    right: 45px;
+    top: 18px;
+    position: absolute;
+}
+
 .selects {
     background-color: white;
     height: 28px;
@@ -786,6 +805,8 @@ path {
     color: #000000a3;
 }
 
+.dropdown:hover .dropdown-content {display: block;}
+
 .new-dropdown {
     display: block;
     color: black;
@@ -832,7 +853,7 @@ path {
 }
 
 .automate-div {
-    margin: auto;
+    margin: 15px auto;
     text-align: center;
 }
 
@@ -842,14 +863,29 @@ path {
 }
 
 .lbl-automate {
+    display: block;
     font-weight: normal;
     font-size: 16px;
-    margin: 10px 0;
+    margin-top: 22px;
+    margin-bottom: 10px;
+}
+
+.lbl-choose-appliances {
+    font-weight: normal;
+    font-size: 16px;
+    margin-top: 22px;
+    margin-bottom: 10px;
+    text-align: center;
 }
 
 .automate-error {
+    text-align: center;
     color: red;
-    font-size: 16px;
+    font-size: 14px;
+}
+
+#automate-times {
+    margin-bottom: 10px;
 }
 
 .timepicker {
@@ -862,4 +898,52 @@ path {
 
 .dont-display {
     display: none;
+}
+
+.paint-brush {
+    position: unset;
+    margin-right: -5px;
+    z-index: 100;
+}
+
+.scene-name-input {
+    width: 70%;
+}
+
+.appliance-list-selector {
+    text-align: center;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+.ul-appliance-list {
+    width: 50%;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px auto;
+    list-style: none;
+    background-color: #ffffffe8;
+    box-shadow: 0px 0px 8px 0px #8888885e;
+}
+
+.li-appliance {
+    margin: 1px 0;
+    border-radius: 10px;
+    padding: 5px 0;
+}
+
+.li-appliance:hover {
+    cursor: pointer;
+}
+
+.input-time {
+    width: 100%;
+    border-radius: 2px;
+    padding: 10px;
+    margin: 0;
+    border: 1px solid #0000003d;
+}
+
+.appliance-selected {
+    background-color: #bcdff4;
 }

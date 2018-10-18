@@ -12,7 +12,7 @@
     <head>
         <title>HARP</title>
 	<!-- AJAX & jQuery CDN, must go before Bootstrap -->
-	   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
@@ -155,6 +155,31 @@
                             $('.' + this.id).show();
                         }
                     });
+                }
+            });
+        });
+        
+        $(function() {
+            $('#colorSelect').change(function(){
+                var color = $(this).val().toLowerCase();
+                if(color == "color") {
+                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-black').removeClass('scene-blue');
+                }
+                else if(color == "blue") {
+                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-black');
+                    $('#color-brush').addClass('scene-blue');
+                }
+                else if (color == "red") {
+                    $('#color-brush').removeClass('scene-blue').removeClass('scene-yellow').removeClass('scene-black');
+                    $('#color-brush').addClass('scene-red');
+                }
+                else if (color == "yellow") {
+                    $('#color-brush').removeClass('scene-red').removeClass('scene-blue').removeClass('scene-black');
+                    $('#color-brush').addClass('scene-yellow');                   
+                }
+                else if (color == "black") {
+                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-blue');
+                    $('#color-brush').addClass('scene-black');                    
                 }
             });
         });
@@ -403,15 +428,113 @@
         });
         
         function fnHideShowAutomation(arg) {
-            var checkBox = document.getElementById(arg)
-            
-            if (checkBox.checked == true) {
+            var isAutomated = arg;            
+
+            if (isAutomated == 1) {
                 document.getElementById('automate-times').classList.remove('dont-display');
                 document.getElementById('automate-times').classList.add('display');
             }
             else {
                 document.getElementById('automate-times').classList.remove('display');
                 document.getElementById('automate-times').classList.add('dont-display');
+            }
+        }
+        
+        function fnSelectSceneAppliance(arg) {
+            var appliance = document.getElementById(arg);
+            
+            if (appliance.classList.contains('appliance-selected')) {
+                appliance.classList.remove('appliance-selected');
+            }
+            else {
+                appliance.classList.add('appliance-selected');
+            }
+        }
+        
+        function fnClearSceneModal() {
+            document.getElementById('color-brush').classList.remove('scene-red');
+            document.getElementById('color-brush').classList.remove('scene-yellow');
+            document.getElementById('color-brush').classList.remove('scene-black');
+            document.getElementById('color-brush').classList.remove('scene-blue');
+            
+            document.getElementById('automate-times').classList.add('dont-display');
+            
+            document.getElementById('automate-error').classList.remove('display');
+            document.getElementById('automate-error').classList.add('dont-display');
+
+            $('.li-appliance').each(function(i, obj) {
+                $('.li-appliance').removeClass('appliance-selected');
+            });
+            document.getElementById('scene-form').reset();
+        }
+        
+        function fnSaveScene() {
+            var sceneName = document.getElementById('scene-name').value;
+            var sceneColor = document.getElementById('colorSelect').value;
+            var sceneAutomated = document.querySelector('input[name="automate"]:checked').value;
+            var sceneStart = document.getElementById('scene-start').value;
+            var sceneEnd = document.getElementById('scene-end').value;
+            var sceneTimeOkay = true;
+            var sceneStartEndOkay = true;
+            var sceneNameOkay = true;
+            var sceneColorOkay = true;
+            var addOnID = "";
+            
+            if (sceneAutomated == 1) {
+                if (sceneStart == "" || sceneEnd == "") {
+                    sceneTimeOkay = false;
+                }
+                if (sceneStart > sceneEnd || sceneStart == sceneEnd) {
+                    sceneStartEndOkay = false;
+                }
+            }
+            if (sceneName == "") {
+                sceneNameOkay = false;
+            }
+            if (sceneColor == "color") {
+                sceneColorOkay = false;
+            }
+
+            if (sceneNameOkay && sceneColorOkay && sceneTimeOkay && sceneStartEndOkay) {
+                fnLoad(true);
+                $('.appliance-selected').each(function(i, obj) {
+                    var shortID = this.id.substring(10);
+                    if (addOnID == "") {
+                        addOnID = shortID;
+                    }
+                    else {
+                        addOnID = addOnID + "," + shortID;
+                    }
+                });
+                
+                $.post(
+                    "newScene.php",
+                    { sN: (sceneName), sC: (sceneColor), sA: (sceneAutomated), sS: (sceneStart), sE: (sceneEnd), aID: (addOnID),  },
+                );
+                
+                fnClearSceneModal();
+                $('#myModal').modal('hide');
+                $('#all-scenes').load(document.URL +  ' #all-scenes');
+                fnLoad(false);
+            }
+            else {
+                if (!sceneTimeOkay || !sceneStartEndOkay) {
+                    if (!sceneTimeOkay) {
+                        document.getElementById('automate-error-times').innerHTML = "You must enter a start and end time.";
+                        document.getElementById('automate-error-times').classList.remove('dont-display');
+                        document.getElementById('automate-error-times').classList.add('display');
+                    }
+                    else {
+                        document.getElementById('automate-error-times').innerHTML = "Start time must be less than end time.";
+                        document.getElementById('automate-error-times').classList.remove('dont-display');
+                        document.getElementById('automate-error-times').classList.add('display');
+                    }
+                }
+                if (!sceneNameOkay || !sceneColorOkay) {
+                    document.getElementById('automate-error').innerHTML = "You must have a name, color, and at least one appliance.";
+                    document.getElementById('automate-error').classList.remove('dont-display');
+                    document.getElementById('automate-error').classList.add('display');
+                }
             }
         }
     </script>
@@ -432,46 +555,85 @@
                     <!-- Modal content-->
                     <div class="modal-content">
                       <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <button type="button" class="close" data-dismiss="modal" onclick="fnClearSceneModal()">&times;</button>
                         <h4 class="modal-title">New Scene</h4>
                       </div>
                         <!-- Modal body-->
                         <div class="modal-body">
                             <!-- Modal form-->
                             
-                            <form class="row">
+                            <form id="scene-form" class="row">
                                 <div class="automate-div">
-                                    <label class="automate-error dont-display">Test</label>
+                                    <label id="automate-error" class="automate-error dont-display"></label>
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <i class="fa fa-home fa-login"></i>
-                                    <input type="text" placeholder="Scene Name" class="input-login">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+                                        <i class="fa fa-home fa-login"></i>
+                                        <input type="text" id="scene-name" placeholder="Scene Name" class="input-login scene-name-input">
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+                                        <i id="color-brush" class="fas fa-paint-brush paint-brush fa-login"></i>
+                                        <select id="colorSelect" class="selects color-select">
+                                            <option value="color">Color</option>
+                                            <option value="blue">Blue</option>
+                                            <option value="yellow">Yellow</option>
+                                            <option value="red">Red</option>
+                                            <option value="black">Black</option>
+                                        </select>
+                                        <i class="fas fa-caret-down color-caret"></i>
+                                    </div>
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="automate-div">
                                         <label class="lbl-automate">Would you like to automate this scene?</label>
-                                        <input id="automate-checkbox" type="checkbox" onclick="fnHideShowAutomation(this.id)" class="automate-checkbox">
+                                        <!--<input id="automate-checkbox" type="checkbox" onclick="fnHideShowAutomation(this.id)" class="automate-checkbox">-->
+                                        <label for="automated" style="margin: 0 5px;">Yes</label>
+                                        <input type="radio" style="margin: 0 5px;" id="automated" name="automate" value="1" onclick="fnHideShowAutomation(this.value)"/>
+                                        <label for="automated" style="margin: 0 5px;">No</label>
+                                        <input type="radio" style="margin: 0 5px;" id="automated" name="automate" value="0" onclick="fnHideShowAutomation(this.value)" checked />
                                     </div>
                                 </div>
-                                <div id="automate-times" class="dont-display">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <label>Start Time</label>
+                                <div id="automate-times" class="dont-display col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <label id="automate-error-times" class="automate-error dont-display"></label>
                                     </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <label>End Time</label>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                        Start Time
+                                        <input placeholder="Start time" type="time" id="scene-start" class="input-login input-time">
                                     </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <input placeholder="Start time" type="text" id="input_starttime" class="form-control timepicker">
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <input placeholder="End time" type="text" id="input_starttime" class="form-control timepicker">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                        End Time
+                                        <input placeholder="End time" type="time" id="scene-end" class="input-login input-time">
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                    <button type="button" class="btn-component-save-cancel btn-setting-option btn-cancel" data-dismiss="modal">Cancel</button>
+                                <div id="choose-appliance" class="appliance-list-selector col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <label class="lbl-choose-appliances">Select the appliances you want in the scene.</label>
+                                    <ul id="appliance-list" class="ul-appliance-list">
+                                    <?php
+                                        $sql3 = "SELECT Addon.Addon_Name, Addon.Addon_ID 
+                                                    FROM Addon 
+                                                    INNER JOIN 
+                                                    (select * from Room where House_ID=" . $_SESSION['home'] . ") as A
+                                                    ON A.Room_ID=Addon.Addon_Room_ID;";
+                                        $result3 = mysqli_query($conn,$sql3);
+                                        $i = -1;
+                                        while($row3 = mysqli_fetch_array($result3,MYSQLI_ASSOC)) {
+                                            $aN = $row3['Addon_Name'];
+                                            $aID = $row3['Addon_ID'];
+                                            
+                                            echo '<li id="scene-app-' . $aID . '" class="li-appliance" onclick="fnSelectSceneAppliance(this.id)">' . $aN . '</li>';
+                                            
+                                        }
+                                    ?>
+                                    </ul>
                                 </div>
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                    <button class="btn-component-save-cancel btn-setting-option btn-save-appliance">Save</button>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <button type="button" class="btn-component-save-cancel btn-setting-option btn-cancel" data-dismiss="modal" onclick="fnClearSceneModal()">Cancel</button>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene()">Save</button>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -562,7 +724,7 @@
                     
                     <hr>
 <!--                    SCENES-->
-                    <div class="all-scenes-container">
+                    <div id="all-scenes" class="all-scenes-container">
                         
                         <?php
                             $sql = "SELECT Scene_ID, Scene_Name, Scene_Order, Scene_Color FROM Scenes WHERE House_ID = " . $_SESSION['home'] . "";
@@ -587,7 +749,7 @@
                     </div>
 <!--                    END SCENES-->
                     
-                    
+                    <div id="all-components">
             <?php
                 $sql3 = "SELECT Addon.Addon_Name, Addon.Addon_Description, Addon.Addon_ID, A.Room_Name, Addon.Addon_State, Addon.Addon_Type 
                             FROM Addon 
@@ -689,6 +851,7 @@
                     }
                 }
             ?> 
+                        </div>
         </div>
     </body>    
 </html>
