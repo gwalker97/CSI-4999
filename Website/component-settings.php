@@ -121,7 +121,7 @@ var componentBehavior = getParameterByName("componentBehavior");
             
                         $count = mysqli_num_rows($result);
                     	?>
-            <h1 class="text-center h1-settings">Component Settings</h1>
+            <h1 class="text-center h1-settings">Appliance Settings</h1>
             <label id="componentErrorText" class="lbl-new-component-hidden"></label>
             <form class="component-settings-card row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
