@@ -31,7 +31,7 @@ body {
    display: block;
    opacity: 0.7;
    background-color: #fff;
-   z-index: 99;
+   z-index: 100;
    text-align: center;
 }
 
@@ -217,7 +217,7 @@ h4 {
     border-radius: 2px;
     padding: 10px;
     width: 100%;
-    background-color: #31708f66;
+    background-color: #91c9ec99;
     border: 1px solid black;
     font-weight: bold;
     width: 90%;
@@ -395,7 +395,7 @@ h4 {
 .btn-new-component {
     display: inline-block;
     border-radius: 10px;
-    background-color: #91c9ec;
+    background-color: #91c9ec99;
     border: 1px solid black;
     margin-top: 10px;
     margin-right: 20px;
@@ -698,6 +698,7 @@ path {
 }
 
 .scene-name {
+    font-weight: bold;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     height: 34px;
@@ -712,16 +713,28 @@ path {
     color: gray;
 }
 
+.scene-green {
+    background-color: #9ade4a;
+}
+
+.scene-green:hover {
+    background-color: #9ee24d;
+}
+
+.scene-green:active {
+    background-color: #9ee24d;
+}
+
 .scene-yellow {
-    background-color: yellow;
+    background-color: #ffd600;
 }
 
 .scene-yellow:hover {
-    background-color: #ffee00;
+    background-color: #fdde3e;
 }
 
 .scene-yellow:active {
-    background-color: #ffee00;
+    background-color: #fdde3e;
 }
 
 .scene-black {
@@ -730,36 +743,47 @@ path {
 }
 
 .scene-black:hover {
-    background-color: #404040;
+    background-color: #292929;
 }
 
 .scene-black:active {
-    background-color: #404040;
+    background-color: #292929;
 }
 
 .scene-blue {
     background-color: #0a91c7;
-    color: white;
 }
 
 .scene-blue:hover {
-    background-color: #0d7ba7;
+    background-color: #0b97d0;
 }
 
 .scene-blue:active {
-    background-color: #0d7ba7;
+    background-color: #0b97d0;
 }
 
 .scene-red {
-    background-color: #f74949;
+    background-color: #e63c3c;
 }
 
 .scene-red:hover {
-    background-color: #ff7070;
+    background-color: #ef4343;
 }
 
 .scene-red:active {
-    background-color: #ff7070;
+    background-color: #ef4343;
+}
+
+.scene-orange {
+    background-color: #ffa901;
+}
+
+.scene-orange:hover {
+    background-color: #fdb21e;
+}
+
+.scene-orange:active {
+    background-color: #fdb21e;
 }
 
 .fa-lightbulb {
