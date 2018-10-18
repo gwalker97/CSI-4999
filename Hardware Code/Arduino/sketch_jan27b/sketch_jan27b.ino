@@ -57,6 +57,7 @@ void loop(void){
   // Initiate the query class instance
   MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
   char* query = "Select Addon_MAC, Addon_Pin, Addon_State from SeniorProject.Addon";
+  //char* query = "Select * from SeniorProject.Addon";
   cur_mem->execute(query);
   // Fetch the columns and print them
   column_names *cols = cur_mem->get_columns();
@@ -76,16 +77,19 @@ void loop(void){
       for (int f = 0; f < cols->num_fields; f++) {
         // Printing each value. Send the values to the gpio function for pin manipulation
         // Send specific index to the gpio function. As of now, check the ip, index length-1, and index length-2
-        //Serial.print(row->values[f]);
-        char* mac = row->values[0];
+         String mac = row->values[0];
+          //Serial.print("From db: ");
+         // Serial.println(row->values[0]);
+          // Serial.println(WiFi.macAddress());
         if(mac == WiFi.macAddress()){
-          gpio(row->values[1], row->values[2]);
-        }
+          gpio(atoi(row->values[1]), atof(row->values[2]));
+         // Serial.println("Made it here");
+       }
         if (f < cols->num_fields-1) {
-         // Serial.print(", ");
+         //Serial.print(", ");
         }
       }
-      //Serial.println();
+     // Serial.println();
     }
   } while (row != NULL);
   //Serial.println("Deleting Cursor");
@@ -95,12 +99,16 @@ void loop(void){
 //This function is passed a pin and state to determine if it is to be shut off or turned on.
 void gpio(int pin, float state){
   pinMode(pin, OUTPUT);
+  //Serial.println(state);
   if(state == 1 && digitalRead(pin) < 1){
-    digitalWrite(pin, LOW);
-  }else if(state == 0 && digitalRead(pin) > 0){
     digitalWrite(pin, HIGH);
+   // Serial.println("Turn on");
+  }else if(state == 0 && digitalRead(pin) > 0){
+    digitalWrite(pin, LOW);
+   // Serial.println("Turn off");
   }else{
     int turns = state * 255;
     analogWrite(pin, turns);
+   // Serial.println("Dim");
   }
 }
