@@ -650,6 +650,85 @@
         function removeSelectedAddons() {
             $('.li-appliance').removeClass('appliance-selected');
         }
+        
+        function fnSceneSettings(arg) {
+            var sID = arg.substring(6);
+            var btnSaveScene = document.getElementById('btn-save-scene');
+            if (btnSaveScene == undefined) {
+                btnSaveScene = document.getElementsByClassName('btn-save-appliance');
+            }
+            btnSaveScene.id = 'btn-save-scene' + sID;
+            btnSaveScene.innerHTML = 'Update';
+            
+            $.post(
+                "sceneSettings.php",
+                { sID: (sID),  },
+                function(response) {	
+                    document.getElementById('scene-name').value = response.Scene_Name;
+                    document.getElementById('colorSelect').value = response.Scene_Color;
+                    removeColorBrushClasses();
+                    switch(response.Scene_Color) {
+                        case 'blue':
+                            $('#color-brush').addClass('scene-blue');
+                            break;
+                        case 'black':
+                            $('#color-brush').addClass('scene-black');
+                            break;
+                        case 'red':
+                            $('#color-brush').addClass('scene-red');
+                            break;
+                        case 'yellow': 
+                            $('#color-brush').addClass('scene-yellow');
+                            break;
+                        case 'green':                                    
+                            $('#color-brush').addClass('scene-green');
+                            break;
+                        case 'orange':
+                            $('#color-brush').addClass('scene-orange');
+                            break;
+                        default:
+                            break;
+                    }
+
+                    if (response.Scene_Color == 'red') {
+                        $('#yesAutomated').prop('checked', true);  
+                        document.getElementById('automate-times').classList.remove('dont-display');
+                        document.getElementById('automate-times').classList.add('display');
+                        document.getElementById('scene-start').value = response.Start_Time;
+                        document.getElementById('scene-end').value = response.End_Time;
+                    }
+                    else {
+                        $('#noAutomated').prop('checked', true);  
+                        document.getElementById('automate-times').classList.remove('display');
+                        document.getElementById('automate-times').classList.add('dont-display');
+                    }
+                }, 'json'
+            );
+            
+            $.post(
+                "sceneSettingsAddons.php",
+                { sID: (sID),  },
+                function(response) {	
+                    removeSelectedAddons();
+                    var addons = response.Addon_ID.split(',');
+                    for(var i = 0; i < addons.length; i++) {
+                        addons[i] = addons[i].replace(/^\s*/, "").replace(/\s*$/, "");
+                        document.getElementById('scene-app-' + addons[i]).classList.add('appliance-selected');
+                    }
+                }, 'json'
+            );
+            
+            $('#myModal').modal('show');
+            
+        }
+        
+        function removeColorBrushClasses() {
+            $('#color-brush').removeClass('scene-blue').removeClass('scene-red').removeClass('scene-black').removeClass('scene-green').removeClass('scene-yellow').removeClass('scene-orange');
+        }
+        
+        function removeSelectedAddons() {
+            $('.li-appliance').removeClass('appliance-selected');
+        }
     </script>
 
             <body class="login-body">
@@ -745,10 +824,14 @@
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 <<<<<<< HEAD
+<<<<<<< HEAD
                                         <button type="button" id="btn-save-scene" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene(this.id)">Save</button>
 =======
                                         <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene()">Save</button>
 >>>>>>> parent of 3f6a589... Merge branch 'master' of https://github.com/gwalker97/CSI-4999
+=======
+                                        <button type="button" id="btn-save-scene" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene(this.id)">Save</button>
+>>>>>>> parent of 63fd48b... Revert "Merge remote-tracking branch 'origin/master'"
                                     </div>
                                 </div>
                             </form>
@@ -811,12 +894,17 @@
                                 New<i class="fa fa-plus fa-plus-main"></i>
                               </button>
                               <div class="dropdown-menu new-dropdown-menu" aria-labelledby="dropdownMenuButton">
+<<<<<<< HEAD
                                 <a class="dropdown-item new-dropdown" href="/new-component.php">Appliance</a>
 <<<<<<< HEAD
                                 <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#myModal" onclick="fnClearSceneModal()">Scene</a>
 =======
                                 <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#myModal">Scene</a>
 >>>>>>> parent of 3f6a589... Merge branch 'master' of https://github.com/gwalker97/CSI-4999
+=======
+                                <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#myModal" onclick="fnClearSceneModal()">Scene</a>
+                                <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#newCompModal">Appliance</a>
+>>>>>>> parent of 63fd48b... Revert "Merge remote-tracking branch 'origin/master'"
                               </div>
                             </div>
                         </div>
