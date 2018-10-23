@@ -17,9 +17,10 @@ os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
  
 base_dir = '/sys/bus/w1/devices/'
-#device_folder;
-
+device_folder = ""
+device_file = ""
 def read_sensor():
+	global device_folder, device_file
 	done = False
 	while not done:
 		try:
@@ -27,6 +28,7 @@ def read_sensor():
 			device_file = device_folder + '/w1_slave'
 			done = True
 		except:	
+			print "not done"
 			done = False
 	return done
 
@@ -38,21 +40,21 @@ def read_temp_raw():
  
 def read_temp():
 	global c, f
-	try:
-    		lines = read_temp_raw()
-     		while lines[0].strip()[-3:] != 'YES':
-       			time.sleep(0.2)
-			lines = read_temp_raw()
-			equals_pos = lines[1].find('t=')
-			print "While"
-			if equals_pos != -1:
-				print "if"
-        			temp_string = lines[1][equals_pos+2:]
-        			c = float(temp_string) / 1000.0
-        			f = temp_c * 9.0 / 5.0 + 32.0
-		return c, f
-	except:
-		print read_sensor()
+	#try:
+    	lines = read_temp_raw()
+     	while lines[0].strip()[-3:] != 'YES':
+     		time.sleep(0.2)
+		lines = read_temp_raw()
+		equals_pos = lines[1].find('t=')
+		print "While"
+		if equals_pos != -1:
+			print "if"
+        		temp_string = lines[1][equals_pos+2:]
+        		c = float(temp_string) / 1000.0
+        		f = temp_c * 9.0 / 5.0 + 32.0
+	return c, f
+	#except:
+		#print read_sensor()
 
 def mysqlConn():
 	myconn = mysql.connector.connect(host=hostname, user=username, passwd=password, db=dbname)
@@ -71,6 +73,7 @@ def reading():
 def main():
 	initBool = False;
 	while not initBool:
+		print "initbool"
 		initBool = read_sensor()
 	reading()
 if __name__ == '__main__':
