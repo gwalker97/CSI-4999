@@ -661,6 +661,12 @@ if($_SESSION["guest"] == true) {
         function removeSelectedAddons() {
             $('.li-appliance').removeClass('appliance-selected');
         }
+        
+        function fnNewAppPinSet(pin){
+            document.getElementById("pin-number").value = pin;
+            document.getElementById("new-comp-pin-text").innerHTML = "Pin Available!";
+        }
+        
     </script>
 
     <body class="login-body">
@@ -843,34 +849,41 @@ if($_SESSION["guest"] == true) {
 			<img src="Images/layouts/pi_third.png" usemap="#pi-map">
 
 			<map name="pi-map">
-			    <area target="" alt="14" title="14" href="14" coords="144,29,6" shape="circle">
-			    <area target="" alt="15" title="15" href="15" coords="490,84,22" shape="circle">
-			    <area target="" alt="18" title="18" href="18" coords="551,85,24" shape="circle">
-			    <area target="" alt="23" title="23" href="23" coords="670,85,23" shape="circle">
-			    <area target="" alt="24" title="24" href="24" coords="728,85,28" shape="circle">
-			    <area target="" alt="25" title="25" href="25" coords="847,85,25" shape="circle">
-			    <area target="" alt="8" title="8" href="8" coords="911,84,25" shape="circle">
-			    <area target="" alt="7" title="7" href="7" coords="970,84,24" shape="circle">
-			    <area target="" alt="12" title="12" href="12" coords="1149,87,22" shape="circle">
-			    <area target="" alt="16" title="16" href="16" coords="1270,84,28" shape="circle">
-			    <area target="" alt="20" title="20" href="20" coords="1329,87,25" shape="circle">
-			    <area target="" alt="21" title="21" href="21" coords="1387,84,22" shape="circle">
-			    <area target="" alt="2" title="2" href="2" coords="313,159,23" shape="circle">
-			    <area target="" alt="3" title="3" href="3" coords="373,155,24" shape="circle">
-			    <area target="" alt="4" title="4" href="4" coords="432,158,24" shape="circle">
-			    <area target="" alt="17" title="17" href="17" coords="553,156,26" shape="circle">
-			    <area target="" alt="27" title="27" href="27" coords="612,159,23" shape="circle">
-			    <area target="" alt="22" title="22" href="22" coords="672,155,27" shape="circle">
-			    <area target="" alt="10" title="10" href="10" coords="792,156,24" shape="circle">
-			    <area target="" alt="9" title="9" href="9" coords="849,157,28" shape="circle">
-			    <area target="" alt="11" title="11" href="11" coords="910,156,28" shape="circle">
-			    <area target="" alt="5" title="5" href="5" coords="1088,158,27" shape="circle">
-			    <area target="" alt="6" title="6" href="6" coords="1148,158,24" shape="circle">
-			    <area target="" alt="13" title="13" href="13" coords="1210,161,22" shape="circle">
-			    <area target="" alt="19" title="19" href="19" coords="1267,159,22" shape="circle">
-			    <area target="" alt="26" title="26" href="26" coords="1329,155,28" shape="circle">
+			    <area alt="14" title="14" href="javascript:fnNewAppPinSet(14)" coords="144,29,6" shape="circle">
+			    <area alt="15" title="15" href="javascript:fnNewAppPinSet(15)" coords="163,28,7" shape="circle">
+			    <area alt="18" title="18" href="javascript:fnNewAppPinSet(18)" coords="184,28,8" shape="circle">
+			    <area alt="23" title="23" href="javascript:fnNewAppPinSet(23)" coords="223,28,8" shape="circle">
+			    <area alt="24" title="24" href="javascript:fnNewAppPinSet(24)" coords="243,28,9" shape="circle">
+			    <area alt="25" title="25" href="javascript:fnNewAppPinSet(25)" coords="282,28,8" shape="circle">
+			    <area alt="8" title="8" href="javascript:fnNewAppPinSet(8)" coords="304,28,8" shape="circle">
+			    <area alt="7" title="7" href="javascript:fnNewAppPinSet(7)" coords="323,28,8" shape="circle">
+			    <area alt="12" title="12" href="javascript:fnNewAppPinSet(12)" coords="383,29,7" shape="circle">
+			    <area alt="16" title="16" href="javascript:fnNewAppPinSet(16)" coords="423,28,9" shape="circle">
+			    <area alt="20" title="20" href="javascript:fnNewAppPinSet(20)" coords="443,29,8" shape="circle">
+			    <area alt="21" title="21" href="javascript:fnNewAppPinSet(21)" coords="462,28,7" shape="circle">
+			    <area alt="2" title="2" href="javascript:fnNewAppPinSet(2)" coords="104,53,8" shape="circle">
+			    <area alt="3" title="3" href="javascript:fnNewAppPinSet(3)" coords="124,52,8" shape="circle">
+			    <area alt="4" title="4" href="javascript:fnNewAppPinSet(4)" coords="144,53,8" shape="circle">
+			    <area alt="17" title="17" href="javascript:fnNewAppPinSet(17)" coords="184,52,9" shape="circle">
+			    <area alt="27" title="27" href="javascript:fnNewAppPinSet(27)" coords="204,53,8" shape="circle">
+			    <area alt="22" title="22" href="javascript:fnNewAppPinSet(22)" coords="224,52,9" shape="circle">
+			    <area alt="10" title="10" href="javascript:fnNewAppPinSet(10)" coords="264,52,8" shape="circle">
+			    <area alt="9" title="9" href="javascript:fnNewAppPinSet(9)" coords="283,52,9" shape="circle">
+			    <area alt="11" title="11" href="javascript:fnNewAppPinSet(11)" coords="303,52,9" shape="circle">
+			    <area alt="5" title="5" href="javascript:fnNewAppPinSet(5)" coords="363,53,9" shape="circle">
+			    <area alt="6" title="6" href="javascript:fnNewAppPinSet(6)" coords="383,53,8" shape="circle">
+			    <area alt="13" title="13" href="javascript:fnNewAppPinSet(13)" coords="403,54,7" shape="circle">
+			    <area alt="19" title="19" href="javascript:fnNewAppPinSet(19)" coords="422,53,7" shape="circle">
+			    <area alt="26" title="26" href="javascript:fnNewAppPinSet(26)" coords="443,52,9" shape="circle">
 			</map>
 		</div>	
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"> 
+                                    <i class="fa fa-home fa-login"></i>
+		                                <input type="text" id="pin-number" placeholder="Pin Number" class="input-login scene-name-input center" disabled="true">
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <p id="new-comp-pin-text"></p>
+                                    </div>
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
                                         <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene()">Save</button>
                                     </div>
