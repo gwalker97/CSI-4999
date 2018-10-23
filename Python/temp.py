@@ -42,16 +42,17 @@ def read_temp():
 	global c, f
 	#try:
     	lines = read_temp_raw()
+	print "%s" %(lines[1])
      	while lines[0].strip()[-3:] != 'YES':
      		time.sleep(0.2)
 		lines = read_temp_raw()
-		equals_pos = lines[1].find('t=')
-		print "While"
-		if equals_pos != -1:
-			print "if"
-        		temp_string = lines[1][equals_pos+2:]
-        		c = float(temp_string) / 1000.0
-        		f = temp_c * 9.0 / 5.0 + 32.0
+	equals_pos = lines[1].find('t=')
+	print "While"
+	if equals_pos != -1:
+		print "if"
+       		temp_string = lines[1][equals_pos+2:]
+       		c = float(temp_string) / 1000.0
+       		f = c * 9.0 / 5.0 + 32.0
 	return c, f
 	#except:
 		#print read_sensor()
@@ -64,12 +65,15 @@ def reading():
 	conn = mysqlConn()
 	cur = conn.cursor(buffered=True)
 	while True:
-		temps = read_temp()
-		print "%s C / %s F" %(int(temps[0]),int(temps[1]))
-		conn.commit()
-		print "Sending Update"
-		cur.execute( "Update Temp set C = %s, F = %s" %(int(temps[0]), int(temps[1])))
-		time.sleep(.5)
+		try:
+			temps = read_temp()
+			print "%s C / %s F" %(int(temps[0]),int(temps[1]))
+			conn.commit()
+			print "Sending Update"
+			cur.execute( "Update Temp set C = %s, F = %s;" %(int(temps[0]), int(temps[1])))
+			time.sleep(.5)
+		except:
+			print "Nope"
 def main():
 	initBool = False;
 	while not initBool:
