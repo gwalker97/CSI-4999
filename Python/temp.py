@@ -13,7 +13,7 @@ dbtable = 'Addon'
 
 c = 0
 f = 0
-
+coolVal
 os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
  
@@ -64,6 +64,9 @@ def reading():
 	cur = conn.cursor(buffered=True)
 	while True:
 	#	try:
+		#The following query will pull the temp
+		#At which the fan turns on at, from the database
+		#cur.execute("select CoolTemp from *The Table*;")
 		temps = read_temp()
 		if (temps[1] >= 80):
 			print "%s" %(cooling.coolOn())
