@@ -9,8 +9,8 @@
             $sql = "select * from House where House_ID=" . $_SESSION['home'];
             $result = mysqli_query($conn,$sql);
             $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
-
-            if ($row['House_Name'] != $hName) {
+            
+            if (mysqli_real_escape_string($conn, $row['House_Name']) != $hName) {
                 
                 if ($_SESSION['gID'] == 1) {
                     $sql = "update House set House_Name='" . $hName . "' where House_ID=" . $_SESSION['home'];
@@ -44,7 +44,7 @@
                 if (array_key_exists($row2['Room_ID'], $_POST['updateRooms'])) {
                     $rName = mysqli_real_escape_string($conn, $_POST['updateRooms'][$row2['Room_ID']][0]);
 
-                    if ($rName != $row2['Room_Name']) {
+                    if ($rName != mysqli_real_escape_string($conn, $row2['Room_Name'])) {
 
                         if ($_SESSION['gID'] == 1 or ($_SESSION['gID'] == $row2['Room_gID'] and $_SESSION['gID'] != 2)) {
                             $sql3 = "update Room set Room_Name='" . $rName . "' where Room_ID=" . $row2['Room_ID'];
