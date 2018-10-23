@@ -2,7 +2,6 @@
    require('config.php');
 
 	if($_SERVER["REQUEST_METHOD"] == "POST") {
-        
         //houseName
         if (array_key_exists('houseName', $_POST)) {
             $hName = mysqli_real_escape_string($conn, $_POST['houseName']);
@@ -43,11 +42,12 @@
 
                 if (array_key_exists($row2['Room_ID'], $_POST['updateRooms'])) {
                     $rName = mysqli_real_escape_string($conn, $_POST['updateRooms'][$row2['Room_ID']][0]);
+                    $rNum = mysqli_real_escape_string($conn, $_POST['updateRooms'][$row2['Room_ID']][1]);
 
-                    if ($rName != mysqli_real_escape_string($conn, $row2['Room_Name'])) {
+                    if ($rName != mysqli_real_escape_string($conn, $row2['Room_Name']) or $rNum != $row2['Room_gID']) {
 
                         if ($_SESSION['gID'] == 1 or ($_SESSION['gID'] == $row2['Room_gID'] and $_SESSION['gID'] != 2)) {
-                            $sql3 = "update Room set Room_Name='" . $rName . "' where Room_ID=" . $row2['Room_ID'];
+                            $sql3 = "update Room set Room_Name='" . $rName . "', Room_gID='" . $rNum . "' where Room_ID=" . $row2['Room_ID'];
                             $result3 = mysqli_query($conn,$sql3);
 
                             if (result3 === false) {
@@ -61,9 +61,9 @@
                         } else {
                             
                             if (isset($_SESSION['houseSetMsg'])) {
-                                $_SESSION['houseSetMsg'] .= "<br>You cannot change [" . $row2['Room_Name'] . "]'s name.";
+                                $_SESSION['houseSetMsg'] .= "<br>You cannot edit [" . $row2['Room_Name'] . "].";
                             } else {
-                                $_SESSION['houseSetMsg'] = "You cannot change [" . $row2['Room_Name'] . "]'s name.";
+                                $_SESSION['houseSetMsg'] = "You cannot edit [" . $row2['Room_Name'] . "].";
                             }
                         }
                     }  
