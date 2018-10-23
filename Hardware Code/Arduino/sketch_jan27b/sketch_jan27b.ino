@@ -47,7 +47,6 @@ while(!conn.connect(server_addr, 3306, user, dbpass)){
 
  MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
  cur_mem->execute("use SeniorProject");
- dbconn = true;
 Serial.println("You have connected");
 }
  
@@ -109,9 +108,15 @@ void loop(void){
 }
 
 //This function is passed a pin and state to determine if it is to be shut off or turned on.
-void gpio(int pin, float state){
+void gpio(int pin, float state, String type){
   pinMode(pin, OUTPUT);
-  //Serial.println(state);
+  Serial.println(type);
+  Serial.println(state);
+  if (type == "F"){
+    int turns = state * 10  * 255;
+    analogWrite(pin, turns);
+  }else{
+     //Serial.println(state);
   if(state == 1 && digitalRead(pin) < 1){
     digitalWrite(pin, HIGH);
    // Serial.println("Turn on");
@@ -122,5 +127,6 @@ void gpio(int pin, float state){
     int turns = state * 255;
     analogWrite(pin, turns);
    // Serial.println("Dim");
+  }
   }
 }
