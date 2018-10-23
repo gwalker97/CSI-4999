@@ -44,28 +44,15 @@ def read_temp():
 	global c, f
 	#try:
     	lines = read_temp_raw()
-	print "%s" %(lines[1])
      	while lines[0].strip()[-3:] != 'YES':
-     		time.sleep(0.2)
-		lines = read_temp_raw()
-<<<<<<< HEAD
+       		time.sleep(0.2)
+       		lines = read_temp_raw()
 	equals_pos = lines[1].find('t=')
-	print "While"
 	if equals_pos != -1:
-		print "if"
        		temp_string = lines[1][equals_pos+2:]
        		c = float(temp_string) / 1000.0
        		f = c * 9.0 / 5.0 + 32.0
-=======
-		equals_pos = lines[1].find('t=')
-		print "While"
-		if equals_pos != -1:
-			print "if"
-        		temp_string = lines[1][equals_pos+2:]
-        		c = float(temp_string) / 1000.0
-        		f = c * 9.0 / 5.0 + 32.0
->>>>>>> 5ca8bd46d59fdd50cc6f957a7c43da77d648ce9b
-	return c, f
+		return c, f
 	#except:
 		#print read_sensor()
 
@@ -82,28 +69,19 @@ def reading():
 	conn = mysqlConn()
 	cur = conn.cursor(buffered=True)
 	while True:
-<<<<<<< HEAD
 		try:
 			temps = read_temp()
+			if (temps[1] >= 80):
+				print "%s" %(cooling.coolOn())
+			else:
+				print "%s" %(cooling.coolOff())
+				print "turn off"
 			print "%s C / %s F" %(int(temps[0]),int(temps[1]))
 			conn.commit()
-			print "Sending Update"
 			cur.execute( "Update Temp set C = %s, F = %s;" %(int(temps[0]), int(temps[1])))
 			time.sleep(.5)
 		except:
 			print "Nope"
-=======
-		temps = read_temp()
-		if(temps[1] >= 80):
-			cooling.coolOn()
-		else:
-			cooling.coolOff()
-		print "%s C / %s F" %(int(temps[0]),int(temps[1]))
-		conn.commit()
-		print "Sending Update"
-		cur.execute( "Update Temp set C = %s, F = %s" %(int(temps[0]), int(temps[1])))
-		time.sleep(.5)
->>>>>>> 3f6a589fe4ec84e7f193f4726e1cb3ed5776e516
 def main():
 	initBool = False;
 	while not initBool:

@@ -1,4 +1,4 @@
-import num
+
 import RPi.GPIO as gpio
 import temp
 
@@ -10,11 +10,14 @@ def coolOn():
 	gpio.setmode(gpio.BCM)
 	gpio.setwarnings(False)
 	gpio.setup(pin, gpio.OUT)
-	gpio.output(pin, gpio.HIGH)
-
+	if(gpio.input(pin) != 1):
+		gpio.output(pin, gpio.HIGH)
+		return "turn on"
 def coolOff():
 	global pin
 	gpio.setmode(gpio.BCM)
 	gpio.setwarnings(False)
 	gpio.setup(pin, gpio.OUT)
-	gpio.output(pin, gpio.LOW)
+	if(gpio.input(pin)):
+		gpio.output(pin, gpio.LOW)
+		return "turn off"
