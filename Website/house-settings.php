@@ -66,7 +66,11 @@
             var btn = document.createElement("i");
                 btn.setAttribute("class", "fa fa-minus fa-settings-remove-room");
                 btn.setAttribute("onclick", "removeRoomBox(this.parentNode)");
-            box.appendChild(btn);
+            var prm = document.createElement("select");
+                prm.setAttribute("style", "background-color:black;margin-left:4px");
+                prm.setAttribute("class", "fa fa-lock fa-login");
+            box.appendChild(prm);
+            box.insertBefore(btn, prm);
             box.insertBefore(inp, btn);
             box.insertBefore(icn, inp);
             
@@ -120,29 +124,34 @@
                 <?php
                         $sql3 = "select * from Groups";
                         $result3 = mysqli_query($conn,$sql3);
+                        $groups = array();
+                        
+                        while ($row3 = mysqli_fetch_array($result3,MYSQLI_ASSOC)) {
+                            $groups[] = $row3;
+                        }
                         
                         if ($count == 0) {
                             echo '<div class="col-md-12">
                                     <i class="fa fa-map-marker fa-login"></i>
                                     <input type="text" placeholder="Room Name" class="input-settings" name="newRooms[]">
-                                    <select class="" name="newRooms2[]">';
-                                        
-                                        while ($row3 = mysqli_fetch_array($result3,MYSQLI_ASSOC)) {
-                                            echo '<option value="' . $row3['Groups_gID'] . '">' . $row3['Groups_Name'] .'</option>';
-                                        }
-                            echo '</select></div>';
+                                    <select style="background-color:black" class="fa fa-lock fa-login"></select></div>';
                         } else {
                             
                             while ($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
                                 echo '<div id="' . $row['Room_ID'] . '" class="col-md-12">
                                         <i class="fa fa-map-marker fa-login"></i>
                                         <input type="text" placeholder="Room Name" value="' . $row['Room_Name'] . '" class="input-settings" name="updateRooms[' . $row['Room_ID'] . '][]">
-                                        <select class="" name="newRooms2[]">';
-                                
-                                            while ($row3 = mysqli_fetch_array($result3,MYSQLI_ASSOC)) {
-                                                echo '<option value="' . $row3['Groups_gID'] . '">' . $row3['Groups_Name'] .'</option>';
-                                            }
-                                echo '</select><i class="fa fa-minus fa-settings-remove-room" onclick="removeRoomBox(this.parentNode)"></i>
+                                        <i class="fa fa-minus fa-settings-remove-room" onclick="removeRoomBox(this.parentNode)"></i>
+                                            <select style="background-color:black" class="fa fa-lock fa-login" name="updateRooms[' . $row['Room_ID'] . '][]">';
+                                                foreach ($groups as $row3) {
+                                                    
+                                                    if ($row['Room_gID'] == $row3['Groups_gID']) {
+                                                        echo '<option selected value="' . $row3['Groups_gID'] . '">' . $row3['Groups_Name'] .'</option>';
+                                                    } else {
+                                                        echo '<option value="' . $row3['Groups_gID'] . '">' . $row3['Groups_Name'] .'</option>';
+                                                    }
+                                                }
+                                echo '</select>
                                       </div>';
                             }
                         }
