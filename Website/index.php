@@ -744,7 +744,11 @@
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+<<<<<<< HEAD
                                         <button type="button" id="btn-save-scene" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene(this.id)">Save</button>
+=======
+                                        <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene()">Save</button>
+>>>>>>> parent of 3f6a589... Merge branch 'master' of https://github.com/gwalker97/CSI-4999
                                     </div>
                                 </div>
                             </form>
@@ -808,7 +812,11 @@
                               </button>
                               <div class="dropdown-menu new-dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item new-dropdown" href="/new-component.php">Appliance</a>
+<<<<<<< HEAD
                                 <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#myModal" onclick="fnClearSceneModal()">Scene</a>
+=======
+                                <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#myModal">Scene</a>
+>>>>>>> parent of 3f6a589... Merge branch 'master' of https://github.com/gwalker97/CSI-4999
                               </div>
                             </div>
                         </div>
