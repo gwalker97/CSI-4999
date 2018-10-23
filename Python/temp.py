@@ -2,6 +2,7 @@ import os
 import glob
 import time
 import mysql.connector
+import cooling
 from mysql.connector import MySQLConnection, Error
 
 hostname = '127.0.0.1'
@@ -12,6 +13,7 @@ dbtable = 'Addon'
 
 c = 0
 f = 0
+coolTemp = 0
 
 os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
@@ -61,10 +63,16 @@ def mysqlConn():
 	myconn = mysql.connector.connect(host=hostname, user=username, passwd=password, db=dbname)
 	return myconn
 
+def setAutoTemp(temp):
+	global coolTemp
+	coolTemp = temp
+
+
 def reading():
 	conn = mysqlConn()
 	cur = conn.cursor(buffered=True)
 	while True:
+<<<<<<< HEAD
 		try:
 			temps = read_temp()
 			print "%s C / %s F" %(int(temps[0]),int(temps[1]))
@@ -74,6 +82,18 @@ def reading():
 			time.sleep(.5)
 		except:
 			print "Nope"
+=======
+		temps = read_temp()
+		if(temps[1] >= 80):
+			cooling.coolOn()
+		else:
+			cooling.coolOff()
+		print "%s C / %s F" %(int(temps[0]),int(temps[1]))
+		conn.commit()
+		print "Sending Update"
+		cur.execute( "Update Temp set C = %s, F = %s" %(int(temps[0]), int(temps[1])))
+		time.sleep(.5)
+>>>>>>> 3f6a589fe4ec84e7f193f4726e1cb3ed5776e516
 def main():
 	initBool = False;
 	while not initBool:

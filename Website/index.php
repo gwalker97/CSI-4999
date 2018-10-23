@@ -458,6 +458,17 @@
                 appliance.classList.add('appliance-selected');
             }
         }
+
+	function fnSelectCompHost(arg) {
+            var appliance = document.getElementById(arg);
+            
+            if (appliance.classList.contains('appliance-selected')) {
+                appliance.classList.remove('appliance-selected');
+            }
+            else {
+                appliance.classList.add('appliance-selected');
+            }
+        }
         
         function fnClearSceneModal() {
             document.getElementById('color-brush').classList.remove('scene-red');
@@ -654,12 +665,96 @@
                                     </ul>
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                      
+<button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene()">Save</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        
+                    </div>
+                  </div>
+                </div>
+
+<!-- New Component Modal content -->
+                <div id="newCompModal" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" onclick="fnClearSceneModal()">&times;</button>
+                        <h4 class="modal-title">New Appliance</h4>
+                      </div>
+                        <!-- Modal body-->
+                        <div class="modal-body">
+                            <!-- Modal form-->
+                            
+                            <form id="scene-form" class="row">
+                                <div class="automate-div">
+                                    <label id="automate-error" class="automate-error dont-display"></label>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+                                        <i class="fa fa-home fa-login"></i>
+                                        <input type="text" id="appliance-name" placeholder="Appliance Name" class="input-login scene-name-input">
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+                                        <i id="color-brush" class="fas fa-home home fa-login"></i>
+                                        <select id="colorSelect" class="selects color-select">
+						<option value="l">Light</option>
+						<option value="s">Dimmable Light</option>
+						<option value="f">Fan</option>
+                                        </select>
+                                        <i class="fas fa-caret-down color-caret"></i>
+                                    </div>
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+		                                <i class="fa fa-home fa-login"></i>
+		                                <input type="text" id="appliance-name" placeholder="Appliance Description" class="input-login scene-name-input">
+		                            </div>
+				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+		                                <i id="color-brush" class="fas fa-home home fa-login"></i>
+		                                <select id="colorSelect" class="selects color-select">
+							<?php
+							    $sql = "select * from Room where House_ID=" . $_SESSION['home'];
+							    $result = mysqli_query($conn,$sql);
+
+							    while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+								$rID = $row['Room_ID'];
+								$rN = $row['Room_Name'];
+								echo '<option value="' . $rID . '">' . $rN . '</option>';
+							    }
+							?>
+		                                </select>
+		                                <i class="fas fa-caret-down color-caret"></i>
+		                            </div>
+				</div>
+                                </div>
+                                <div id="choose-appliance" class="appliance-list-selector col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <label class="lbl-choose-appliances">Select the host device:</label>
+                                    <ul id="appliance-list" class="ul-appliance-list">
+				        <?php
+				            $sql = "select * from Hosts";
+				            $result = mysqli_query($conn,$sql);
+
+				            while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+				                $hID = $row['Host_ID'];
+				                $hN = $row['Host_Name'];
+				                echo '<li id="comp-app-' . $hID . '" class="li-appliance" onclick="fnSelectCompHost(this.id)">' . $hN . '</li>';
+				            }
+				        ?>
+                                    </ul>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+					<img src="Images/layouts/pi_org.png">  
                                         <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene()">Save</button>
                                     </div>
                                 </div>
                             </form>
                         </div>
+
                         
                     </div>
                   </div>
@@ -718,7 +813,7 @@
                                 New<i class="fa fa-plus fa-plus-main"></i>
                               </button>
                               <div class="dropdown-menu new-dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item new-dropdown" href="/new-component.php">Appliance</a>
+                                <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#newCompModal">Appliance</a>
                                 <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#myModal">Scene</a>
                               </div>
                             </div>
