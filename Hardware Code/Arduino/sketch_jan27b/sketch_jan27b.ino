@@ -110,8 +110,8 @@ void loop(void){
 //This function is passed a pin and state to determine if it is to be shut off or turned on.
 void gpio(int pin, float state, String type){
   pinMode(pin, OUTPUT);
-  Serial.println(type);
-  Serial.println(state);
+  //Serial.println(type);
+  //Serial.println(state);
   if (type == "F"){
     int turns = state * 10  * 255;
     analogWrite(pin, turns);
@@ -125,8 +125,10 @@ void gpio(int pin, float state, String type){
    // Serial.println("Turn off");
   }else{
     int turns = state * 255;
+    //Serial.println(pin);
+    //Serial.println("Here at Dim");
     analogWrite(pin, turns);
-   // Serial.println("Dim");
+    //Serial.println("Dim");
   }
   }
 }

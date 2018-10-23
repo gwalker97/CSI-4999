@@ -125,23 +125,24 @@
                             echo '<div class="col-md-12">
                                     <i class="fa fa-map-marker fa-login"></i>
                                     <input type="text" placeholder="Room Name" class="input-settings" name="newRooms[]">
-                                    <select class="selects color-select" name="newRooms2[]">';
+                                    <select class="" name="newRooms2[]">';
                                         
-                            for ($row3 = mysqli_fetch_array($result3,MYSQLI_ASSOC)) {
-                                echo '<option name="' . $row3['Groups_Name'] . '" value="' . $row3['Groups_gID'] . '">';
-                            }
+                                        while ($row3 = mysqli_fetch_array($result3,MYSQLI_ASSOC)) {
+                                            echo '<option value="' . $row3['Groups_gID'] . '">' . $row3['Groups_Name'] .'</option>';
+                                        }
                             echo '</select></div>';
                         } else {
                             
                             while ($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
                                 echo '<div id="' . $row['Room_ID'] . '" class="col-md-12">
                                         <i class="fa fa-map-marker fa-login"></i>
-                                        <input type="text" placeholder="Room Name" value="' . $row['Room_Name'] . '" class="input-settings" name="updateRooms[' . $row['Room_ID'] . '][]">';
+                                        <input type="text" placeholder="Room Name" value="' . $row['Room_Name'] . '" class="input-settings" name="updateRooms[' . $row['Room_ID'] . '][]">
+                                        <select class="" name="newRooms2[]">';
                                 
-                                for ($row3 = mysqli_fetch_array($result3,MYSQLI_ASSOC)) {
-                                    echo '<option name="' . $row3['Groups_Name'] . '" value="' . $row3['Groups_gID'] . '">';
-                                }
-                                echo '<i class="fa fa-minus fa-settings-remove-room" onclick="removeRoomBox(this.parentNode)"></i>
+                                            while ($row3 = mysqli_fetch_array($result3,MYSQLI_ASSOC)) {
+                                                echo '<option value="' . $row3['Groups_gID'] . '">' . $row3['Groups_Name'] .'</option>';
+                                            }
+                                echo '</select><i class="fa fa-minus fa-settings-remove-room" onclick="removeRoomBox(this.parentNode)"></i>
                                       </div>';
                             }
                         }
