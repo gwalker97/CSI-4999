@@ -48,6 +48,7 @@ def read_temp():
      	while lines[0].strip()[-3:] != 'YES':
      		time.sleep(0.2)
 		lines = read_temp_raw()
+<<<<<<< HEAD
 	equals_pos = lines[1].find('t=')
 	print "While"
 	if equals_pos != -1:
@@ -55,6 +56,15 @@ def read_temp():
        		temp_string = lines[1][equals_pos+2:]
        		c = float(temp_string) / 1000.0
        		f = c * 9.0 / 5.0 + 32.0
+=======
+		equals_pos = lines[1].find('t=')
+		print "While"
+		if equals_pos != -1:
+			print "if"
+        		temp_string = lines[1][equals_pos+2:]
+        		c = float(temp_string) / 1000.0
+        		f = c * 9.0 / 5.0 + 32.0
+>>>>>>> 5ca8bd46d59fdd50cc6f957a7c43da77d648ce9b
 	return c, f
 	#except:
 		#print read_sensor()
