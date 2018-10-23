@@ -96,7 +96,6 @@
                         $hID = $_SESSION['home'];
                         $sql = "select * from Room where House_ID='$hID'";
                         $result = mysqli_query($conn,$sql);
-                        $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
                         $count = mysqli_num_rows($result);
 
                         $sql2 = "select * from House where House_ID='$hID'";
@@ -119,25 +118,30 @@
                 ?>
                 </div>
                 <?php
+                        $sql3 = "select * from Groups";
+                        $result3 = mysqli_query($conn,$sql3);
+                        
                         if ($count == 0) {
-
                             echo '<div class="col-md-12">
                                     <i class="fa fa-map-marker fa-login"></i>
                                     <input type="text" placeholder="Room Name" class="input-settings" name="newRooms[]">
-                                  </div>';
+                                    <select class="selects color-select" name="newRooms2[]">';
+                                        
+                            for ($row3 = mysqli_fetch_array($result3,MYSQLI_ASSOC)) {
+                                echo '<option name="' . $row3['Groups_Name'] . '" value="' . $row3['Groups_gID'] . '">';
+                            }
+                            echo '</select></div>';
                         } else {
-
-                            echo '<div id="' . $row['Room_ID'] . '" class="col-md-12">
-                                        <i class="fa fa-map-marker fa-login"></i>
-                                        <input type="text" placeholder="Room Name" value="' . $row['Room_Name'] . '" class="input-settings" name="updateRooms[' . $row['Room_ID'] . '][]">
-                                        <i class="fa fa-minus fa-settings-remove-room" onclick="removeRoomBox(this.parentNode)"></i>
-                                      </div>';
+                            
                             while ($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-
                                 echo '<div id="' . $row['Room_ID'] . '" class="col-md-12">
                                         <i class="fa fa-map-marker fa-login"></i>
-                                        <input type="text" placeholder="Room Name" value="' . $row['Room_Name'] . '" class="input-settings" name="updateRooms[' . $row['Room_ID'] . '][]">
-                                        <i class="fa fa-minus fa-settings-remove-room" onclick="removeRoomBox(this.parentNode)"></i>
+                                        <input type="text" placeholder="Room Name" value="' . $row['Room_Name'] . '" class="input-settings" name="updateRooms[' . $row['Room_ID'] . '][]">';
+                                
+                                for ($row3 = mysqli_fetch_array($result3,MYSQLI_ASSOC)) {
+                                    echo '<option name="' . $row3['Groups_Name'] . '" value="' . $row3['Groups_gID'] . '">';
+                                }
+                                echo '<i class="fa fa-minus fa-settings-remove-room" onclick="removeRoomBox(this.parentNode)"></i>
                                       </div>';
                             }
                         }
