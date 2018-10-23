@@ -455,6 +455,17 @@ if($_SESSION["guest"] == true) {
             }
         }
 
+	function fnSelectCompHost(arg) {
+            var appliance = document.getElementById(arg);
+            
+            if (appliance.classList.contains('appliance-selected')) {
+                appliance.classList.remove('appliance-selected');
+            }
+            else {
+                appliance.classList.add('appliance-selected');
+            }
+        }
+
         function fnClearSceneModal() {
             /*removeColorBrushClasses();
 
@@ -750,9 +761,127 @@ if($_SESSION["guest"] == true) {
                         </form>
                     </div>
 
+
+
                 </div>
             </div>
         </div>
+
+<!-- New Component Modal content -->
+                <div id="newCompModal" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" onclick="fnClearSceneModal()">&times;</button>
+                        <h4 class="modal-title">New Appliance</h4>
+                      </div>
+                        <!-- Modal body-->
+                        <div class="modal-body">
+                            <!-- Modal form-->
+                            
+                            <form id="comp-form" class="row">
+                                <div class="automate-div">
+                                    <label id="automate-error" class="automate-error dont-display"></label>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+                                        <i class="fa fa-home fa-login"></i>
+                                        <input type="text" id="appliance-name" placeholder="Appliance Name" class="input-login scene-name-input">
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+                                        <i id="color-brush" class="fas fa-home home fa-login"></i>
+                                        <select id="colorSelect" class="selects color-select">
+						<option value="l">Light</option>
+						<option value="s">Dimmable Light</option>
+						<option value="f">Fan</option>
+                                        </select>
+                                        <i class="fas fa-caret-down color-caret"></i>
+                                    </div>
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+		                                <i class="fa fa-home fa-login"></i>
+		                                <input type="text" id="appliance-name" placeholder="Appliance Description" class="input-login scene-name-input">
+		                            </div>
+				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+		                                <i id="color-brush" class="fas fa-home home fa-login"></i>
+		                                <select id="colorSelect" class="selects color-select">
+							<?php
+							    $sql = "select * from Room where House_ID=" . $_SESSION['home'];
+							    $result = mysqli_query($conn,$sql);
+
+							    while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+								$rID = $row['Room_ID'];
+								$rN = $row['Room_Name'];
+								echo '<option value="' . $rID . '">' . $rN . '</option>';
+							    }
+							?>
+		                                </select>
+		                                <i class="fas fa-caret-down color-caret"></i>
+		                            </div>
+				</div>
+                                </div>
+                                <div id="choose-appliance" class="appliance-list-selector col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <label class="lbl-choose-appliances">Select the host device:</label>
+                                    <ul id="appliance-list" class="ul-appliance-list">
+				        <?php
+				            $sql = "select * from Hosts";
+				            $result = mysqli_query($conn,$sql);
+
+				            while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+				                $hID = $row['Host_ID'];
+				                $hN = $row['Host_Name'];
+				                echo '<li id="comp-app-' . $hID . '" class="li-appliance" onclick="fnSelectCompHost(this.id)">' . $hN . '</li>';
+				            }
+				        ?>
+                                    </ul>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				
+			<img src="Images/layouts/pi_third.png" usemap="#pi-map">
+
+			<map name="pi-map">
+			    <area target="" alt="14" title="14" href="14" coords="144,29,6" shape="circle">
+			    <area target="" alt="15" title="15" href="15" coords="490,84,22" shape="circle">
+			    <area target="" alt="18" title="18" href="18" coords="551,85,24" shape="circle">
+			    <area target="" alt="23" title="23" href="23" coords="670,85,23" shape="circle">
+			    <area target="" alt="24" title="24" href="24" coords="728,85,28" shape="circle">
+			    <area target="" alt="25" title="25" href="25" coords="847,85,25" shape="circle">
+			    <area target="" alt="8" title="8" href="8" coords="911,84,25" shape="circle">
+			    <area target="" alt="7" title="7" href="7" coords="970,84,24" shape="circle">
+			    <area target="" alt="12" title="12" href="12" coords="1149,87,22" shape="circle">
+			    <area target="" alt="16" title="16" href="16" coords="1270,84,28" shape="circle">
+			    <area target="" alt="20" title="20" href="20" coords="1329,87,25" shape="circle">
+			    <area target="" alt="21" title="21" href="21" coords="1387,84,22" shape="circle">
+			    <area target="" alt="2" title="2" href="2" coords="313,159,23" shape="circle">
+			    <area target="" alt="3" title="3" href="3" coords="373,155,24" shape="circle">
+			    <area target="" alt="4" title="4" href="4" coords="432,158,24" shape="circle">
+			    <area target="" alt="17" title="17" href="17" coords="553,156,26" shape="circle">
+			    <area target="" alt="27" title="27" href="27" coords="612,159,23" shape="circle">
+			    <area target="" alt="22" title="22" href="22" coords="672,155,27" shape="circle">
+			    <area target="" alt="10" title="10" href="10" coords="792,156,24" shape="circle">
+			    <area target="" alt="9" title="9" href="9" coords="849,157,28" shape="circle">
+			    <area target="" alt="11" title="11" href="11" coords="910,156,28" shape="circle">
+			    <area target="" alt="5" title="5" href="5" coords="1088,158,27" shape="circle">
+			    <area target="" alt="6" title="6" href="6" coords="1148,158,24" shape="circle">
+			    <area target="" alt="13" title="13" href="13" coords="1210,161,22" shape="circle">
+			    <area target="" alt="19" title="19" href="19" coords="1267,159,22" shape="circle">
+			    <area target="" alt="26" title="26" href="26" coords="1329,155,28" shape="circle">
+			</map>
+		</div>	
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
+                                        <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene()">Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        
+                    </div>
+                  </div>
+                </div>
 
         <div class="main-page-container">
             <div class="temp-container">
@@ -807,7 +936,7 @@ if($_SESSION["guest"] == true) {
                             New<i class="fa fa-plus fa-plus-main"></i>
                         </button>
                         <div class="dropdown-menu new-dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item new-dropdown" href="/new-component.php">Appliance</a>
+                            <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#newCompModal">Appliance</a>
                             <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#myModal" onclick="fnClearSceneModal()">Scene</a>
                         </div>
                     </div>

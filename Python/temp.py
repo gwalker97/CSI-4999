@@ -1,6 +1,7 @@
 import os
 import glob
 import time
+import cooling
 import mysql.connector
 from mysql.connector import MySQLConnection, Error
 
@@ -12,7 +13,7 @@ dbtable = 'Addon'
 
 c = 0
 f = 0
-
+coolVal
 os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
  
@@ -62,18 +63,21 @@ def reading():
 	conn = mysqlConn()
 	cur = conn.cursor(buffered=True)
 	while True:
-		try:
-			temps = read_temp()
-			if (temps[1] >= 80):
-				print "%s" %(cooling.coolOn())
-			else:
-				print "%s" %(cooling.coolOff())
-			print "%s C / %s F" %(int(temps[0]),int(temps[1]))
-			conn.commit()
-			cur.execute( "Update Temp set C = %s, F = %s;" %(int(temps[0]), int(temps[1])))
-			time.sleep(.5)
-		except:
-			print "Nope"
+	#	try:
+		#The following query will pull the temp
+		#At which the fan turns on at, from the database
+		#cur.execute("select CoolTemp from *The Table*;")
+		temps = read_temp()
+		if (temps[1] >= 80):
+			cooling.coolOn()
+		else:
+			cooling.coolOff()
+		print "%s C / %s F" %(int(temps[0]),int(temps[1]))
+		conn.commit()
+		cur.execute( "Update Temp set C = %s, F = %s;" %(int(temps[0]), int(temps[1])))
+		time.sleep(.5)
+		#except:
+			#print "Nope"
 def main():
 	initBool = False;
 	while not initBool:
