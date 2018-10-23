@@ -574,10 +574,7 @@
                 "allOffOn.php",
                 { OnOff: (0.00),  },
             );
-<<<<<<< HEAD
             fnLoad(false);
-=======
->>>>>>> parent of 7b95aaf... Implemented scene settings
         }
     </script>
 
@@ -755,10 +752,7 @@
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-<<<<<<< HEAD
 					<img src="Images/layouts/pi_org.png">  
-=======
->>>>>>> parent of 7b95aaf... Implemented scene settings
                                         <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene()">Save</button>
                                     </div>
                                 </div>
@@ -823,11 +817,7 @@
                                 New<i class="fa fa-plus fa-plus-main"></i>
                               </button>
                               <div class="dropdown-menu new-dropdown-menu" aria-labelledby="dropdownMenuButton">
-<<<<<<< HEAD
                                 <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#newCompModal">Appliance</a>
-=======
-                                <a class="dropdown-item new-dropdown" href="/new-component.php">Appliance</a>
->>>>>>> parent of 7b95aaf... Implemented scene settings
                                 <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#myModal">Scene</a>
                               </div>
                             </div>
