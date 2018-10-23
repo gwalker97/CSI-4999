@@ -555,17 +555,21 @@
         }
         
         function fnAllOn() {
+            fnLoad(true);
             $.post(
                 "allOffOn.php",
                 { OnOff: (1.00),  },
             );
+            fnLoad(false);
         }
         
         function fnAllOff() {
+            fnLoad(true);
             $.post(
                 "allOffOn.php",
                 { OnOff: (0.00),  },
             );
+            fnLoad(false);
         }
         
         function fnSceneSettings(arg) {
@@ -892,7 +896,7 @@
                     //dynamically adds component divs
                     if ($aT == "L")
                     {
-                        echo '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 rooms ' . $strippedrN .'" id="' . $strippedrN . '">
+                        /*echo '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 rooms ' . $strippedrN .'" id="' . $strippedrN . '">
                                 <div class="component-card">
                                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                                         <p class="p-component-main"><i id="l-image-' . $aID .'" class="fa fa-lightbulb" style="margin-right: 20px;"></i>' . $aN . '</p>
@@ -904,6 +908,22 @@
                                         <p class="p-component-label"><b>Room:</b> ' . $rN . '</p>
                                         <p class="p-component-label"><b>Description:</b> ' . $aD . '</p>
 
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                        <button class="btn-component-switch btn-component-switch-settings fa fa-cog" id="c' . $aID . '" onclick="fnComponentSettingsRedirect(this.id)"></button>
+                                    </div>
+                                </div>
+                              </div>';*/
+                         echo '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 rooms ' . $strippedrN .'" id="' . $strippedrN . '">
+                                <div class="component-card">
+                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                        <p class="p-component-main"><i id="l-image-' . $aID .'" class="fa fa-lightbulb" style="margin-right: 20px;"></i>' . $aN . '</p>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                        <button class="'. $buttonClass . '" id="l' . $aID . '" onclick="fnSwitchClick(this.id)">'. $buttonText . '</button>
+                                    </div>
+                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                        <p class="p-component-label"><b>Room:</b> ' . $rN . '</p>
                                     </div>
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                                         <button class="btn-component-switch btn-component-switch-settings fa fa-cog" id="c' . $aID . '" onclick="fnComponentSettingsRedirect(this.id)"></button>
