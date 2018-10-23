@@ -430,11 +430,7 @@
                 }, 850);
             }
         }
-        
-        $('#input_starttime').pickatime({
-            twelvehour: true,
-        });
-        
+                
         function fnHideShowAutomation(arg) {
             var isAutomated = arg;            
 
@@ -460,12 +456,7 @@
         }
         
         function fnClearSceneModal() {
-            document.getElementById('color-brush').classList.remove('scene-red');
-            document.getElementById('color-brush').classList.remove('scene-yellow');
-            document.getElementById('color-brush').classList.remove('scene-black');
-            document.getElementById('color-brush').classList.remove('scene-blue');
-            document.getElementById('color-brush').classList.remove('scene-green');
-            document.getElementById('color-brush').classList.remove('scene-orange');
+            /*removeColorBrushClasses();
             
             document.getElementById('automate-times').classList.add('dont-display');
             
@@ -475,10 +466,17 @@
             $('.li-appliance').each(function(i, obj) {
                 $('.li-appliance').removeClass('appliance-selected');
             });
-            document.getElementById('scene-form').reset();
+            
+            document.getElementById('scene-form').reset();*/
+            $('#scene-form').load(document.URL +  ' #scene-form');
         }
         
-        function fnSaveScene() {
+        function fnSaveScene(arg) {
+            var sceneID = arg.substring(14);
+            var btnSaveScene = document.getElementsByClassName('btn-save-appliance');
+            //btnSaveScene.id = 'btn-save-scene';
+            //var IsUpdate = document.getElementById(btnSaveScene.id).innerHTML;
+            
             var sceneName = document.getElementById('scene-name').value;
             var sceneColor = document.getElementById('colorSelect').value;
             var sceneAutomated = document.querySelector('input[name="automate"]:checked').value;
@@ -489,7 +487,7 @@
             var sceneNameOkay = true;
             var sceneColorOkay = true;
             var addOnID = "";
-            
+
             if (sceneAutomated == 1) {
                 if (sceneStart == "" || sceneEnd == "") {
                     sceneTimeOkay = false;
@@ -516,12 +514,20 @@
                         addOnID = addOnID + "," + shortID;
                     }
                 });
-                
-                $.post(
-                    "newScene.php",
-                    { sN: (sceneName), sC: (sceneColor), sA: (sceneAutomated), sS: (sceneStart), sE: (sceneEnd), aID: (addOnID),  },
-                );
-                
+
+                if (sceneID == "") {
+                    $.post(
+                        "newScene.php",
+                        { sN: (sceneName), sC: (sceneColor), sA: (sceneAutomated), sS: (sceneStart), sE: (sceneEnd), aID: (addOnID),  },
+                    );
+                }
+                else {
+                    $.post(
+                        "updateScene.php",
+                        { sN: (sceneName), sC: (sceneColor), sA: (sceneAutomated), sS: (sceneStart), sE: (sceneEnd), aID: (addOnID), sID: (sceneID),  },
+                    );
+                }
+
                 fnClearSceneModal();
                 $('#myModal').modal('hide');
                 $('#all-scenes').load(document.URL +  ' #all-scenes');
@@ -549,21 +555,17 @@
         }
         
         function fnAllOn() {
-            fnLoad(true);
             $.post(
                 "allOffOn.php",
                 { OnOff: (1.00),  },
             );
-            fnLoad(false);
         }
         
         function fnAllOff() {
-            fnLoad(true);
             $.post(
                 "allOffOn.php",
                 { OnOff: (0.00),  },
             );
-            fnLoad(false);
         }
         
         function fnSceneSettings(arg) {
@@ -697,9 +699,9 @@
                                         <label class="lbl-automate">Would you like to automate this scene?</label>
                                         <!--<input id="automate-checkbox" type="checkbox" onclick="fnHideShowAutomation(this.id)" class="automate-checkbox">-->
                                         <label for="automated" style="margin: 0 5px;">Yes</label>
-                                        <input type="radio" style="margin: 0 5px;" id="automated" name="automate" value="1" onclick="fnHideShowAutomation(this.value)"/>
+                                        <input type="radio" style="margin: 0 5px;" id="yesAutomated" name="automate" value="1" onclick="fnHideShowAutomation(this.value)"/>
                                         <label for="automated" style="margin: 0 5px;">No</label>
-                                        <input type="radio" style="margin: 0 5px;" id="automated" name="automate" value="0" onclick="fnHideShowAutomation(this.value)" checked />
+                                        <input type="radio" style="margin: 0 5px;" id="noAutomated" name="automate" value="0" onclick="fnHideShowAutomation(this.value)" checked />
                                     </div>
                                 </div>
                                 <div id="automate-times" class="dont-display col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -738,20 +740,7 @@
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                                         <button type="button" id="btn-save-scene" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene(this.id)">Save</button>
-=======
-                                        <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene()">Save</button>
->>>>>>> parent of 3f6a589... Merge branch 'master' of https://github.com/gwalker97/CSI-4999
-=======
-                                        <button type="button" id="btn-save-scene" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene(this.id)">Save</button>
->>>>>>> parent of 63fd48b... Revert "Merge remote-tracking branch 'origin/master'"
-=======
-					<img src="Images/layouts/pi_org.png">  
-                                        <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene()">Save</button>
->>>>>>> parent of 04f91c3... Merge remote-tracking branch 'origin/master'
                                     </div>
                                 </div>
                             </form>
@@ -814,22 +803,8 @@
                                 New<i class="fa fa-plus fa-plus-main"></i>
                               </button>
                               <div class="dropdown-menu new-dropdown-menu" aria-labelledby="dropdownMenuButton">
-<<<<<<< HEAD
-<<<<<<< HEAD
                                 <a class="dropdown-item new-dropdown" href="/new-component.php">Appliance</a>
-<<<<<<< HEAD
                                 <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#myModal" onclick="fnClearSceneModal()">Scene</a>
-=======
-                                <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#myModal">Scene</a>
->>>>>>> parent of 3f6a589... Merge branch 'master' of https://github.com/gwalker97/CSI-4999
-=======
-                                <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#myModal" onclick="fnClearSceneModal()">Scene</a>
-                                <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#newCompModal">Appliance</a>
->>>>>>> parent of 63fd48b... Revert "Merge remote-tracking branch 'origin/master'"
-=======
-                                <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#newCompModal">Appliance</a>
-                                <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#myModal">Scene</a>
->>>>>>> parent of 04f91c3... Merge remote-tracking branch 'origin/master'
                               </div>
                             </div>
                         </div>
@@ -917,7 +892,7 @@
                     //dynamically adds component divs
                     if ($aT == "L")
                     {
-                        /*echo '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 rooms ' . $strippedrN .'" id="' . $strippedrN . '">
+                        echo '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 rooms ' . $strippedrN .'" id="' . $strippedrN . '">
                                 <div class="component-card">
                                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                                         <p class="p-component-main"><i id="l-image-' . $aID .'" class="fa fa-lightbulb" style="margin-right: 20px;"></i>' . $aN . '</p>
@@ -929,22 +904,6 @@
                                         <p class="p-component-label"><b>Room:</b> ' . $rN . '</p>
                                         <p class="p-component-label"><b>Description:</b> ' . $aD . '</p>
 
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                        <button class="btn-component-switch btn-component-switch-settings fa fa-cog" id="c' . $aID . '" onclick="fnComponentSettingsRedirect(this.id)"></button>
-                                    </div>
-                                </div>
-                              </div>';*/
-                         echo '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 rooms ' . $strippedrN .'" id="' . $strippedrN . '">
-                                <div class="component-card">
-                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                                        <p class="p-component-main"><i id="l-image-' . $aID .'" class="fa fa-lightbulb" style="margin-right: 20px;"></i>' . $aN . '</p>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                        <button class="'. $buttonClass . '" id="l' . $aID . '" onclick="fnSwitchClick(this.id)">'. $buttonText . '</button>
-                                    </div>
-                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                                        <p class="p-component-label"><b>Room:</b> ' . $rN . '</p>
                                     </div>
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                                         <button class="btn-component-switch btn-component-switch-settings fa fa-cog" id="c' . $aID . '" onclick="fnComponentSettingsRedirect(this.id)"></button>
