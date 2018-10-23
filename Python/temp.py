@@ -69,9 +69,9 @@ def reading():
 		#cur.execute("select CoolTemp from *The Table*;")
 		temps = read_temp()
 		if (temps[1] >= 80):
-			print "%s" %(cooling.coolOn())
+			cooling.coolOn()
 		else:
-			print "%s" %(cooling.coolOff())
+			cooling.coolOff()
 		print "%s C / %s F" %(int(temps[0]),int(temps[1]))
 		conn.commit()
 		cur.execute( "Update Temp set C = %s, F = %s;" %(int(temps[0]), int(temps[1])))

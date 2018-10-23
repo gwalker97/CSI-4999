@@ -11,7 +11,7 @@ def coolOn():
 	gpio.setup(pin, gpio.OUT)
 	if(gpio.input(pin) != 1):
 		gpio.output(pin, gpio.HIGH)
-		return "turn on"
+		#return "turn on"
 def coolOff():
 	global pin
 	gpio.setmode(gpio.BCM)
@@ -19,4 +19,4 @@ def coolOff():
 	gpio.setup(pin, gpio.OUT)
 	if(gpio.input(pin)):
 		gpio.output(pin, gpio.LOW)
-		return "turn off"
+		#return "turn off"
