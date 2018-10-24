@@ -1,6 +1,7 @@
 import os
 import glob
 import time
+import cooling
 import mysql.connector
 from mysql.connector import MySQLConnection, Error
 
@@ -12,7 +13,7 @@ dbtable = 'Addon'
 
 c = 0
 f = 0
-
+coolVal
 os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
  
@@ -43,16 +44,14 @@ def read_temp():
 	#try:
     	lines = read_temp_raw()
      	while lines[0].strip()[-3:] != 'YES':
-     		time.sleep(0.2)
-		lines = read_temp_raw()
-		equals_pos = lines[1].find('t=')
-		print "While"
-		if equals_pos != -1:
-			print "if"
-        		temp_string = lines[1][equals_pos+2:]
-        		c = float(temp_string) / 1000.0
-        		f = temp_c * 9.0 / 5.0 + 32.0
-	return c, f
+       		time.sleep(0.2)
+       		lines = read_temp_raw()
+	equals_pos = lines[1].find('t=')
+	if equals_pos != -1:
+       		temp_string = lines[1][equals_pos+2:]
+       		c = float(temp_string) / 1000.0
+       		f = c * 9.0 / 5.0 + 32.0
+		return c, f
 	#except:
 		#print read_sensor()
 
@@ -64,12 +63,21 @@ def reading():
 	conn = mysqlConn()
 	cur = conn.cursor(buffered=True)
 	while True:
+	#	try:
+		#The following query will pull the temp
+		#At which the fan turns on at, from the database
+		#cur.execute("select CoolTemp from *The Table*;")
 		temps = read_temp()
+		if (temps[1] >= 80):
+			cooling.coolOn()
+		else:
+			cooling.coolOff()
 		print "%s C / %s F" %(int(temps[0]),int(temps[1]))
 		conn.commit()
-		print "Sending Update"
-		cur.execute( "Update Temp set C = %s, F = %s" %(int(temps[0]), int(temps[1])))
+		cur.execute( "Update Temp set C = %s, F = %s;" %(int(temps[0]), int(temps[1])))
 		time.sleep(.5)
+		#except:
+			#print "Nope"
 def main():
 	initBool = False;
 	while not initBool:

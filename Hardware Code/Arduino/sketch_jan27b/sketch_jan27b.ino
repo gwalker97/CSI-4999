@@ -120,8 +120,10 @@ void gpio(int pin, float state, String type){
    // Serial.println("Turn off");
   }else if(state != 1 && state != 0){
     int turns = state * 255;
+    //Serial.println(pin);
+    //Serial.println("Here at Dim");
     analogWrite(pin, turns);
-   // Serial.println("Dim");
+    //Serial.println("Dim");
   }
   }
 }

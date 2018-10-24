@@ -1,17 +1,17 @@
 <?php
-    require('config.php');
-    
-    if($_SESSION["guest"] == true) {
-        $_SESSION['loginMsg'] = "Please login first.";
-        header("Location: login.php");
-        die();
-    }
+require('config.php');
+
+if($_SESSION["guest"] == true) {
+    $_SESSION['loginMsg'] = "Please login first.";
+    header("Location: login.php");
+    die();
+}
 ?>
 <!DOCTYPE html>
 <html>
     <head>
         <title>HARP</title>
-	<!-- AJAX & jQuery CDN, must go before Bootstrap -->
+        <!-- AJAX & jQuery CDN, must go before Bootstrap -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -28,7 +28,7 @@
             var changeID = change.id.substring(1);
             //Sends the button ID and (minus first character) and 0 to PHP
             $.post("saveDatabase.php",
-            {
+                   {
                 id: change.id.substring(1),
                 state: '0',
             });
@@ -41,7 +41,7 @@
 
                 //Sends the button ID (minus first character) and 1 to PHP
                 $.post("saveDatabase.php",
-                {
+                       {
                     id: change.id.substring(1),
                     state: '1',
                 });
@@ -86,7 +86,7 @@
                 change.classList.add('btn-on');   
             }
         }
-        
+
         function fnSwitchClickSlider(clicked_id) {
             var change = document.getElementById(clicked_id);
             var changeID = change.id.substring(1);
@@ -97,22 +97,22 @@
             {
                 change.innerHTML = "Off";
 
-			//Sends the button ID and (minus first character) and 0 to PHP
+                //Sends the button ID and (minus first character) and 0 to PHP
                 $.post("saveDatabase.php",
-			    {
-				    id: change.id.substring(1),
-				    state: '0',
-			    });
+                       {
+                    id: change.id.substring(1),
+                    state: '0',
+                });
             }
             else {
                 change.innerHTML = "On";
 
                 //Sends the button ID (minus first character) and 1 to PHP
                 $.post("saveDatabase.php",
-			    {
-				    id: change.id.substring(1),
-				    state: '1',
-			    });
+                       {
+                    id: change.id.substring(1),
+                    state: '1',
+                });
             }
             if (change.classList.contains('btn-on'))
             {
@@ -127,7 +127,7 @@
                 sliderChange.value = "1.00";
             }
         }
-        
+
         function fnComponentSettingsRedirect(clicked_id) {
             window.location.href='/component-settings.php?component-id=' + clicked_id
         }
@@ -140,7 +140,7 @@
             if(confirm('Are you sure you want to log out? Logging out will automatically turn off all appliances.'))
                 document.location.href = 'logoutScript.php';
         }
-        
+
         $(function() {
             $('#roomList').change(function(){
                 var room = $(this).val();
@@ -158,41 +158,36 @@
                 }
             });
         });
-        
+
         $(function() {
             $('#colorSelect').change(function(){
                 var color = $(this).val().toLowerCase();
+                removeColorBrushClasses();
                 if(color == "color") {
-                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-black').removeClass('scene-blue').removeClass('scene-green').removeClass('scene-orange');
+
                 }
                 else if(color == "blue") {
-                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-black').removeClass('scene-green').removeClass('scene-orange');
                     $('#color-brush').addClass('scene-blue');
                 }
                 else if (color == "red") {
-                    $('#color-brush').removeClass('scene-blue').removeClass('scene-yellow').removeClass('scene-black').removeClass('scene-green').removeClass('scene-orange');
                     $('#color-brush').addClass('scene-red');
                 }
                 else if (color == "yellow") {
-                    $('#color-brush').removeClass('scene-red').removeClass('scene-blue').removeClass('scene-black').removeClass('scene-green').removeClass('scene-orange');
                     $('#color-brush').addClass('scene-yellow');                   
                 }
                 else if (color == "black") {
-                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-blue').removeClass('scene-green').removeClass('scene-orange');
                     $('#color-brush').addClass('scene-black');                    
                 }
                 else if (color == "green") {
-                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-blue').removeClass('scene-black').removeClass('scene-orange');
                     $('#color-brush').addClass('scene-green'); 
                 }
                 else if (color == "orange") {
-                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-blue').removeClass('scene-black').removeClass('scene-green');
                     $('#color-brush').addClass('scene-orange'); 
                 }
             });
         });
 
-	   //Function to check button states and update	
+        //Function to check button states and update	
         function checkButtons() {
             //Find all buttons, store
             var className = document.getElementsByClassName('btn-component-switch');
@@ -235,7 +230,7 @@
                                 var elementID = 's-image-' + tempButton.substring(1);
                                 document.getElementById(elementID).classList.add('slider-icon-flipped');
                             }
-                            
+
                             document.getElementById(tempButton).innerHTML = "On";
                             document.getElementById(tempButton).classList.remove('btn-off');
                             document.getElementById(tempButton).classList.add('btn-on');
@@ -255,13 +250,13 @@
                                 var elementID = 's-image-' + tempButton.substring(1);
                                 document.getElementById(elementID).classList.remove('slider-icon-flipped');
                             }
-                            
+
                             document.getElementById(tempButton).innerHTML = "Off";
                             document.getElementById(tempButton).classList.remove('btn-on');
                             document.getElementById(tempButton).classList.add('btn-off');
                         }
-                        
-                        
+
+
 
                     }, 'json'
                 );
@@ -295,18 +290,18 @@
 
                 //If slider is not active                
                 if (SliderActive == 0){
-				    $.post(
-		                "readButton.php",
-		                { id: (tempButton.substring(1)) },
-		                function(response) {			
+                    $.post(
+                        "readButton.php",
+                        { id: (tempButton.substring(1)) },
+                        function(response) {			
                             document.getElementById(tempButton).value = Number(response.state);
 
-		                }, 'json'
-		            );
+                        }, 'json'
+                    );
                 }
             }
         }
-        
+
         //function to check Temp and update
         function checkTemp() {
             var idNameF = document.getElementById('displayTempF');
@@ -314,12 +309,12 @@
             var IdStore = new Array();
             IdStore.push(idNameF.id);
             IdStore.push(idNameC.id)
-            
+
             var idArr = new Array();			
             for (var i = 0; i < IdStore.length; i++) {	
                 idArr.push(IdStore[i]);
             }
-            
+
             $.post(
                 "readTemp.php",
                 function(response) {			
@@ -359,17 +354,17 @@
                 }
             });
         });
-        
+
         //Sets variable if mouse is interacting with any slider
         var SliderActive = 0;
         $(document).ready(function(){
             $( "[type=range]" )
-              .mouseenter(function() {
+                .mouseenter(function() {
                 SliderActive = 1;    
-              })
-              .mouseleave(function() {
-                    SliderActive = 0;
-              });
+            })
+                .mouseleave(function() {
+                SliderActive = 0;
+            });
         });
 
         function fnTempChange(arg) {
@@ -378,13 +373,13 @@
             var btnF =document.getElementById('btnTempF');
             var displayC = document.getElementById('displayTempC');
             var displayF = document.getElementById('displayTempF');
-            
+
             if (btn == "btnTempC") {
                 btnC.classList.remove('btn-temp-not-selected');
                 btnC.classList.add('btn-temp-selected');
                 btnF.classList.remove('btn-temp-selected');
                 btnF.classList.add('btn-temp-not-selected');
-                
+
                 displayF.classList.remove('temp-display');
                 displayF.classList.add('temp-display-off');
                 displayC.classList.remove('temp-display-off');
@@ -395,14 +390,14 @@
                 btnC.classList.remove('btn-temp-selected');
                 btnF.classList.add('btn-temp-selected');
                 btnF.classList.remove('btn-temp-not-selected');
-                
+
                 displayF.classList.add('temp-display');
                 displayF.classList.remove('temp-display-off');
                 displayC.classList.add('temp-display-off');
                 displayC.classList.remove('temp-display');
             }
         }
-        
+
         function fnSetScene(arg) {
             fnLoad(true);
             //scene-x --> x
@@ -416,9 +411,9 @@
             );
             fnLoad(false);
         }
-        
+
         window.onload = function () { document.getElementById('loading').style.display = "none" }
-        
+
         function fnLoad(arg) {
             if (arg) {
                 document.getElementById('loading').style.display = "block";
@@ -430,11 +425,7 @@
                 }, 850);
             }
         }
-        
-        $('#input_starttime').pickatime({
-            twelvehour: true,
-        });
-        
+
         function fnHideShowAutomation(arg) {
             var isAutomated = arg;            
 
@@ -447,10 +438,10 @@
                 document.getElementById('automate-times').classList.add('dont-display');
             }
         }
-        
+
         function fnSelectSceneAppliance(arg) {
             var appliance = document.getElementById(arg);
-            
+
             if (appliance.classList.contains('appliance-selected')) {
                 appliance.classList.remove('appliance-selected');
             }
@@ -458,27 +449,39 @@
                 appliance.classList.add('appliance-selected');
             }
         }
-        
+
+        function fnSelectCompHost(arg) {
+            var appliance = document.getElementById(arg);
+
+            if (appliance.classList.contains('appliance-selected')) {
+                appliance.classList.remove('appliance-selected');
+            }
+            else {
+                appliance.classList.add('appliance-selected');
+            }
+        }
+
         function fnClearSceneModal() {
-            document.getElementById('color-brush').classList.remove('scene-red');
-            document.getElementById('color-brush').classList.remove('scene-yellow');
-            document.getElementById('color-brush').classList.remove('scene-black');
-            document.getElementById('color-brush').classList.remove('scene-blue');
-            document.getElementById('color-brush').classList.remove('scene-green');
-            document.getElementById('color-brush').classList.remove('scene-orange');
-            
+            removeColorBrushClasses();
+
             document.getElementById('automate-times').classList.add('dont-display');
-            
+
             document.getElementById('automate-error').classList.remove('display');
             document.getElementById('automate-error').classList.add('dont-display');
 
             $('.li-appliance').each(function(i, obj) {
                 $('.li-appliance').removeClass('appliance-selected');
             });
+
             document.getElementById('scene-form').reset();
         }
-        
-        function fnSaveScene() {
+
+        function fnSaveScene(arg) {
+            var sceneID = arg.substring(14);
+            var btnSaveScene = document.getElementsByClassName('btn-save-appliance');
+            //btnSaveScene.id = 'btn-save-scene';
+            //var IsUpdate = document.getElementById(btnSaveScene.id).innerHTML;
+
             var sceneName = document.getElementById('scene-name').value;
             var sceneColor = document.getElementById('colorSelect').value;
             var sceneAutomated = document.querySelector('input[name="automate"]:checked').value;
@@ -489,7 +492,7 @@
             var sceneNameOkay = true;
             var sceneColorOkay = true;
             var addOnID = "";
-            
+
             if (sceneAutomated == 1) {
                 if (sceneStart == "" || sceneEnd == "") {
                     sceneTimeOkay = false;
@@ -516,12 +519,20 @@
                         addOnID = addOnID + "," + shortID;
                     }
                 });
-                
-                $.post(
-                    "newScene.php",
-                    { sN: (sceneName), sC: (sceneColor), sA: (sceneAutomated), sS: (sceneStart), sE: (sceneEnd), aID: (addOnID),  },
-                );
-                
+
+                if (sceneID == "") {
+                    $.post(
+                        "newScene.php",
+                        { sN: (sceneName), sC: (sceneColor), sA: (sceneAutomated), sS: (sceneStart), sE: (sceneEnd), aID: (addOnID),  },
+                    );
+                }
+                else {
+                    $.post(
+                        "updateScene.php",
+                        { sN: (sceneName), sC: (sceneColor), sA: (sceneAutomated), sS: (sceneStart), sE: (sceneEnd), aID: (addOnID), sID: (sceneID),  },
+                    );
+                }
+
                 fnClearSceneModal();
                 $('#myModal').modal('hide');
                 $('#all-scenes').load(document.URL +  ' #all-scenes');
@@ -547,238 +558,452 @@
                 }
             }
         }
-        
+
         function fnAllOn() {
+            fnLoad(true);
             $.post(
                 "allOffOn.php",
                 { OnOff: (1.00),  },
             );
+            fnLoad(false);
         }
-        
+
         function fnAllOff() {
+            fnLoad(true);
             $.post(
                 "allOffOn.php",
                 { OnOff: (0.00),  },
             );
+            fnLoad(false);
         }
+
+        function fnSceneSettings(arg) {
+            var sID = arg.substring(6);
+            var btnSaveScene = document.getElementById('btn-save-scene');
+            if (btnSaveScene == undefined) {
+                btnSaveScene = document.getElementsByClassName('btn-save-appliance');
+            }
+            btnSaveScene.id = 'btn-save-scene' + sID;
+            btnSaveScene.innerHTML = 'Update';
+
+            $.post(
+                "sceneSettings.php",
+                { sID: (sID),  },
+                function(response) {	
+                    document.getElementById('scene-name').value = response.Scene_Name;
+                    document.getElementById('colorSelect').value = response.Scene_Color;
+                    removeColorBrushClasses();
+                    switch(response.Scene_Color) {
+                        case 'blue':
+                            $('#color-brush').addClass('scene-blue');
+                            break;
+                        case 'black':
+                            $('#color-brush').addClass('scene-black');
+                            break;
+                        case 'red':
+                            $('#color-brush').addClass('scene-red');
+                            break;
+                        case 'yellow': 
+                            $('#color-brush').addClass('scene-yellow');
+                            break;
+                        case 'green':                                    
+                            $('#color-brush').addClass('scene-green');
+                            break;
+                        case 'orange':
+                            $('#color-brush').addClass('scene-orange');
+                            break;
+                        default:
+                            break;
+                                               }
+
+                    if (response.Scene_Color == 'red') {
+                        $('#yesAutomated').prop('checked', true);  
+                        document.getElementById('automate-times').classList.remove('dont-display');
+                        document.getElementById('automate-times').classList.add('display');
+                        document.getElementById('scene-start').value = response.Start_Time;
+                        document.getElementById('scene-end').value = response.End_Time;
+                    }
+                    else {
+                        $('#noAutomated').prop('checked', true);  
+                        document.getElementById('automate-times').classList.remove('display');
+                        document.getElementById('automate-times').classList.add('dont-display');
+                    }
+                }, 'json'
+            );
+
+            $.post(
+                "sceneSettingsAddons.php",
+                { sID: (sID),  },
+                function(response) {	
+                    removeSelectedAddons();
+                    var addons = response.Addon_ID.split(',');
+                    for(var i = 0; i < addons.length; i++) {
+                        addons[i] = addons[i].replace(/^\s*/, "").replace(/\s*$/, "");
+                        document.getElementById('scene-app-' + addons[i]).classList.add('appliance-selected');
+                    }
+                }, 'json'
+            );
+
+            $('#myModal').modal('show');
+
+        }
+
+        function removeColorBrushClasses() {
+            $('#color-brush').removeClass('scene-blue').removeClass('scene-red').removeClass('scene-black').removeClass('scene-green').removeClass('scene-yellow').removeClass('scene-orange');
+        }
+
+        function removeSelectedAddons() {
+            $('.li-appliance').removeClass('appliance-selected');
+        }
+
+        function fnNewAppPinSet(pin){
+            document.getElementById("pin-number").value = pin;
+            document.getElementById("new-comp-pin-text").innerHTML = "Pin Available!";
+        }
+
     </script>
 
-            <body class="login-body">
-                
-                <!--loading content-->
-                <div id="loading">
-                    <div class="loading-box">
-                        <img id="loading-image" src="Images/loader.gif" alt="Loading..." />
-                    </div>
-                </div>
-                
-                <!-- Modal content -->
-                <div id="myModal" class="modal fade" role="dialog">
-                  <div class="modal-dialog">
+    <body class="login-body">
 
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                      <div class="modal-header">
+        <!--loading content-->
+        <div id="loading">
+            <div class="loading-box">
+                <img id="loading-image" src="Images/loader.gif" alt="Loading..." />
+            </div>
+        </div>
+
+        <!-- Modal content -->
+        <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" onclick="fnClearSceneModal()">&times;</button>
                         <h4 class="modal-title">New Scene</h4>
-                      </div>
-                        <!-- Modal body-->
-                        <div class="modal-body">
-                            <!-- Modal form-->
-                            
-                            <form id="scene-form" class="row">
+                    </div>
+                    <!-- Modal body-->
+                    <div class="modal-body">
+                        <!-- Modal form-->
+
+                        <form id="scene-form" class="row">
+                            <div class="automate-div">
+                                <label id="automate-error" class="automate-error dont-display"></label>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+                                    <i class="fa fa-home fa-login"></i>
+                                    <input type="text" id="scene-name" placeholder="Scene Name" class="input-login scene-name-input">
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+                                    <i id="color-brush" class="fas fa-paint-brush paint-brush fa-login"></i>
+                                    <select id="colorSelect" class="selects color-select">
+                                        <option value="color">Color</option>
+                                        <option value="blue">Blue</option>
+                                        <option value="green">Green</option>
+                                        <option value="yellow">Yellow</option>
+                                        <option value="orange">Orange</option>
+                                        <option value="red">Red</option>
+                                        <option value="black">Black</option>
+                                    </select>
+                                    <i class="fas fa-caret-down color-caret"></i>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="automate-div">
-                                    <label id="automate-error" class="automate-error dont-display"></label>
+                                    <label class="lbl-automate">Would you like to automate this scene?</label>
+                                    <!--<input id="automate-checkbox" type="checkbox" onclick="fnHideShowAutomation(this.id)" class="automate-checkbox">-->
+                                    <label for="automated" style="margin: 0 5px;">Yes</label>
+                                    <input type="radio" style="margin: 0 5px;" id="yesAutomated" name="automate" value="1" onclick="fnHideShowAutomation(this.value)"/>
+                                    <label for="automated" style="margin: 0 5px;">No</label>
+                                    <input type="radio" style="margin: 0 5px;" id="noAutomated" name="automate" value="0" onclick="fnHideShowAutomation(this.value)" checked />
                                 </div>
+                            </div>
+                            <div id="automate-times" class="dont-display col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
-                                        <i class="fa fa-home fa-login"></i>
-                                        <input type="text" id="scene-name" placeholder="Scene Name" class="input-login scene-name-input">
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
-                                        <i id="color-brush" class="fas fa-paint-brush paint-brush fa-login"></i>
-                                        <select id="colorSelect" class="selects color-select">
-                                            <option value="color">Color</option>
-                                            <option value="blue">Blue</option>
-                                            <option value="green">Green</option>
-                                            <option value="yellow">Yellow</option>
-                                            <option value="orange">Orange</option>
-                                            <option value="red">Red</option>
-                                            <option value="black">Black</option>
-                                        </select>
-                                        <i class="fas fa-caret-down color-caret"></i>
-                                    </div>
+                                    <label id="automate-error-times" class="automate-error dont-display"></label>
                                 </div>
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="automate-div">
-                                        <label class="lbl-automate">Would you like to automate this scene?</label>
-                                        <!--<input id="automate-checkbox" type="checkbox" onclick="fnHideShowAutomation(this.id)" class="automate-checkbox">-->
-                                        <label for="automated" style="margin: 0 5px;">Yes</label>
-                                        <input type="radio" style="margin: 0 5px;" id="automated" name="automate" value="1" onclick="fnHideShowAutomation(this.value)"/>
-                                        <label for="automated" style="margin: 0 5px;">No</label>
-                                        <input type="radio" style="margin: 0 5px;" id="automated" name="automate" value="0" onclick="fnHideShowAutomation(this.value)" checked />
-                                    </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    Start Time
+                                    <input placeholder="Start time" type="time" id="scene-start" class="input-login input-time">
                                 </div>
-                                <div id="automate-times" class="dont-display col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <label id="automate-error-times" class="automate-error dont-display"></label>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                        Start Time
-                                        <input placeholder="Start time" type="time" id="scene-start" class="input-login input-time">
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                        End Time
-                                        <input placeholder="End time" type="time" id="scene-end" class="input-login input-time">
-                                    </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    End Time
+                                    <input placeholder="End time" type="time" id="scene-end" class="input-login input-time">
                                 </div>
-                                <div id="choose-appliance" class="appliance-list-selector col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <label class="lbl-choose-appliances">Select the appliances you want in the scene.</label>
-                                    <ul id="appliance-list" class="ul-appliance-list">
+                            </div>
+                            <div id="choose-appliance" class="appliance-list-selector col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label class="lbl-choose-appliances">Select the appliances you want in the scene.</label>
+                                <ul id="appliance-list" class="ul-appliance-list">
                                     <?php
-                                        $sql3 = "SELECT Addon.Addon_Name, Addon.Addon_ID 
+                                    $sql3 = "SELECT Addon.Addon_Name, Addon.Addon_ID 
                                                     FROM Addon 
                                                     INNER JOIN 
                                                     (select * from Room where House_ID=" . $_SESSION['home'] . ") as A
                                                     ON A.Room_ID=Addon.Addon_Room_ID;";
-                                        $result3 = mysqli_query($conn,$sql3);
-                                        $i = -1;
-                                        while($row3 = mysqli_fetch_array($result3,MYSQLI_ASSOC)) {
-                                            $aN = $row3['Addon_Name'];
-                                            $aID = $row3['Addon_ID'];
-                                            
-                                            echo '<li id="scene-app-' . $aID . '" class="li-appliance" onclick="fnSelectSceneAppliance(this.id)">' . $aN . '</li>';
-                                            
-                                        }
+                                    $result3 = mysqli_query($conn,$sql3);
+                                    $i = -1;
+                                    while($row3 = mysqli_fetch_array($result3,MYSQLI_ASSOC)) {
+                                        $aN = $row3['Addon_Name'];
+                                        $aID = $row3['Addon_ID'];
+
+                                        echo '<li id="scene-app-' . $aID . '" class="li-appliance" onclick="fnSelectSceneAppliance(this.id)">' . $aN . '</li>';
+
+                                    }
                                     ?>
-                                    </ul>
+                                </ul>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <button type="button" id="btn-save-scene" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene(this.id)">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+
+        <!-- New Component Modal content -->
+        <div id="newCompModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" onclick="fnClearSceneModal()">&times;</button>
+                        <h4 class="modal-title">New Appliance</h4>
+                    </div>
+                    <!-- Modal body-->
+                    <div class="modal-body">
+                        <!-- Modal form-->
+
+                        <form id="comp-form" class="row">
+                            <div class="automate-div">
+                                <label id="automate-error" class="automate-error dont-display"></label>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+                                    <i class="fa fa-home fa-login"></i>
+                                    <input type="text" id="appliance-name" placeholder="Appliance Name" class="input-login scene-name-input">
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+                                    <i id="color-brush" class="fas fa-home home fa-login"></i>
+                                    <select id="applianceSelect" class="selects color-select">
+                                        <option value="l">Light</option>
+                                        <option value="s">Dimmable Light</option>
+                                        <option value="f">Fan</option>
+                                    </select>
+                                    <i class="fas fa-caret-down color-caret"></i>
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene()">Save</button>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+                                        <i class="fa fa-home fa-login"></i>
+                                        <input type="text" id="appliance-name" placeholder="Appliance Description" class="input-login scene-name-input">
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+                                        <i id="color-brush" class="fas fa-home home fa-login"></i>
+                                        <select id="roomSelect" class="selects color-select">
+                                            <?php
+                                            $sql = "select * from Room where House_ID=" . $_SESSION['home'];
+                                            $result = mysqli_query($conn,$sql);
+
+                                            while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+                                                $rID = $row['Room_ID'];
+                                                $rN = $row['Room_Name'];
+                                                echo '<option value="' . $rID . '">' . $rN . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                        <i class="fas fa-caret-down color-caret"></i>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
-                        
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="main-page-container">
-                    <div class="temp-container">
-                        <div class="temp-container-inside">
-                            <span class="fas fa-thermometer-half"></span>
-                            <?php 
-                                $hID = $_SESSION['home'];
-                                $sql = "select C, F from Temp where House_ID='$hID'";
-                                $result = mysqli_query($conn,$sql);
-                                $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
-                            
-                                $F = $row["F"];
-                                $C = $row["C"];
-                                
-                                echo '<span id="displayTempF" class="temp-display">' . $F . '°</span>';
-                                echo '<span id="displayTempC" class="temp-display-off">' . $C . '°</span>';
-                            ?>
+                            </div>
+                            <div id="choose-appliance" class="appliance-list-selector col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label class="lbl-choose-appliances">Select the host device:</label>
+                                <ul id="appliance-list" class="ul-appliance-list">
+                                    <?php
+                                    $sql = "select * from Hosts";
+                                    $result = mysqli_query($conn,$sql);
 
-                            <button id="btnTempF" class="btn-temp btn-temp-left btn-temp-selected" onclick="fnTempChange(this.id)">F</button>
-                            <button id="btnTempC" class="btn-temp btn-temp-right btn-temp-not-selected" onclick="fnTempChange(this.id)">C</button>
-                        </div>
+                                    while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+                                        $hID = $row['Host_ID'];
+                                        $hN = $row['Host_Name'];
+                                        echo '<li id="comp-app-' . $hID . '" class="li-appliance" onclick="fnSelectCompHost(this.id)">' . $hN . '</li>';
+                                    }
+                                    ?>
+                                </ul>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                                    <img src="Images/layouts/pi_third.png" usemap="#pi-map">
+
+                                    <map name="pi-map">
+                                        <area alt="14" title="14" href="javascript:fnNewAppPinSet(14)" coords="144,29,6" shape="circle">
+                                        <area alt="15" title="15" href="javascript:fnNewAppPinSet(15)" coords="163,28,7" shape="circle">
+                                        <area alt="18" title="18" href="javascript:fnNewAppPinSet(18)" coords="184,28,8" shape="circle">
+                                        <area alt="23" title="23" href="javascript:fnNewAppPinSet(23)" coords="223,28,8" shape="circle">
+                                        <area alt="24" title="24" href="javascript:fnNewAppPinSet(24)" coords="243,28,9" shape="circle">
+                                        <area alt="25" title="25" href="javascript:fnNewAppPinSet(25)" coords="282,28,8" shape="circle">
+                                        <area alt="8" title="8" href="javascript:fnNewAppPinSet(8)" coords="304,28,8" shape="circle">
+                                        <area alt="7" title="7" href="javascript:fnNewAppPinSet(7)" coords="323,28,8" shape="circle">
+                                        <area alt="12" title="12" href="javascript:fnNewAppPinSet(12)" coords="383,29,7" shape="circle">
+                                        <area alt="16" title="16" href="javascript:fnNewAppPinSet(16)" coords="423,28,9" shape="circle">
+                                        <area alt="20" title="20" href="javascript:fnNewAppPinSet(20)" coords="443,29,8" shape="circle">
+                                        <area alt="21" title="21" href="javascript:fnNewAppPinSet(21)" coords="462,28,7" shape="circle">
+                                        <area alt="2" title="2" href="javascript:fnNewAppPinSet(2)" coords="104,53,8" shape="circle">
+                                        <area alt="3" title="3" href="javascript:fnNewAppPinSet(3)" coords="124,52,8" shape="circle">
+                                        <area alt="4" title="4" href="javascript:fnNewAppPinSet(4)" coords="144,53,8" shape="circle">
+                                        <area alt="17" title="17" href="javascript:fnNewAppPinSet(17)" coords="184,52,9" shape="circle">
+                                        <area alt="27" title="27" href="javascript:fnNewAppPinSet(27)" coords="204,53,8" shape="circle">
+                                        <area alt="22" title="22" href="javascript:fnNewAppPinSet(22)" coords="224,52,9" shape="circle">
+                                        <area alt="10" title="10" href="javascript:fnNewAppPinSet(10)" coords="264,52,8" shape="circle">
+                                        <area alt="9" title="9" href="javascript:fnNewAppPinSet(9)" coords="283,52,9" shape="circle">
+                                        <area alt="11" title="11" href="javascript:fnNewAppPinSet(11)" coords="303,52,9" shape="circle">
+                                        <area alt="5" title="5" href="javascript:fnNewAppPinSet(5)" coords="363,53,9" shape="circle">
+                                        <area alt="6" title="6" href="javascript:fnNewAppPinSet(6)" coords="383,53,8" shape="circle">
+                                        <area alt="13" title="13" href="javascript:fnNewAppPinSet(13)" coords="403,54,7" shape="circle">
+                                        <area alt="19" title="19" href="javascript:fnNewAppPinSet(19)" coords="422,53,7" shape="circle">
+                                        <area alt="26" title="26" href="javascript:fnNewAppPinSet(26)" coords="443,52,9" shape="circle">
+                                    </map>
+                                </div>	
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"> 
+                                    <i class="fa fa-home fa-login"></i>
+                                    <input type="text" id="pin-number" placeholder="Pin Number" class="input-login scene-name-input center" disabled="true">
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <p id="new-comp-pin-text"></p>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
+                                    <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene()">Save</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <?php
-                        $hID = $_SESSION['home'];
-                        $sql = "select * from House where House_ID='$hID'";
-		                $result = mysqli_query($conn,$sql);
-                        $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
-            
-                        $hName = $row['House_Name'];
-            
-                        $count = mysqli_num_rows($result);
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="main-page-container">
+            <div class="temp-container">
+                <div class="temp-container-inside">
+                    <span class="fas fa-thermometer-half"></span>
+                    <?php 
+                    $hID = $_SESSION['home'];
+                    $sql = "select C, F from Temp where House_ID='$hID'";
+                    $result = mysqli_query($conn,$sql);
+                    $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
+
+                    $F = $row["F"];
+                    $C = $row["C"];
+
+                    echo '<span id="displayTempF" class="temp-display">' . $F . '°</span>';
+                    echo '<span id="displayTempC" class="temp-display-off">' . $C . '°</span>';
                     ?>
-                    <div>
+
+                    <button id="btnTempF" class="btn-temp btn-temp-left btn-temp-selected" onclick="fnTempChange(this.id)">F</button>
+                    <button id="btnTempC" class="btn-temp btn-temp-right btn-temp-not-selected" onclick="fnTempChange(this.id)">C</button>
+                </div>
+            </div>
+            <?php
+            $hID = $_SESSION['home'];
+            $sql = "select * from House where House_ID='$hID'";
+            $result = mysqli_query($conn,$sql);
+            $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
+
+            $hName = $row['House_Name'];
+
+            $count = mysqli_num_rows($result);
+            ?>
+            <div>
+                <?php
+                if (!isset($_SESSION['indexMsg'])) {
+                    echo '<center><label id="accountErrorText" class="lbl-create-account-hidden"></label></center>';
+                } else { 
+                    echo '<center><label id="accountErrorText" class="lbl-create-account-visible">' . $_SESSION['indexMsg'] . '</label></center>';
+                    unset($_SESSION['indexMsg']);
+                }
+                ?>
+                <h1 class="text-left h1-main-page"><?php echo $hName; ?></h1>
+                <div>
+
+                </div>
+                <!--                        settings went here-->
+            </div>
+            <div class="div-devices">
+                <div style="display: inline-block">
+                    <div class="dropdown">
+                        <button class="dropdown-toggle btn-new-component" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            New<i class="fa fa-plus fa-plus-main"></i>
+                        </button>
+                        <div class="dropdown-menu new-dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#newCompModal">Appliance</a>
+                            <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#myModal" onclick="fnClearSceneModal()">Scene</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: inline-block">
+                    <select id="roomList" class="selects">
                         <?php
-                            if (!isset($_SESSION['indexMsg'])) {
-                                echo '<center><label id="accountErrorText" class="lbl-create-account-hidden"></label></center>';
-                            } else { 
-                                echo '<center><label id="accountErrorText" class="lbl-create-account-visible">' . $_SESSION['indexMsg'] . '</label></center>';
-                                unset($_SESSION['indexMsg']);
-                            }
+                        $sql2 = "select * from Room where House_ID='$hID'";
+                        $result2 = mysqli_query($conn,$sql2);
+
+                        echo '<option value="All Rooms">All Rooms</option>';
+                        while($row2 = mysqli_fetch_array($result2,MYSQLI_ASSOC)) {
+                            $rID = $row2['Room_ID'];
+                            $rN = $row2['Room_Name'];
+                            echo '<option value="' . $rN . '">' . $rN . '</option>';
+                        }
                         ?>
-                        <h1 class="text-left h1-main-page"><?php echo $hName; ?></h1>
-                        <div>
-                            
-                        </div>
-<!--                        settings went here-->
+                    </select>
+                    <div style="width: 80px; margin-top: -6px; float: right;">
+                        <button class="fa fa-sign-out-alt btn-sign-out" onclick="phpLogout()"></button>
+                        <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='house-settings.php'"></button>
                     </div>
-                    <div class="div-devices">
-                        <div style="display: inline-block">
-                            <div class="dropdown">
-                              <button class="dropdown-toggle btn-new-component" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                New<i class="fa fa-plus fa-plus-main"></i>
-                              </button>
-                              <div class="dropdown-menu new-dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item new-dropdown" href="/new-component.php">Appliance</a>
-                                <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#myModal">Scene</a>
-                              </div>
-                            </div>
-                        </div>
-                        
-                        <div style="display: inline-block">
-                            <select id="roomList" class="selects">
-                            <?php
-                                $sql2 = "select * from Room where House_ID='$hID'";
-                                $result2 = mysqli_query($conn,$sql2);
-                                
-                                echo '<option value="All Rooms">All Rooms</option>';
-                                while($row2 = mysqli_fetch_array($result2,MYSQLI_ASSOC)) {
-                                    $rID = $row2['Room_ID'];
-                                    $rN = $row2['Room_Name'];
-                                    echo '<option value="' . $rN . '">' . $rN . '</option>';
-                                }
-                            ?>
-                            </select>
-                            <div style="width: 80px; margin-top: -6px; float: right;">
-                                <button class="fa fa-sign-out-alt btn-sign-out" onclick="phpLogout()"></button>
-                                <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='house-settings.php'"></button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <hr>
-<!--                    SCENES-->
-                    <div id="all-scenes" class="all-scenes-container">
-                        <div class="scene-container">
-                            <button id="" class="scene-name all-on-off" type="button">All
-                                <button id="all-off" class="btn-scene-settings all-off" onclick="fnAllOff()">Off</button>
-                                <button id="all-on" class="btn-scene-settings all-on" onclick="fnAllOn()">On</button>
-                            </button>
-                        </div>
-                        <?php
-                            $sql = "SELECT Scene_ID, Scene_Name, Scene_Order, Scene_Color FROM Scenes WHERE House_ID = " . $_SESSION['home'] . "";
-                            $result = mysqli_query($conn,$sql);
-                            $i = -1;
-                            while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-                                $sID = $row['Scene_ID'];
-                                $sN = $row['Scene_Name'];
-                                $sO = $row['Scene_Order'];
-                                $sC = $row['Scene_Color'];
-                                
-                                
-                                echo '<div class="scene-container">
+                </div>
+            </div>
+
+            <hr>
+            <!--                    SCENES-->
+            <div id="all-scenes" class="all-scenes-container">
+                <div class="scene-container">
+                    <button id="" class="scene-name all-on-off" type="button">All
+                        <button id="all-off" class="btn-scene-settings all-off" onclick="fnAllOff()">Off</button>
+                        <button id="all-on" class="btn-scene-settings all-on" onclick="fnAllOn()">On</button>
+                    </button>
+                </div>
+                <?php
+                $sql = "SELECT Scene_ID, Scene_Name, Scene_Order, Scene_Color FROM Scenes WHERE House_ID = " . $_SESSION['home'] . "";
+                $result = mysqli_query($conn,$sql);
+                $i = -1;
+                while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+                    $sID = $row['Scene_ID'];
+                    $sN = $row['Scene_Name'];
+                    $sO = $row['Scene_Order'];
+                    $sC = $row['Scene_Color'];
+
+
+                    echo '<div class="scene-container">
                                         <button id="scene-' . $sID . '" class="scene-name scene-' . $sC . '" onclick="fnSetScene(this.id)">' . $sN . '
                                             <button id="scene-' . $sID . '" class="btn-scene-settings" onclick="fnSceneSettings(this.id)">
                                                 <i class="fa fa-cog fa-setting-scene"></i>
                                             </button>
                                         </button>
                                     </div>';
-                            }
-                        ?>
-                    </div>
-<!--                    END SCENES-->
-                    
-                    <div id="all-components">
-            <?php
+                }
+                ?>
+            </div>
+            <!--                    END SCENES-->
+
+            <div id="all-components">
+                <?php
                 $sql3 = "SELECT Addon.Addon_Name, Addon.Addon_Description, Addon.Addon_ID, A.Room_Name, Addon.Addon_State, Addon.Addon_Type 
                             FROM Addon 
                             INNER JOIN 
@@ -794,16 +1019,16 @@
                     $aS = $row3['Addon_State'];
                     $aT = $row3['Addon_Type'];
                     $strippedrN=preg_replace('/\s+/', '', $rN);
-                    
+
                     //Sets variables based on Addon_State
                     if ($aS > '0') {
-                            $buttonClass = "btn-component-switch btn-on";
+                        $buttonClass = "btn-component-switch btn-on";
                         $buttonText = "On";
                     } else{
-                            $buttonClass = "btn-component-switch btn-off";
+                        $buttonClass = "btn-component-switch btn-off";
                         $buttonText = "Off";
                     }
-                    
+
                     //dynamically adds component divs
                     if ($aT == "L")
                     {
@@ -828,7 +1053,7 @@
                     }
                     else if ($aT == "S")
                     {
-                       echo '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 rooms ' . $strippedrN . '" id="' . $strippedrN . '">
+                        echo '<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 rooms ' . $strippedrN . '" id="' . $strippedrN . '">
                                 <div class="component-card-slider">
                                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                                         <div class="row">
@@ -878,8 +1103,8 @@
                             </div>';
                     }
                 }
-            ?> 
-                        </div>
+                ?> 
+            </div>
         </div>
     </body>    
 </html>

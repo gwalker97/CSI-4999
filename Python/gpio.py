@@ -20,11 +20,12 @@ def doQuery( conn ):
 	cur = conn.cursor(buffered=True)
 	conn.commit()	
 	#For now we are just pulling all the time until we can recompile the newest version of mysql to 5.7 on ARM64.
-	cur.execute( "Select Addon_ID, Addon_Pin, Addon_State from Addon")
+	cur.execute( "Select Addon_ID, Addon_Pin, Addon_State, Addon_Host_ID from Addon")
 	#cur.execute( "SELECT Addon_ID, Addon_Name, Addon_Pin, Addon_State FROM %s WHERE EXISTS (Select table_schema,table_name,update_time FROM information_schema.tables WHERE update_time > (NOW() - INTERVAL .15 SECOND) AND table_schema = '%s' AND table_name='%s')" %(dbtable, dbname, dbtable)); #This query might not be needed. The impact would be minimal
 	if cur.rowcount > 0 : #Check if any rows were returned
-		for Addon_ID, Addon_Pin, Addon_State in cur.fetchall() :
-			GPIO(Addon_ID, Addon_Pin, Addon_State)
+		for Addon_ID, Addon_Pin, Addon_State, Addon_Host_ID in cur.fetchall() :
+			if (Addon_Host_ID == 1):
+				GPIO(Addon_ID, Addon_Pin, Addon_State)
 		#for Addon_Pin, Addon_State, Addon_Dim, Addon_dimVal in cur.fetchall() :
 		#GPIO(Addon_Pin, Addon_State, Addon_Dim, Addon_dimVal)
 
@@ -52,7 +53,7 @@ def GPIO(id, pinNum, On_Off):
 	gpio.setmode(gpio.BCM)
 	gpio.setwarnings(False)
 	gpio.setup(pinNum, gpio.OUT)
-
+	
 	#Checks the value of the pin against current state
 	if On_Off == 1 and gpio.input(pinNum) < 1 :
 		gpio.output(pinNum, gpio.HIGH)
