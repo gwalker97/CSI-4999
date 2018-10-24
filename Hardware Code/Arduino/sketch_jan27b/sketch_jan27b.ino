@@ -60,11 +60,6 @@ void loop(void){
   connected = false;
  }
   //Serial.println("\nRunning SELECT and printing results\n");
-  /*if(totaltime % 200 == 0){
-    analogWrite(LED_BUILTIN, 100);
-  }else{
-    analogWrite(LED_BUILTIN, 100);
-  }*/
   // Initiate the query class instance
   MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
   char* query = "SELECT Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID;";
@@ -110,8 +105,8 @@ void loop(void){
 //This function is passed a pin and state to determine if it is to be shut off or turned on.
 void gpio(int pin, float state, String type){
   pinMode(pin, OUTPUT);
-  Serial.println(type);
-  Serial.println(state);
+  //Serial.println(type);
+  //Serial.println(state);
   if (type == "F"){
     int turns = state * 10  * 255;
     analogWrite(pin, turns);
@@ -123,7 +118,7 @@ void gpio(int pin, float state, String type){
   }else if(state == 0 && digitalRead(pin) > 0){
     digitalWrite(pin, LOW);
    // Serial.println("Turn off");
-  }else{
+  }else if(state != 1 && state != 0){
     int turns = state * 255;
     analogWrite(pin, turns);
    // Serial.println("Dim");
