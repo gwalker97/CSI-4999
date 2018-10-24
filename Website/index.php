@@ -162,31 +162,26 @@ if($_SESSION["guest"] == true) {
         $(function() {
             $('#colorSelect').change(function(){
                 var color = $(this).val().toLowerCase();
+                removeColorBrushClasses();
                 if(color == "color") {
-                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-black').removeClass('scene-blue').removeClass('scene-green').removeClass('scene-orange');
+
                 }
                 else if(color == "blue") {
-                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-black').removeClass('scene-green').removeClass('scene-orange');
                     $('#color-brush').addClass('scene-blue');
                 }
                 else if (color == "red") {
-                    $('#color-brush').removeClass('scene-blue').removeClass('scene-yellow').removeClass('scene-black').removeClass('scene-green').removeClass('scene-orange');
                     $('#color-brush').addClass('scene-red');
                 }
                 else if (color == "yellow") {
-                    $('#color-brush').removeClass('scene-red').removeClass('scene-blue').removeClass('scene-black').removeClass('scene-green').removeClass('scene-orange');
                     $('#color-brush').addClass('scene-yellow');                   
                 }
                 else if (color == "black") {
-                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-blue').removeClass('scene-green').removeClass('scene-orange');
                     $('#color-brush').addClass('scene-black');                    
                 }
                 else if (color == "green") {
-                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-blue').removeClass('scene-black').removeClass('scene-orange');
                     $('#color-brush').addClass('scene-green'); 
                 }
                 else if (color == "orange") {
-                    $('#color-brush').removeClass('scene-red').removeClass('scene-yellow').removeClass('scene-blue').removeClass('scene-black').removeClass('scene-green');
                     $('#color-brush').addClass('scene-orange'); 
                 }
             });
@@ -455,9 +450,9 @@ if($_SESSION["guest"] == true) {
             }
         }
 
-	function fnSelectCompHost(arg) {
+        function fnSelectCompHost(arg) {
             var appliance = document.getElementById(arg);
-            
+
             if (appliance.classList.contains('appliance-selected')) {
                 appliance.classList.remove('appliance-selected');
             }
@@ -467,7 +462,7 @@ if($_SESSION["guest"] == true) {
         }
 
         function fnClearSceneModal() {
-            /*removeColorBrushClasses();
+            removeColorBrushClasses();
 
             document.getElementById('automate-times').classList.add('dont-display');
 
@@ -478,8 +473,7 @@ if($_SESSION["guest"] == true) {
                 $('.li-appliance').removeClass('appliance-selected');
             });
 
-            document.getElementById('scene-form').reset();*/
-            $('#scene-form').load(document.URL +  ' #scene-form');
+            document.getElementById('scene-form').reset();
         }
 
         function fnSaveScene(arg) {
@@ -661,12 +655,12 @@ if($_SESSION["guest"] == true) {
         function removeSelectedAddons() {
             $('.li-appliance').removeClass('appliance-selected');
         }
-        
+
         function fnNewAppPinSet(pin){
             document.getElementById("pin-number").value = pin;
             document.getElementById("new-comp-pin-text").innerHTML = "Pin Available!";
         }
-        
+
     </script>
 
     <body class="login-body">
@@ -773,128 +767,128 @@ if($_SESSION["guest"] == true) {
             </div>
         </div>
 
-<!-- New Component Modal content -->
-                <div id="newCompModal" class="modal fade" role="dialog">
-                  <div class="modal-dialog">
+        <!-- New Component Modal content -->
+        <div id="newCompModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
 
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                      <div class="modal-header">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" onclick="fnClearSceneModal()">&times;</button>
                         <h4 class="modal-title">New Appliance</h4>
-                      </div>
-                        <!-- Modal body-->
-                        <div class="modal-body">
-                            <!-- Modal form-->
-                            
-                            <form id="comp-form" class="row">
-                                <div class="automate-div">
-                                    <label id="automate-error" class="automate-error dont-display"></label>
+                    </div>
+                    <!-- Modal body-->
+                    <div class="modal-body">
+                        <!-- Modal form-->
+
+                        <form id="comp-form" class="row">
+                            <div class="automate-div">
+                                <label id="automate-error" class="automate-error dont-display"></label>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+                                    <i class="fa fa-home fa-login"></i>
+                                    <input type="text" id="appliance-name" placeholder="Appliance Name" class="input-login scene-name-input">
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+                                    <i id="color-brush" class="fas fa-home home fa-login"></i>
+                                    <select id="applianceSelect" class="selects color-select">
+                                        <option value="l">Light</option>
+                                        <option value="s">Dimmable Light</option>
+                                        <option value="f">Fan</option>
+                                    </select>
+                                    <i class="fas fa-caret-down color-caret"></i>
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
                                         <i class="fa fa-home fa-login"></i>
-                                        <input type="text" id="appliance-name" placeholder="Appliance Name" class="input-login scene-name-input">
+                                        <input type="text" id="appliance-name" placeholder="Appliance Description" class="input-login scene-name-input">
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
                                         <i id="color-brush" class="fas fa-home home fa-login"></i>
-                                        <select id="colorSelect" class="selects color-select">
-						<option value="l">Light</option>
-						<option value="s">Dimmable Light</option>
-						<option value="f">Fan</option>
+                                        <select id="roomSelect" class="selects color-select">
+                                            <?php
+                                            $sql = "select * from Room where House_ID=" . $_SESSION['home'];
+                                            $result = mysqli_query($conn,$sql);
+
+                                            while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+                                                $rID = $row['Room_ID'];
+                                                $rN = $row['Room_Name'];
+                                                echo '<option value="' . $rID . '">' . $rN . '</option>';
+                                            }
+                                            ?>
                                         </select>
                                         <i class="fas fa-caret-down color-caret"></i>
                                     </div>
-			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
-		                                <i class="fa fa-home fa-login"></i>
-		                                <input type="text" id="appliance-name" placeholder="Appliance Description" class="input-login scene-name-input">
-		                            </div>
-				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
-		                                <i id="color-brush" class="fas fa-home home fa-login"></i>
-		                                <select id="colorSelect" class="selects color-select">
-							<?php
-							    $sql = "select * from Room where House_ID=" . $_SESSION['home'];
-							    $result = mysqli_query($conn,$sql);
-
-							    while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-								$rID = $row['Room_ID'];
-								$rN = $row['Room_Name'];
-								echo '<option value="' . $rID . '">' . $rN . '</option>';
-							    }
-							?>
-		                                </select>
-		                                <i class="fas fa-caret-down color-caret"></i>
-		                            </div>
-				</div>
                                 </div>
-                                <div id="choose-appliance" class="appliance-list-selector col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <label class="lbl-choose-appliances">Select the host device:</label>
-                                    <ul id="appliance-list" class="ul-appliance-list">
-				        <?php
-				            $sql = "select * from Hosts";
-				            $result = mysqli_query($conn,$sql);
+                            </div>
+                            <div id="choose-appliance" class="appliance-list-selector col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label class="lbl-choose-appliances">Select the host device:</label>
+                                <ul id="appliance-list" class="ul-appliance-list">
+                                    <?php
+                                    $sql = "select * from Hosts";
+                                    $result = mysqli_query($conn,$sql);
 
-				            while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-				                $hID = $row['Host_ID'];
-				                $hN = $row['Host_Name'];
-				                echo '<li id="comp-app-' . $hID . '" class="li-appliance" onclick="fnSelectCompHost(this.id)">' . $hN . '</li>';
-				            }
-				        ?>
-                                    </ul>
-                                </div>
+                                    while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+                                        $hID = $row['Host_ID'];
+                                        $hN = $row['Host_Name'];
+                                        echo '<li id="comp-app-' . $hID . '" class="li-appliance" onclick="fnSelectCompHost(this.id)">' . $hN . '</li>';
+                                    }
+                                    ?>
+                                </ul>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-				
-			<img src="Images/layouts/pi_third.png" usemap="#pi-map">
 
-			<map name="pi-map">
-			    <area alt="14" title="14" href="javascript:fnNewAppPinSet(14)" coords="144,29,6" shape="circle">
-			    <area alt="15" title="15" href="javascript:fnNewAppPinSet(15)" coords="163,28,7" shape="circle">
-			    <area alt="18" title="18" href="javascript:fnNewAppPinSet(18)" coords="184,28,8" shape="circle">
-			    <area alt="23" title="23" href="javascript:fnNewAppPinSet(23)" coords="223,28,8" shape="circle">
-			    <area alt="24" title="24" href="javascript:fnNewAppPinSet(24)" coords="243,28,9" shape="circle">
-			    <area alt="25" title="25" href="javascript:fnNewAppPinSet(25)" coords="282,28,8" shape="circle">
-			    <area alt="8" title="8" href="javascript:fnNewAppPinSet(8)" coords="304,28,8" shape="circle">
-			    <area alt="7" title="7" href="javascript:fnNewAppPinSet(7)" coords="323,28,8" shape="circle">
-			    <area alt="12" title="12" href="javascript:fnNewAppPinSet(12)" coords="383,29,7" shape="circle">
-			    <area alt="16" title="16" href="javascript:fnNewAppPinSet(16)" coords="423,28,9" shape="circle">
-			    <area alt="20" title="20" href="javascript:fnNewAppPinSet(20)" coords="443,29,8" shape="circle">
-			    <area alt="21" title="21" href="javascript:fnNewAppPinSet(21)" coords="462,28,7" shape="circle">
-			    <area alt="2" title="2" href="javascript:fnNewAppPinSet(2)" coords="104,53,8" shape="circle">
-			    <area alt="3" title="3" href="javascript:fnNewAppPinSet(3)" coords="124,52,8" shape="circle">
-			    <area alt="4" title="4" href="javascript:fnNewAppPinSet(4)" coords="144,53,8" shape="circle">
-			    <area alt="17" title="17" href="javascript:fnNewAppPinSet(17)" coords="184,52,9" shape="circle">
-			    <area alt="27" title="27" href="javascript:fnNewAppPinSet(27)" coords="204,53,8" shape="circle">
-			    <area alt="22" title="22" href="javascript:fnNewAppPinSet(22)" coords="224,52,9" shape="circle">
-			    <area alt="10" title="10" href="javascript:fnNewAppPinSet(10)" coords="264,52,8" shape="circle">
-			    <area alt="9" title="9" href="javascript:fnNewAppPinSet(9)" coords="283,52,9" shape="circle">
-			    <area alt="11" title="11" href="javascript:fnNewAppPinSet(11)" coords="303,52,9" shape="circle">
-			    <area alt="5" title="5" href="javascript:fnNewAppPinSet(5)" coords="363,53,9" shape="circle">
-			    <area alt="6" title="6" href="javascript:fnNewAppPinSet(6)" coords="383,53,8" shape="circle">
-			    <area alt="13" title="13" href="javascript:fnNewAppPinSet(13)" coords="403,54,7" shape="circle">
-			    <area alt="19" title="19" href="javascript:fnNewAppPinSet(19)" coords="422,53,7" shape="circle">
-			    <area alt="26" title="26" href="javascript:fnNewAppPinSet(26)" coords="443,52,9" shape="circle">
-			</map>
-		</div>	
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"> 
+                                    <img src="Images/layouts/pi_third.png" usemap="#pi-map">
+
+                                    <map name="pi-map">
+                                        <area alt="14" title="14" href="javascript:fnNewAppPinSet(14)" coords="144,29,6" shape="circle">
+                                        <area alt="15" title="15" href="javascript:fnNewAppPinSet(15)" coords="163,28,7" shape="circle">
+                                        <area alt="18" title="18" href="javascript:fnNewAppPinSet(18)" coords="184,28,8" shape="circle">
+                                        <area alt="23" title="23" href="javascript:fnNewAppPinSet(23)" coords="223,28,8" shape="circle">
+                                        <area alt="24" title="24" href="javascript:fnNewAppPinSet(24)" coords="243,28,9" shape="circle">
+                                        <area alt="25" title="25" href="javascript:fnNewAppPinSet(25)" coords="282,28,8" shape="circle">
+                                        <area alt="8" title="8" href="javascript:fnNewAppPinSet(8)" coords="304,28,8" shape="circle">
+                                        <area alt="7" title="7" href="javascript:fnNewAppPinSet(7)" coords="323,28,8" shape="circle">
+                                        <area alt="12" title="12" href="javascript:fnNewAppPinSet(12)" coords="383,29,7" shape="circle">
+                                        <area alt="16" title="16" href="javascript:fnNewAppPinSet(16)" coords="423,28,9" shape="circle">
+                                        <area alt="20" title="20" href="javascript:fnNewAppPinSet(20)" coords="443,29,8" shape="circle">
+                                        <area alt="21" title="21" href="javascript:fnNewAppPinSet(21)" coords="462,28,7" shape="circle">
+                                        <area alt="2" title="2" href="javascript:fnNewAppPinSet(2)" coords="104,53,8" shape="circle">
+                                        <area alt="3" title="3" href="javascript:fnNewAppPinSet(3)" coords="124,52,8" shape="circle">
+                                        <area alt="4" title="4" href="javascript:fnNewAppPinSet(4)" coords="144,53,8" shape="circle">
+                                        <area alt="17" title="17" href="javascript:fnNewAppPinSet(17)" coords="184,52,9" shape="circle">
+                                        <area alt="27" title="27" href="javascript:fnNewAppPinSet(27)" coords="204,53,8" shape="circle">
+                                        <area alt="22" title="22" href="javascript:fnNewAppPinSet(22)" coords="224,52,9" shape="circle">
+                                        <area alt="10" title="10" href="javascript:fnNewAppPinSet(10)" coords="264,52,8" shape="circle">
+                                        <area alt="9" title="9" href="javascript:fnNewAppPinSet(9)" coords="283,52,9" shape="circle">
+                                        <area alt="11" title="11" href="javascript:fnNewAppPinSet(11)" coords="303,52,9" shape="circle">
+                                        <area alt="5" title="5" href="javascript:fnNewAppPinSet(5)" coords="363,53,9" shape="circle">
+                                        <area alt="6" title="6" href="javascript:fnNewAppPinSet(6)" coords="383,53,8" shape="circle">
+                                        <area alt="13" title="13" href="javascript:fnNewAppPinSet(13)" coords="403,54,7" shape="circle">
+                                        <area alt="19" title="19" href="javascript:fnNewAppPinSet(19)" coords="422,53,7" shape="circle">
+                                        <area alt="26" title="26" href="javascript:fnNewAppPinSet(26)" coords="443,52,9" shape="circle">
+                                    </map>
+                                </div>	
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"> 
                                     <i class="fa fa-home fa-login"></i>
-		                                <input type="text" id="pin-number" placeholder="Pin Number" class="input-login scene-name-input center" disabled="true">
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                    <p id="new-comp-pin-text"></p>
-                                    </div>
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
-                                        <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene()">Save</button>
-                                    </div>
+                                    <input type="text" id="pin-number" placeholder="Pin Number" class="input-login scene-name-input center" disabled="true">
                                 </div>
-                            </form>
-                        </div>
-
-                        
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <p id="new-comp-pin-text"></p>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
+                                    <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene()">Save</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                  </div>
+
+
                 </div>
+            </div>
+        </div>
 
         <div class="main-page-container">
             <div class="temp-container">
