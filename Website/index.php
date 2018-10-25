@@ -616,7 +616,7 @@ if($_SESSION["guest"] == true) {
                             break;
                                                }
 
-                    if (response.Scene_Color == 'red') {
+                    if (response.Is_Automated == 1) {
                         $('#yesAutomated').prop('checked', true);  
                         document.getElementById('automate-times').classList.remove('dont-display');
                         document.getElementById('automate-times').classList.add('display');
