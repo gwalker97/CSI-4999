@@ -578,6 +578,7 @@ if($_SESSION["guest"] == true) {
         }
 
         function fnSceneSettings(arg) {
+            fnLoad(true);
             var sID = arg.substring(6);
             var btnSaveScene = document.getElementById('btn-save-scene');
             if (btnSaveScene == undefined) {
@@ -645,7 +646,7 @@ if($_SESSION["guest"] == true) {
             );
 
             $('#myModal').modal('show');
-
+            fnLoad(false);
         }
 
         function removeColorBrushClasses() {
