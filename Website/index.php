@@ -877,7 +877,7 @@ if($_SESSION["guest"] == true) {
                                     <p id="new-comp-pin-text"></p>
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
-                                    <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance-2" onclick="fnSaveScene()">Save</button>
+                                    <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene()">Save</button>
                                 </div>
                             </div>
                         </form>
