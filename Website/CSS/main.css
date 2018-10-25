@@ -31,11 +31,12 @@ body {
     display: block;
     opacity: 0.7;
     background-color: #fff;
-    z-index: 100;
+    z-index: 1051;
     text-align: center;
 }
 
 .loading-box {
+    z-index: 1051;
     margin: auto;
     width: 100px;
     height: 100%;
@@ -46,7 +47,7 @@ body {
     margin-left: -45px;
     top: 45%;
     width: 100px;
-    z-index: 100;
+    z-index: 1051;
     position: absolute;
 }
 
