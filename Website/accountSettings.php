@@ -121,18 +121,19 @@
                     $result2 = mysqli_query($conn,$sql2);
                 ?>
                     
-                    <div id="groupList">
+                    <div id="groupList" style="margin:5%">
+                        <p class="text-center" style="margin-bottom:-1%"><b>Custom Groups</b></p>
 
                         <?php
 
                             if (mysqli_num_rows($result2) == 0) {
-                                echo '<p>NO CUSTOM GROUPS</p>';
+                                echo '<p>There are no custom groups.</p>';
                             } else {
 
                                 while ($row2 = mysqli_fetch_array($result2,MYSQLI_ASSOC)) {
                                     echo '<div id="' . $row2['Groups_gID'] . '" class="col-md-12">
                                             <i class="fa fa-lock fa-login"></i>
-                                            <input style="width:70%" type="text" placeholder="Room Name" value="' . $row2['Groups_Name'] . '" class="input-settings" name="updateGroups[' . $row2['Groups_gID'] . '][]">
+                                            <input style="width:80%" type="text" placeholder="Room Name" value="' . $row2['Groups_Name'] . '" class="input-settings" name="updateGroups[' . $row2['Groups_gID'] . '][]">
                                             <i class="fa fa-minus fa-settings-remove-room" onclick="removeGroupBox(this.parentNode)"></i>
                                           </div>';
                                 }
@@ -148,11 +149,11 @@
                     ?>
 
                     <div id="accountList">
-
+                        <p class="text-center" style="margin-bottom:-1%"><b>Other Accounts</b></p>
                         <?php
 
                             if (mysqli_num_rows($result3) == 0) {
-                                echo '<p>NO OTHER USERS</p>';
+                                echo '<p>There are no other accounts.</p>';
                             } else {
 
                                 while ($row3 = mysqli_fetch_array($result3,MYSQLI_ASSOC)) {
