@@ -950,7 +950,7 @@ if($_SESSION["guest"] == true) {
                     </div>
                 </div>
 
-                <div style="display: inline-block">
+                <div style="display: inline-block; margin-top: 10px;">
                     <select id="roomList" class="selects">
                         <?php
                         $sql2 = "select * from Room where House_ID='$hID'";
