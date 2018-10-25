@@ -83,6 +83,7 @@
             if (id == "new") {
                 document.getElementById("myForm").removeChild(target);   
             } else {
+                target.removeChild(target.getElementsByTagName("select")[0]);
                 var inp = target.getElementsByTagName("input")[0];
                 inp.setAttribute("name", "delRooms[]");
                 inp.setAttribute("value", "" + target.id);

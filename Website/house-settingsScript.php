@@ -47,7 +47,22 @@
                     if ($rName != mysqli_real_escape_string($conn, $row2['Room_Name']) or $rNum != $row2['Room_gID']) {
 
                         if ($_SESSION['gID'] == 1 or ($_SESSION['gID'] == $row2['Room_gID'] and $_SESSION['gID'] != 2)) {
-                            $sql3 = "update Room set Room_Name='" . $rName . "', Room_gID='" . $rNum . "' where Room_ID=" . $row2['Room_ID'];
+                            
+                            if ($_SESSION['gID'] == 1) {
+                                
+                                $sql3 = "update Room set Room_Name='" . $rName . "', Room_gID='" . $rNum . "' where Room_ID=" . $row2['Room_ID'];
+                            } else {
+                                $sql3 = "update Room set Room_Name='" . $rName . "' where Room_ID=" . $row2['Room_ID'];
+                                
+                                if ($rNum != $row2['Room_gID']) {
+                                    
+                                    if (isset($_SESSION['houseSetMsg'])) {
+                                        $_SESSION['houseSetMsg'] .= "<br>You cannot change [" . $rName . "]'s group.";
+                                    } else {
+                                        $_SESSION['houseSetMsg'] = "You cannot change [" . $rName . "]'s group.";
+                                    }
+                                }
+                            }
                             $result3 = mysqli_query($conn,$sql3);
 
                             if (result3 === false) {
