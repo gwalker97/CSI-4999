@@ -472,15 +472,15 @@ if($_SESSION["guest"] == true) {
             $('.li-appliance').each(function(i, obj) {
                 $('.li-appliance').removeClass('appliance-selected');
             });
-
+            
+            document.getElementById('lbl-scene-id').innerHTML = "";
+            document.getElementById('btn-save-scene').innerHTML = "Create";
+            
             document.getElementById('scene-form').reset();
         }
 
         function fnSaveScene(arg) {
-            var sceneID = arg.substring(14);
-            var btnSaveScene = document.getElementsByClassName('btn-save-appliance');
-            //btnSaveScene.id = 'btn-save-scene';
-            //var IsUpdate = document.getElementById(btnSaveScene.id).innerHTML;
+            var sceneID = document.getElementById('lbl-scene-id').innerHTML;
 
             var sceneName = document.getElementById('scene-name').value;
             var sceneColor = document.getElementById('colorSelect').value;
@@ -580,12 +580,8 @@ if($_SESSION["guest"] == true) {
         function fnSceneSettings(arg) {
             fnLoad(true);
             var sID = arg.substring(6);
-            var btnSaveScene = document.getElementById('btn-save-scene');
-            if (btnSaveScene == undefined) {
-                btnSaveScene = document.getElementsByClassName('btn-save-appliance');
-            }
-            btnSaveScene.id = 'btn-save-scene' + sID;
-            btnSaveScene.innerHTML = 'Update';
+            document.getElementById('lbl-scene-id').innerHTML = sID;
+            document.getElementById('btn-save-scene').innerHTML = "Update";
 
             $.post(
                 "sceneSettings.php",
@@ -756,7 +752,7 @@ if($_SESSION["guest"] == true) {
                             </div>
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <button type="button" id="btn-save-scene" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene(this.id)">Save</button>
+                                    <button type="button" id="btn-save-scene" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene(this.id)">Create</button>
                                 </div>
                             </div>
                         </form>
@@ -783,6 +779,7 @@ if($_SESSION["guest"] == true) {
                         <!-- Modal form-->
 
                         <form id="comp-form" class="row">
+                            <label hidden id="lbl-scene-id"></label>
                             <div class="automate-div">
                                 <label id="automate-error" class="automate-error dont-display"></label>
                             </div>
@@ -880,7 +877,7 @@ if($_SESSION["guest"] == true) {
                                     <p id="new-comp-pin-text"></p>
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
-                                    <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene()">Save</button>
+                                    <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance-2" onclick="fnSaveScene()">Save</button>
                                 </div>
                             </div>
                         </form>
@@ -978,7 +975,7 @@ if($_SESSION["guest"] == true) {
                 <div class="scene-container">
                     <button id="" class="scene-name all-on-off" type="button">All
                         <button id="all-off" class="btn-scene-settings all-off" onclick="fnAllOff()">Off</button>
-                        <button id="all-on" class="btn-scene-settings all-on" onclick="fnAllOn()">On</button>
+                        <button style="margin-top: 1px;" id="all-on" class="btn-scene-settings all-on" onclick="fnAllOn()">On</button>
                     </button>
                 </div>
                 <?php
