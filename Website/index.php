@@ -450,14 +450,20 @@ if($_SESSION["guest"] == true) {
             }
         }
 
+        var newCompSelectedApp = "0";
+        
         function fnSelectCompHost(arg) {
             var appliance = document.getElementById(arg);
+            
+            
 
             if (appliance.classList.contains('appliance-selected')) {
                 appliance.classList.remove('appliance-selected');
+                newCompSelectedApp = "0";
             }
             else {
                 appliance.classList.add('appliance-selected');
+                newCompSelectedApp = (appliance.id).split(/[-]+/).pop();
             }
         }
 
@@ -679,9 +685,26 @@ if($_SESSION["guest"] == true) {
         }
 
         function fnNewAppPinSet(pin){
+            
             document.getElementById("pin-number").value = pin;
-            document.getElementById("new-comp-pin-text").innerHTML = "Pin Available!";
+            
+            if (newCompSelectedApp == "0"){
+            
+            document.getElementById("new-comp-pin-text").innerHTML = "Please select host!";
+            } else{
+            $.post(
+                "checkPin.php",
+                { hID: (newCompSelectedApp), pin: (pin) },
+                function(response) {	
+                   
+                    document.getElementById("new-comp-pin-text").innerHTML = response;
+                    
+                }, 'json'
+            );
+            }
         }
+        
+        
 
     </script>
 
@@ -905,7 +928,7 @@ if($_SESSION["guest"] == true) {
                                     <p id="new-comp-pin-text"></p>
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
-                                    <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene()">Save</button>
+                                    <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveAppliance()">Save</button>
                                 </div>
                             </div>
                         </form>
