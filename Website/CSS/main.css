@@ -519,6 +519,26 @@ h4 {
     background-color: #91c9ec99;
 }
 
+.btn-save-appliance:hover {
+    box-shadow: inset 0px 0px 6px 0px #4e86c3;
+}
+
+.btn-save-appliance:active {
+    box-shadow: inset 0px 0px 6px 0px #4e86c3;
+}
+
+.btn-delete-appliance {
+    background-color: #80808063;
+}
+
+.btn-delete-appliance:hover {
+    box-shadow: inset 0px 0px 6px 0px #4e86c3;
+}
+
+.btn-delete-appliance:active {
+    box-shadow: inset 0px 0px 6px 0px #4e86c3;
+}
+
 .btn-cancel {
     background-color: #80808063;
 }
@@ -994,6 +1014,7 @@ path {
 
 .li-appliance:hover {
     cursor: pointer;
+    background-color: #ceedff;
 }
 
 .input-time {

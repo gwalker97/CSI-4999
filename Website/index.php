@@ -476,6 +476,9 @@ if($_SESSION["guest"] == true) {
             document.getElementById('lbl-scene-id').innerHTML = "";
             document.getElementById('btn-save-scene').innerHTML = "Create";
             
+            document.getElementById('btn-delete-scene').classList.remove('display');
+            document.getElementById('btn-delete-scene').classList.add('dont-display');
+            
             document.getElementById('scene-form').reset();
         }
 
@@ -556,6 +559,25 @@ if($_SESSION["guest"] == true) {
                     document.getElementById('automate-error').classList.remove('dont-display');
                     document.getElementById('automate-error').classList.add('display');
                 }
+            }
+        }
+        
+        function fnDeleteScene(arg) {
+            var sceneID = document.getElementById('lbl-scene-id').innerHTML;
+
+            if(confirm('Are you sure you want to delete this scene?')) {
+                fnLoad(true);
+                
+                $.post(
+                        "deleteScene.php",
+                        { sID: (sceneID),  },
+                    );
+                
+                fnClearSceneModal();
+                
+                $('#myModal').modal('hide');
+                $('#all-scenes').load(document.URL +  ' #all-scenes');
+                fnLoad(false);
             }
         }
 
@@ -640,7 +662,10 @@ if($_SESSION["guest"] == true) {
                     }
                 }, 'json'
             );
-
+            
+            document.getElementById('btn-delete-scene').classList.remove('dont-display');
+            document.getElementById('btn-delete-scene').classList.add('display');
+            
             $('#myModal').modal('show');
             fnLoad(false);
         }
@@ -753,6 +778,9 @@ if($_SESSION["guest"] == true) {
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <button type="button" id="btn-save-scene" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene(this.id)">Create</button>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <button type="button" id="btn-delete-scene" class="btn-component-save-cancel btn-setting-option btn-delete-appliance dont-display" onclick="fnDeleteScene(this.id)">Delete</button>
                                 </div>
                             </div>
                         </form>
