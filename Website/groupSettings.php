@@ -102,7 +102,7 @@
                 ?>
                 <form id="myForm" action="groupSettingsScript.php" method="post">
                     <div id="groupList" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <p class="text-center p-user"><b>Custom Groups</b><i class="fa fa-plus fa-plus-groups"></i></p>
+                        <p class="text-center p-user"><b>Custom Groups</b><i class="fa fa-plus fa-plus-groups" onclick="addNewGroupBox()"></i></p>
 
                         <?php
                             $sql2 = "select * from Groups where Groups_gID>2";
@@ -115,7 +115,7 @@
                                 while ($row2 = mysqli_fetch_array($result2,MYSQLI_ASSOC)) {
                                     echo '<div id="' . $row2['Groups_gID'] . '" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <i class="fa fa-lock fa-login"></i>
-                                            <input type="text" placeholder="Room Name" value="' . $row2['Groups_Name'] . '" class="input-settings" name="updateGroups[' . $row2['Groups_gID'] . '][]">
+                                            <input type="text" value="' . $row2['Groups_Name'] . '" class="input-settings" name="updateGroups[' . $row2['Groups_gID'] . '][]">
                                             <i class="fa fa-minus fa-settings-remove-room" onclick="removeGroupBox(this.parentNode)"></i>
                                           </div>';
                                 }
@@ -140,7 +140,7 @@
                                 while ($row3 = mysqli_fetch_array($result3,MYSQLI_ASSOC)) {
                                     echo '<div id="' . $row3['User_ID'] . '" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <i class="fa fa-user fa-login"></i>
-                                            <input style="width:53%" readonly type="text" value="' . $row3['Username'] . '" class="input-settings" name="updateAccounts[' . $row3['User_ID'] . '][]">
+                                            <input style="width:53%" readonly type="text" value="' . $row3['Username'] . '" class="input-settings">
                                             <i class="fa fa-minus fa-settings-remove-room" onclick="removeAccountBox(this.parentNode)"></i>
                                             <select class="fa fa-lock fa-login user-dropdown" name="updateAccounts[' . $row3['User_ID'] . '][]">';
                                                 foreach ($groups as $row) {
