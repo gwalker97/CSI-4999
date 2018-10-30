@@ -83,6 +83,7 @@
         <div class="component-settings-form-container">
             <button class="btn-back" onclick="fnReturnHome()"><i class="fa fa-arrow-left" style="font-size: 10px;"></i> <i class="fa fa-home"></i></button>
             <h1 class="text-center h1-settings">Account Configuration</h1>
+            <p class="text-center p-user col-lg-12 col-md-12 col-sm-12 col-xs-12"><b>House Code:</b> 1x2y3z <i class="fa fa-question tool-tip"><span class="tool-tip-text">When someone creates a new account, they can use this code to join your house.</span></i></p>
                 <?php
                     $sql = "select * from Groups";
                     $result = mysqli_query($conn,$sql);
@@ -101,7 +102,7 @@
                 ?>
                 <form id="myForm" action="groupSettingsScript.php" method="post">
                     <div id="groupList" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <p class="text-center p-user"><b>Custom Groups</b></p>
+                        <p class="text-center p-user"><b>Custom Groups</b><i class="fa fa-plus fa-plus-groups"></i></p>
 
                         <?php
                             $sql2 = "select * from Groups where Groups_gID>2";

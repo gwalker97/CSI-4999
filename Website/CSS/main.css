@@ -1064,3 +1064,49 @@ path {
 .fa-users {
     padding: 1px 6px 0px;
 }
+
+.fa-question {
+    margin: 0 5px;
+    padding: 5px;
+    width: 25px;
+    height: 25px;
+    background-color: #80808063;
+    border-radius: 50%;
+}
+
+/* Tooltip text */
+.tool-tip > .tool-tip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: #b8dbf0;
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid black;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: normal;
+ 
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    right: 75px;
+    top: 25px;
+    z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tool-tip:hover .tool-tip-text {
+    visibility: visible;
+}
+
+.tool-tip:active .tool-tip-text {
+    visibility: visible;
+}
+
+.fa-plus-groups {
+    margin: 0 5px;
+    padding: 5px;
+    width: 25px;
+    height: 25px;
+    background-color: #80808063;
+    border-radius: 50%;
+}
