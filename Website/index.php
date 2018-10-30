@@ -735,6 +735,101 @@ if($_SESSION["guest"] == true) {
             });
         });
         
+        /*
+        function fnClearApplianceModal() {
+
+            document.getElementById('PiImg').classList.add('dont-display');
+            document.getElementById('ESPImg').classList.add('dont-display');
+            
+            document.getElementById('appliance-name').innerHTML = "";
+            document.getElementById('appliance-description').innerHTML = "";
+            
+            document.getElementById('btn-delete-scene').classList.remove('display');
+            document.getElementById('btn-delete-scene').classList.add('dont-display');
+            
+            document.getElementById('comp-form').reset();
+        }
+
+        function fnSaveAppliance(arg) {
+            var sceneID = document.getElementById('lbl-scene-id').innerHTML;
+
+            var sceneName = document.getElementById('scene-name').value;
+            var sceneColor = document.getElementById('colorSelect').value;
+            var sceneAutomated = document.querySelector('input[name="automate"]:checked').value;
+            var sceneStart = document.getElementById('scene-start').value;
+            var sceneEnd = document.getElementById('scene-end').value;
+            var sceneTimeOkay = true;
+            var sceneStartEndOkay = true;
+            var sceneNameOkay = true;
+            var sceneColorOkay = true;
+            var addOnID = "";
+
+            if (sceneAutomated == 1) {
+                if (sceneStart == "" || sceneEnd == "") {
+                    sceneTimeOkay = false;
+                }
+                if (sceneStart > sceneEnd || sceneStart == sceneEnd) {
+                    sceneStartEndOkay = false;
+                }
+            }
+            if (sceneName == "") {
+                sceneNameOkay = false;
+            }
+            if (sceneColor == "color") {
+                sceneColorOkay = false;
+            }
+
+            if (sceneNameOkay && sceneColorOkay && sceneTimeOkay && sceneStartEndOkay) {
+                fnLoad(true);
+                $('.appliance-selected').each(function(i, obj) {
+                    var shortID = this.id.substring(10);
+                    if (addOnID == "") {
+                        addOnID = shortID;
+                    }
+                    else {
+                        addOnID = addOnID + "," + shortID;
+                    }
+                });
+
+                if (sceneID == "") {
+                    $.post(
+                        "newScene.php",
+                        { sN: (sceneName), sC: (sceneColor), sA: (sceneAutomated), sS: (sceneStart), sE: (sceneEnd), aID: (addOnID),  },
+                    );
+                }
+                else {
+                    $.post(
+                        "updateScene.php",
+                        { sN: (sceneName), sC: (sceneColor), sA: (sceneAutomated), sS: (sceneStart), sE: (sceneEnd), aID: (addOnID), sID: (sceneID),  },
+                    );
+                }
+
+                fnClearSceneModal();
+                $('#myModal').modal('hide');
+                $('#all-scenes').load(document.URL +  ' #all-scenes');
+                fnLoad(false);
+            }
+            else {
+                if (!sceneTimeOkay || !sceneStartEndOkay) {
+                    if (!sceneTimeOkay) {
+                        document.getElementById('automate-error-times').innerHTML = "You must enter a start and end time.";
+                        document.getElementById('automate-error-times').classList.remove('dont-display');
+                        document.getElementById('automate-error-times').classList.add('display');
+                    }
+                    else {
+                        document.getElementById('automate-error-times').innerHTML = "Start time must be less than end time.";
+                        document.getElementById('automate-error-times').classList.remove('dont-display');
+                        document.getElementById('automate-error-times').classList.add('display');
+                    }
+                }
+                if (!sceneNameOkay || !sceneColorOkay) {
+                    document.getElementById('automate-error').innerHTML = "You must have a name, color, and at least one appliance.";
+                    document.getElementById('automate-error').classList.remove('dont-display');
+                    document.getElementById('automate-error').classList.add('display');
+                }
+            }
+        }
+        */
 
     </script>
 
@@ -852,7 +947,7 @@ if($_SESSION["guest"] == true) {
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" onclick="fnClearSceneModal()">&times;</button>
+                        <button type="button" class="close" data-dismiss="modal" onclick="fnClearApplianceModal()">&times;</button>
                         <h4 class="modal-title">New Appliance</h4>
                     </div>
                     <!-- Modal body-->
@@ -881,7 +976,7 @@ if($_SESSION["guest"] == true) {
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
                                         <i class="fa fa-home fa-login"></i>
-                                        <input type="text" id="appliance-name" placeholder="Appliance Description" class="input-login scene-name-input">
+                                        <input type="text" id="appliance-description" placeholder="Appliance Description" class="input-login scene-name-input">
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
                                         <i class="fas fa-home home fa-login"></i>
