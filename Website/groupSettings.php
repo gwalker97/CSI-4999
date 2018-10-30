@@ -139,9 +139,9 @@
                                 while ($row3 = mysqli_fetch_array($result3,MYSQLI_ASSOC)) {
                                     echo '<div id="' . $row3['User_ID'] . '" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <i class="fa fa-user fa-login"></i>
-                                            <input style="width:56%" type="text" value="' . $row3['Username'] . '" class="input-settings" name="updateAccounts[' . $row3['User_ID'] . '][]">
+                                            <input style="width:53%" readonly type="text" value="' . $row3['Username'] . '" class="input-settings" name="updateAccounts[' . $row3['User_ID'] . '][]">
                                             <i class="fa fa-minus fa-settings-remove-room" onclick="removeAccountBox(this.parentNode)"></i>
-                                            <select class="fa fa-lock fa-login user-dropdown-2" name="updateAccounts[' . $row3['User_ID'] . '][]">';
+                                            <select class="fa fa-lock fa-login user-dropdown" name="updateAccounts[' . $row3['User_ID'] . '][]">';
                                                 foreach ($groups as $row) {
 
                                                     if ($row3['User_gID'] == $row['Groups_gID']) {

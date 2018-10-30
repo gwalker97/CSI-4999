@@ -1047,22 +1047,10 @@ path {
 
 .user-dropdown {
     background-color: #80808063;
-    margin-left: -1px;
-    position: relative;
-    top: 0px;
-    width: 80px;
-    border: 1px solid #0000003d;
-    border-radius: 0;
-    -webkit-border-radius: 0px;
-    -webkit-appearance: none;
-}
-
-.user-dropdown-2 {
-    background-color: #80808063;
     margin-left: -5px;
     position: relative;
     top: 0px;
-    width: 80px;
+    width: 95px;
     border: 1px solid #0000003d;
     border-radius: 0;
     -webkit-border-radius: 0px;
