@@ -3,7 +3,6 @@
 
 	if($_SERVER["REQUEST_METHOD"] == "POST") {
         print(var_dump($_POST));
-/*        
         //update Accounts
         if (array_key_exists('updateAccounts', $_POST)) {
             $sql = "select * from User";
@@ -56,6 +55,5 @@
                 }
             }
         }
-*/
     }
 ?>
