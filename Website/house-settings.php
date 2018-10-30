@@ -53,22 +53,25 @@
         
         function addNewRoomBox() {
             var box = document.createElement("div");
-                box.setAttribute("class", "col-md-12");
+                box.setAttribute("class", "col-lg-12 col-md-12 col-sm-12 col-xs-12");
+                box.setAttribute("style", "margin-left:-5px;");
                 box.setAttribute("id", "new");
             var icn = document.createElement("i");
                 icn.setAttribute("class", "fa fa-map-marker fa-login");
+                icn.setAttribute("style", "margin-right:-1px;");
             var inp = document.createElement("input");
                 inp.setAttribute("type", "text");
                 inp.setAttribute("placeholder", "Room Name");
                 inp.setAttribute("class", "input-settings");
                 inp.setAttribute("name", "newRooms[]");
-                inp.setAttribute("style", "margin:4px");
+                inp.setAttribute("style", "width: 53%;");
             var btn = document.createElement("i");
                 btn.setAttribute("class", "fa fa-minus fa-settings-remove-room");
+                btn.setAttribute("style", "margin-left:-1px;");
                 btn.setAttribute("onclick", "removeRoomBox(this.parentNode)");
             var prm = document.createElement("select");
-                prm.setAttribute("style", "background-color:black;margin-left:4px");
-                prm.setAttribute("class", "fa fa-lock fa-login");
+                prm.setAttribute("class", "fa fa-lock fa-login user-dropdown");
+                prm.setAttribute("style", "margin-left: -1px;")
             box.appendChild(prm);
             box.insertBefore(btn, prm);
             box.insertBefore(inp, btn);
@@ -115,10 +118,10 @@
                         }
                 ?>
                 <form id="myForm" action="house-settingsScript.php" method="post">
-                <div class="col-md-12">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <i class="fa fa-home fa-login"></i>
                 <?php
-                        echo '<input type="text" placeholder="House Name" value="' . $row2['House_Name'] . '" class="input-login" style="margin:1px" name="houseName">
+                        echo '<input style="width:72%" type="text" placeholder="House Name" value="' . $row2['House_Name'] . '" class="input-login" name="houseName">
                               <i class="fa fa-plus fa-settings-add-room" onclick="addNewRoomBox()"></i>';
                 ?>
                 </div>
@@ -139,11 +142,11 @@
                         } else {
                             
                             while ($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-                                echo '<div id="' . $row['Room_ID'] . '" class="col-md-12">
+                                echo '<div id="' . $row['Room_ID'] . '" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <i class="fa fa-map-marker fa-login"></i>
-                                        <input type="text" placeholder="Room Name" value="' . $row['Room_Name'] . '" class="input-settings" name="updateRooms[' . $row['Room_ID'] . '][]">
+                                        <input style="width:53%" type="text" placeholder="Room Name" value="' . $row['Room_Name'] . '" class="input-settings" name="updateRooms[' . $row['Room_ID'] . '][]">
                                         <i class="fa fa-minus fa-settings-remove-room" onclick="removeRoomBox(this.parentNode)"></i>
-                                            <select style="background-color:black" class="fa fa-lock fa-login" name="updateRooms[' . $row['Room_ID'] . '][]">';
+                                            <select class="fa fa-lock fa-login user-dropdown" name="updateRooms[' . $row['Room_ID'] . '][]">';
                                                 foreach ($groups as $row3) {
                                                     
                                                     if ($row['Room_gID'] == $row3['Groups_gID']) {
@@ -152,15 +155,16 @@
                                                         echo '<option value="' . $row3['Groups_gID'] . '">' . $row3['Groups_Name'] .'</option>';
                                                     }
                                                 }
-                                echo '</select>
+                                echo '</select><i class="fas fa-caret-down user-caret"></i>
                                       </div>';
+                                
                             }
                         }
                     } else { 
                         echo '<label id="houseErrorText" class="lbl-setup-house-visible">You are not assigned to a house.</label>';
                     }
                 ?>
-                <div id="buttonDiv" class="btn-login-float">
+                <div id="buttonDiv" class="btn-login-float col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <button type="submit" class="btn-save-house">Save</button>
                 </div>
             </form>
