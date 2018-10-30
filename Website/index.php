@@ -1015,12 +1015,8 @@ if($_SESSION["guest"] == true) {
                     <div style="width: 160px; margin-top: -6px; float: right;">
                         <button class="fa fa-sign-out-alt btn-sign-out" onclick="phpLogout()"></button>
                         <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='house-settings.php'"></button>
-<<<<<<< HEAD
                         <button class="fa fa-lock btn-sign-out btn-cog" onclick="window.location.href='groupSettings.php'"></button>
                         <button class="fa fa-user btn-sign-out btn-cog" onclick="window.location.href='accountSettings.php'"></button>
-=======
-                        <button class="fa fa-user btn-sign-out btn-cog" onclick="window.location.href='groupSettings.php'"></button>
->>>>>>> 350f461593e41b09f5f9992c428e324d1ce2674f
                     </div>
                 </div>
             </div>
