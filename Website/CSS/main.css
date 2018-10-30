@@ -252,6 +252,15 @@ h4 {
     width: 80%;
 }
 
+.input-user {
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #0000003d;
+    width: 46%;
+}
+
 .fa-login {
     width: 42px;
     height: 42px;
@@ -444,6 +453,11 @@ h4 {
     position: absolute;
 }
 
+.user-caret {
+    right: 8px;
+    position: relative;
+}
+
 .selects {
     background-color: white;
     height: 28px;
@@ -461,6 +475,7 @@ h4 {
 /*component settings*/
 
 .h1-settings {
+    font-size: 32px;
     letter-spacing: 0;
     margin-bottom: 25px;
 }
@@ -474,6 +489,7 @@ h4 {
     min-width: 320px;
     max-width: 550px;
     border-radius: 10px;
+    overflow: auto;
 }
 
 .component-settings-card {
@@ -1027,4 +1043,24 @@ path {
 
 .appliance-selected {
     background-color: #bcdff4;
+}
+
+.user-dropdown {
+    background-color: #80808063;
+    margin-left: -5px;
+    position: relative;
+    top: 0px;
+    width: 95px;
+    border: 1px solid #0000003d;
+    border-radius: 0;
+    -webkit-border-radius: 0px;
+    -webkit-appearance: none;
+}
+
+.p-user {
+    margin: 10px 0;
+}
+
+.fa-users {
+    padding: 1px 6px 0px;
 }
