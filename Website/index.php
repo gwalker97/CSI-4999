@@ -889,7 +889,7 @@ if($_SESSION["guest"] == true) {
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-                                    <img src="Images/layouts/pi_third.png" usemap="#pi-map">
+                                    <img src="Images/layouts/pi_third.png" class="center-block" usemap="#pi-map">
 
                                     <map name="pi-map">
                                         <area alt="14" title="14" href="javascript:fnNewAppPinSet(14)" coords="144,29,6" shape="circle">
@@ -919,6 +919,23 @@ if($_SESSION["guest"] == true) {
                                         <area alt="19" title="19" href="javascript:fnNewAppPinSet(19)" coords="422,53,7" shape="circle">
                                         <area alt="26" title="26" href="javascript:fnNewAppPinSet(26)" coords="443,52,9" shape="circle">
                                     </map>
+                                    
+                                    <img class="center-block" src="Images/layouts/ESP8266_375.png" usemap="#ESP-map">
+                                    
+                                    <map name="ESP-map">
+                                        <area alt="16" title="16" href="javascript:fnNewAppPinSet(16)" coords="107,35,215,62" shape="rect">
+                                        <area alt="5" title="5" href="javascript:fnNewAppPinSet(5)" coords="109,66,215,90" shape="rect">
+                                        <area alt="4" title="4" href="javascript:fnNewAppPinSet(4)" coords="109,93,213,118" shape="rect">
+                                        <area alt="0" title="0" href="javascript:fnNewAppPinSet(0)" coords="109,121,213,147" shape="rect">
+                                        <area alt="2" title="2" href="javascript:fnNewAppPinSet(2)" coords="109,151,213,176" shape="rect">
+                                        <area alt="14" title="14" href="javascript:fnNewAppPinSet(14)" coords="108,238,213,261" shape="rect">
+                                        <area alt="12" title="12" href="javascript:fnNewAppPinSet(12)" coords="109,269,213,291" shape="rect">
+                                        <area alt="13" title="13" href="javascript:fnNewAppPinSet(13)" coords="110,299,212,320" shape="rect">
+                                        <area alt="15" title="15" href="javascript:fnNewAppPinSet(15)" coords="110,328,211,348" shape="rect">
+                                        <area alt="3" title="3" href="javascript:fnNewAppPinSet(3)" coords="106,353,212,377" shape="rect">
+                                        <area alt="1" title="1" href="javascript:fnNewAppPinSet(1)" coords="104,382,213,406" shape="rect">
+                                    </map>
+                                    
                                 </div>	
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"> 
                                     <i class="fa fa-home fa-login"></i>
