@@ -3,44 +3,48 @@
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
+#include <EEPROM.h>
 #include <MySQL_Connection.h>
 #include <MySQL_Cursor.h>
 
 // Replace with your network credentials
-const char* ssid = "Galaxy S6 active 6927";
-const char* password = "qjxu4534";
-IPAddress server_addr(192,168,43,219);  // IP of the MySQL *server* here
+const char *ssidHost = "ESPap";
+const char *passwordHost = "test";
+IPAddress server_addr; // IP of the MySQL *server* here
 char* user = "root";              // MySQL user login username
 char* dbpass = "root";
 int LED = 2;
 WiFiClient client;
+ESP8266WebServer server(80);
 MySQL_Connection conn((Client *)&client);
-bool connected = false;
+bool connected = true;
+bool hosting = false;
 
+char ssid[32];
+char password[32];
+char ipAddr[16] = "192,168,43,219";//Pi Access Point IP-Adr.
 
-//setup function
-void setup(void){
-  
-  pinMode(LED, OUTPUT);
-  // preparing GPIOs
-  Serial.begin(115200);
-  WiFi.begin(ssid, password);
+void handleRoot() {
+  server.send(200, "text/html", "<h1>You are connected</h1>");
+}
+
+bool tryConn(){
+   WiFi.begin(ssid, password);
   Serial.println("");
-
+  int count = 0; // Holds the timing variable.
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    Serial.print(".");
+    count = count + 1;
+    if( count >= 10){
+      connected = false;
+      break;
+    }
+    Serial.println(".");
   }
-  connected = true;
-  Serial.println("");
-  Serial.print("Connected to ");
-  Serial.println(ssid);
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
-  Serial.print("MAC Address: ");
-  Serial.println(WiFi.macAddress());
-while(!conn.connect(server_addr, 3306, user, dbpass)){
+  if(connected){
+    Serial.println("Connected to Wifi!");
+    while(!conn.connect(server_addr, 3306, user, dbpass)){
   delay(1000);
   //Serial.println(".");
 }
@@ -49,17 +53,66 @@ while(!conn.connect(server_addr, 3306, user, dbpass)){
  cur_mem->execute("use SeniorProject");
 Serial.println("You have connected");
 }
+Serial.println(connected);
+return connected;
+}
+
+
+  
+//setup function
+void setup(void){
+  EEPROM.begin(512);
+  pinMode(LED, OUTPUT);
+  // preparing GPIOs
+  Serial.begin(115200);
+  delay(100);
+
+  
+  //strcat(ssid, "Galaxy S6 active 6927");
+  //strcat(password, "qjxu4534");
+
+  //writeEEPROM(0,32,ssid);//32 byte max length
+  //writeEEPROM(32,32, password);//32 byte max length
+  //writeEEPROM(64,16, ipAddr);//16 byte max length
+  /*85 byte saved in total?*/  
+  readEEPROM(0,32,ssid);
+  readEEPROM(32,32,password);
+  readEEPROM(64,16,ipAddr);
+ if (!tryConn()){
+    Serial.println("Did not connect!");
+    Serial.println(ssidHost);
+    Serial.println(passwordHost);
+    WiFi.softAP(ssidHost, passwordHost);
+    IPAddress myIP = WiFi.softAPIP();
+  Serial.print("AP IP address: ");
+  Serial.println(myIP);
+  server.on("/", handleRoot);
+  server.begin();
+  Serial.println("HTTP server started");
+  hosting = true;
+  }
+
+}
  
 void loop(void){
   if(connected){
     digitalWrite(LED, HIGH);
+    queryDB();
+  }else if(hosting){
+    handleRoot();
   }
- delay(50);
+ 
+}
+
+void queryDB(){
+  delay(50);
  digitalWrite(LED, LOW);
  if(WiFi.status() != WL_CONNECTED){
   connected = false;
+ }else{
+  connected = true;  
  }
-  //Serial.println("\nRunning SELECT and printing results\n");
+   //Serial.println("\nRunning SELECT and printing results\n");
   // Initiate the query class instance
   MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
   char* query = "SELECT Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID;";
@@ -126,4 +179,32 @@ void gpio(int pin, float state, String type){
     //Serial.println("Dim");
   }
   }
+}
+
+//startAdr: offset (bytes), writeString: String to be written to EEPROM
+void writeEEPROM(int startAdr, int laenge, char* writeString) {
+  EEPROM.begin(512); //Max bytes of eeprom to use
+  yield();
+  Serial.println();
+  Serial.print("writing EEPROM: ");
+  //write to eeprom 
+  for (int i = 0; i < laenge; i++)
+    {
+      EEPROM.write(startAdr + i, writeString[i]);
+      Serial.print(writeString[i]);
+    }
+  EEPROM.commit();
+  EEPROM.end();           
+}
+
+void readEEPROM(int startAdr, int maxLength, char* dest) {
+  EEPROM.begin(512);
+  delay(10);
+  for (int i = 0; i < maxLength; i++)
+    {
+      dest[i] = char(EEPROM.read(startAdr + i));
+    }
+  EEPROM.end();    
+  Serial.print("ready reading EEPROM:");
+  Serial.println(dest);
 }
