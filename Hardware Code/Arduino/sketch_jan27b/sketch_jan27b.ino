@@ -9,7 +9,7 @@
 
 // Replace with your network credentials
 const char *ssidHost = "ESPap";
-const char *passwordHost = "test";
+const char *passwordHost = "onewordlowercase";
 IPAddress server_addr; // IP of the MySQL *server* here
 char* user = "root";              // MySQL user login username
 char* dbpass = "root";
@@ -29,6 +29,9 @@ void handleRoot() {
 }
 
 bool tryConn(){
+  readEEPROM(0,32,ssid);
+  readEEPROM(32,32,password);
+  readEEPROM(64,16,ipAddr);
    WiFi.begin(ssid, password);
   Serial.println("");
   int count = 0; // Holds the timing variable.
@@ -75,9 +78,6 @@ void setup(void){
   //writeEEPROM(32,32, password);//32 byte max length
   //writeEEPROM(64,16, ipAddr);//16 byte max length
   /*85 byte saved in total?*/  
-  readEEPROM(0,32,ssid);
-  readEEPROM(32,32,password);
-  readEEPROM(64,16,ipAddr);
  if (!tryConn()){
     Serial.println("Did not connect!");
     Serial.println(ssidHost);
@@ -99,6 +99,8 @@ void loop(void){
     digitalWrite(LED, HIGH);
     queryDB();
   }else if(hosting){
+    //Serial.println("Hosting");
+    server.handleClient();
     handleRoot();
   }
  
