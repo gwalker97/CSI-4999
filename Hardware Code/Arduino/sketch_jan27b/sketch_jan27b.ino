@@ -10,7 +10,7 @@
 // Replace with your network credentials
 const char *ssidHost = "ESPap";
 const char *passwordHost = "onewordlowercase";
-IPAddress server_addr; // IP of the MySQL *server* here
+IPAddress server_addr(192,168,43,219); // IP of the MySQL *server* here
 char* user = "root";              // MySQL user login username
 char* dbpass = "root";
 int LED = 2;
@@ -19,7 +19,9 @@ ESP8266WebServer server(80);
 MySQL_Connection conn((Client *)&client);
 bool connected = true;
 bool hosting = false;
-
+String st;
+String content;
+int statusCode;
 char ssid[32];
 char password[32];
 char ipAddr[16] = "192,168,43,219";//Pi Access Point IP-Adr.
@@ -86,7 +88,8 @@ void setup(void){
     IPAddress myIP = WiFi.softAPIP();
   Serial.print("AP IP address: ");
   Serial.println(myIP);
-  server.on("/", handleRoot);
+  createWebServer(1);
+  //server.on("/", createWebServer(1));
   server.begin();
   Serial.println("HTTP server started");
   hosting = true;
@@ -101,7 +104,8 @@ void loop(void){
   }else if(hosting){
     //Serial.println("Hosting");
     server.handleClient();
-    handleRoot();
+    //handleRoot();
+    //createWebServer(1);
   }
  
 }
@@ -182,6 +186,75 @@ void gpio(int pin, float state, String type){
   }
   }
 }
+
+
+void createWebServer(int webtype)
+{
+  if ( webtype == 1 ) {
+    server.on("/", []() {
+        IPAddress ip = WiFi.softAPIP();
+        String ipStr = String(ip[0]) + '.' + String(ip[1]) + '.' + String(ip[2]) + '.' + String(ip[3]);
+        content = "<!DOCTYPE HTML>\r\n<html>Hello from ESP8266 at ";
+        content += ipStr;
+        content += "<p>";
+        content += st;
+        content += "</p><form method='get' action='setting'><label>SSID: </label><input name='ssid' length=32><input name='pass' length=64><input type='submit'></form>";
+        content += "</html>";
+        server.send(200, "text/html", content);  
+    });
+    server.on("/setting", []() {
+        String qsid = server.arg("ssid");
+        String qpass = server.arg("pass");
+        if (qsid.length() > 0 && qpass.length() > 0) {
+          Serial.println("clearing eeprom");
+          for (int i = 0; i < 96; ++i) { EEPROM.write(i, 0); }
+          Serial.println(qsid);
+          Serial.println("");
+          Serial.println(qpass);
+          Serial.println("");
+            
+          Serial.println("writing eeprom ssid:");
+          for (int i = 0; i < qsid.length(); ++i)
+            {
+              EEPROM.write(i, qsid[i]);
+              Serial.print("Wrote: ");
+              Serial.println(qsid[i]); 
+            }
+          Serial.println("writing eeprom pass:"); 
+          for (int i = 0; i < qpass.length(); ++i)
+            {
+              EEPROM.write(32+i, qpass[i]);
+              Serial.print("Wrote: ");
+              Serial.println(qpass[i]); 
+            }    
+          EEPROM.commit();
+          content = "{\"Success\":\"saved to eeprom... reset to boot into new wifi\"}";
+          statusCode = 200;
+        } else {
+          content = "{\"Error\":\"404 not found\"}";
+          statusCode = 404;
+          Serial.println("Sending 404");
+        }
+        server.send(statusCode, "application/json", content);
+    });
+  } else if (webtype == 0) {
+    server.on("/", []() {
+      IPAddress ip = WiFi.localIP();
+      String ipStr = String(ip[0]) + '.' + String(ip[1]) + '.' + String(ip[2]) + '.' + String(ip[3]);
+      server.send(200, "application/json", "{\"IP\":\"" + ipStr + "\"}");
+    });
+    server.on("/cleareeprom", []() {
+      content = "<!DOCTYPE HTML>\r\n<html>";
+      content += "<p>Clearing the EEPROM</p></html>";
+      server.send(200, "text/html", content);
+      Serial.println("clearing eeprom");
+      for (int i = 0; i < 96; ++i) { EEPROM.write(i, 0); }
+      EEPROM.commit();
+    });
+  }
+}
+
+
 
 //startAdr: offset (bytes), writeString: String to be written to EEPROM
 void writeEEPROM(int startAdr, int laenge, char* writeString) {
