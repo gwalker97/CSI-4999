@@ -735,7 +735,7 @@ if($_SESSION["guest"] == true) {
             });
         });
         
-        /*
+        
         function fnClearApplianceModal() {
 
             document.getElementById('PiImg').classList.add('dont-display');
@@ -749,87 +749,69 @@ if($_SESSION["guest"] == true) {
             
             document.getElementById('comp-form').reset();
         }
+    
+        function fnSaveAppliance() {
 
-        function fnSaveAppliance(arg) {
-            var sceneID = document.getElementById('lbl-scene-id').innerHTML;
+            var appName = document.getElementById('appliance-name').value;
+            var appType = document.getElementById('appliance-select').value;
+            var appDescription = document.getElementById('appliance-description').value;
+            var appRoom = document.getElementById('newCompRoomSelect').value;
+            var appHost = document.getElementById('newCompHostSelect').value;
+            var appPin = document.getElementById('pin-number').value;
+            var appPinText = document.getElementById('new-comp-pin-text').innerHTML;
+            
+            var appNameOkay = true;
+            var appTypeOkay = true;
+            var appDescOkay = true;
+            var appRoomOkay = true;
+            var appHostOkay = true;
+            var appPinOkay = true;
 
-            var sceneName = document.getElementById('scene-name').value;
-            var sceneColor = document.getElementById('colorSelect').value;
-            var sceneAutomated = document.querySelector('input[name="automate"]:checked').value;
-            var sceneStart = document.getElementById('scene-start').value;
-            var sceneEnd = document.getElementById('scene-end').value;
-            var sceneTimeOkay = true;
-            var sceneStartEndOkay = true;
-            var sceneNameOkay = true;
-            var sceneColorOkay = true;
-            var addOnID = "";
-
-            if (sceneAutomated == 1) {
-                if (sceneStart == "" || sceneEnd == "") {
-                    sceneTimeOkay = false;
-                }
-                if (sceneStart > sceneEnd || sceneStart == sceneEnd) {
-                    sceneStartEndOkay = false;
-                }
+            if (appName == "") {
+                appNameOkay = false;
             }
-            if (sceneName == "") {
-                sceneNameOkay = false;
+            if (appType == "") {
+                appTypeOkay = false;
             }
-            if (sceneColor == "color") {
-                sceneColorOkay = false;
+            if (appDescription == "") {
+                appDescOkay = false;
+            }
+            if (appRoom == "") {
+                appRoomOkay = false;
+            }
+            if (appHost == "") {
+                appHostOkay = false;
+            }
+            if (appPin == "" || appPinText == "Pin Taken!") {
+                appPinOkay = false;
             }
 
-            if (sceneNameOkay && sceneColorOkay && sceneTimeOkay && sceneStartEndOkay) {
-                fnLoad(true);
-                $('.appliance-selected').each(function(i, obj) {
-                    var shortID = this.id.substring(10);
-                    if (addOnID == "") {
-                        addOnID = shortID;
-                    }
-                    else {
-                        addOnID = addOnID + "," + shortID;
-                    }
-                });
-
-                if (sceneID == "") {
+            if (appNameOkay && appTypeOkay && appDescOkay && appRoomOkay && appHostOkay && appPinOkay) {
+                
                     $.post(
-                        "newScene.php",
-                        { sN: (sceneName), sC: (sceneColor), sA: (sceneAutomated), sS: (sceneStart), sE: (sceneEnd), aID: (addOnID),  },
+                        "newApp.php",
+                        { aN: (appName), aD: (appDescription), aT: (appType), aR: (appRoom), aH: (appHost), aP: (appPin),  },
                     );
-                }
-                else {
-                    $.post(
-                        "updateScene.php",
-                        { sN: (sceneName), sC: (sceneColor), sA: (sceneAutomated), sS: (sceneStart), sE: (sceneEnd), aID: (addOnID), sID: (sceneID),  },
-                    );
-                }
+                
 
-                fnClearSceneModal();
-                $('#myModal').modal('hide');
-                $('#all-scenes').load(document.URL +  ' #all-scenes');
-                fnLoad(false);
+                fnClearApplianceModal();
+                $('#newCompModal').modal('hide');
+                window.location.reload(true); 
             }
             else {
-                if (!sceneTimeOkay || !sceneStartEndOkay) {
-                    if (!sceneTimeOkay) {
-                        document.getElementById('automate-error-times').innerHTML = "You must enter a start and end time.";
-                        document.getElementById('automate-error-times').classList.remove('dont-display');
-                        document.getElementById('automate-error-times').classList.add('display');
-                    }
-                    else {
-                        document.getElementById('automate-error-times').innerHTML = "Start time must be less than end time.";
-                        document.getElementById('automate-error-times').classList.remove('dont-display');
-                        document.getElementById('automate-error-times').classList.add('display');
-                    }
+                if (!appNameOkay || !appDescOkay || !appRoomOkay || !appTypeOkay) {
+                        document.getElementById('appliance-error-message').innerHTML = "Missing information!";
+                        document.getElementById('appliance-error-message').classList.remove('dont-display');
+                        document.getElementById('appliance-error-message').classList.add('display');
                 }
-                if (!sceneNameOkay || !sceneColorOkay) {
-                    document.getElementById('automate-error').innerHTML = "You must have a name, color, and at least one appliance.";
-                    document.getElementById('automate-error').classList.remove('dont-display');
-                    document.getElementById('automate-error').classList.add('display');
+                if (!appHostOkay || !appPinOkay) {
+                    document.getElementById('appliance-error-message').innerHTML = "Host/Pin invalid!";
+                    document.getElementById('appliance-error-message').classList.remove('dont-display');
+                    document.getElementById('appliance-error-message').classList.add('display');
                 }
             }
         }
-        */
+        
 
     </script>
 
@@ -959,6 +941,9 @@ if($_SESSION["guest"] == true) {
                             <div class="automate-div">
                                 <label id="automate-error" class="automate-error dont-display"></label>
                             </div>
+                            <div id="appliance-error" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <label id="appliance-error-message" class="automate-error dont-display"></label>
+                                </div>
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
                                     <i class="fa fa-home fa-login"></i>
@@ -966,10 +951,10 @@ if($_SESSION["guest"] == true) {
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
                                     <i id="color-brush" class="fas fa-home home fa-login"></i>
-                                    <select id="applianceSelect" class="selects color-select">
-                                        <option value="l">Light</option>
-                                        <option value="s">Dimmable Light</option>
-                                        <option value="f">Fan</option>
+                                    <select id="appliance-select" class="selects color-select">
+                                        <option value="L">Light</option>
+                                        <option value="S">Dimmable Light</option>
+                                        <option value="F">Fan</option>
                                     </select>
                                     <i class="fas fa-caret-down color-caret"></i>
                                 </div>
