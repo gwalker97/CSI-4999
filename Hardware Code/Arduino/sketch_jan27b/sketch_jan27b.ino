@@ -8,7 +8,6 @@
 #include <MySQL_Cursor.h>
 //qjxu4534 is the old password
 // Replace with your network credentials
-const char *ssidHost = "ESPap";
 const char *passwordHost = "onewordalllowercase";
 IPAddress server_addr(192,168,43,219); // IP of the MySQL *server* here
 char* user = "root";              // MySQL user login username
@@ -17,7 +16,8 @@ int LED = 2;
 WiFiClient client;
 ESP8266WebServer server(80);
 MySQL_Connection conn((Client *)&client);
-bool connected = true;
+bool wificonnect = true;
+bool dbConn = true;
 bool hosting = false;
 String st;
 String content;
@@ -27,12 +27,25 @@ char password[32];
 char ipAddr[16] = "192,168,43,219";//Pi Access Point IP-Adr.
 
 
+void tryConnDB(){
+  int count = 0;
+  while(!conn.connect(server_addr, 3306, user, dbpass)){
+      delay(500);
+      }
+      Serial.println(".");
+ MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
+ cur_mem->execute("use SeniorProject");
+ Serial.println("db Conn!");
+}
+
+
 bool tryConn(){
+  wificonnect = true;
   EEPROM.begin(512);
   readEEPROM(0,32,ssid);
   readEEPROM(32,32,password);
   readEEPROM(64,16,ipAddr);
-   WiFi.begin(ssid, password);
+  WiFi.begin(ssid, password);
   Serial.println("");
   int count = 0; // Holds the timing variable.
   // Wait for connection
@@ -40,33 +53,32 @@ bool tryConn(){
     delay(500);
     count = count + 1;
     if( count >= 10){
-      connected = false;
+      wificonnect = false;
       break;
     }
     Serial.println(".");
   }
-  if(connected){
+  Serial.println(wificonnect);
+ if(wificonnect){
     Serial.println("Connected to Wifi!");
-    
-WiFi.softAPdisconnect(true);
-Serial.println("Stopped AP");
-    while(!conn.connect(server_addr, 3306, user, dbpass)){
-     delay(1000);
-  //Serial.println(".");
+    WiFi.softAPdisconnect(true);
+    Serial.println("Stopped AP");
+    hosting = false;
 }
-
- MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
- cur_mem->execute("use SeniorProject");
-Serial.println("You have connected");
-}
-return connected;
+return wificonnect;
 }
 
 void hostWifi(){
+  String ssidHost = "ESPap-";
+  byte mac[6];
+  WiFi.macAddress(mac);
+  ssidHost += String(mac[5], HEX);
+  const char* newssid = ssidHost.c_str();
   Serial.println("Did not connect!");
-    Serial.println(ssidHost);
+  Serial.println(ssidHost);
     Serial.println(passwordHost);
-    WiFi.softAP(ssidHost, passwordHost);
+    //WiFi.macAddress(mac);
+    WiFi.softAP(newssid, passwordHost);
     IPAddress myIP = WiFi.softAPIP();
   Serial.print("AP IP address: ");
   Serial.println(myIP);
@@ -84,44 +96,32 @@ void setup(void){
   // preparing GPIOs
   Serial.begin(115200);
   delay(100);
-
-  
-  //strcat(ssid, "Galaxy S6 active 6927");
-  //strcat(password, "qjxu4534");
-
-  //writeEEPROM(0,32,ssid);//32 byte max length
-  //writeEEPROM(32,32, password);//32 byte max length
-  //writeEEPROM(64,16, ipAddr);//16 byte max length
-  /*85 byte saved in total?*/  
  if (!tryConn()){
     hostWifi();
+  }else{
+  createWebServer(1);
+  server.begin();
   }
 }
  
 void loop(void){
-  if(connected){
-    digitalWrite(LED, HIGH);
-    queryDB();
-  }else if(hosting){
-    //Serial.println("Hosting");
-    server.handleClient();
-    //handleRoot();
-    //server.createWebServer(1);
-  }
-  else{
+  if(WiFi.status() == WL_CONNECTED){
+    digitalWrite(LED, LOW);
+   // Serial.println("high");
+   // queryDB();
+  }else if(!hosting){
     hostWifi();
-    tryConn();
-    hosting = true;
   }
+  server.handleClient();
 }
 
 void queryDB(){
   delay(50);
  digitalWrite(LED, LOW);
  if(WiFi.status() != WL_CONNECTED){
-  connected = false;
+  wificonnect = false;
  }else{
-  connected = true;  
+  wificonnect = true;  
  }
    //Serial.println("\nRunning SELECT and printing results\n");
   // Initiate the query class instance
@@ -230,6 +230,9 @@ void createWebServer(int webtype)
           EEPROM.commit();
           content = "{\"Success\":\"saved to eeprom... reset to boot into new wifi\"}";
           statusCode = 200;
+          delay(200);
+          WiFi.disconnect();
+          tryConn();
         } else {
           content = "{\"Error\":\"404 not found\"}";
           statusCode = 404;

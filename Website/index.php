@@ -735,6 +735,83 @@ if($_SESSION["guest"] == true) {
             });
         });
         
+        
+        function fnClearApplianceModal() {
+
+            document.getElementById('PiImg').classList.add('dont-display');
+            document.getElementById('ESPImg').classList.add('dont-display');
+            
+            document.getElementById('appliance-name').innerHTML = "";
+            document.getElementById('appliance-description').innerHTML = "";
+            
+            document.getElementById('btn-delete-scene').classList.remove('display');
+            document.getElementById('btn-delete-scene').classList.add('dont-display');
+            
+            document.getElementById('comp-form').reset();
+        }
+    
+        function fnSaveAppliance() {
+
+            var appName = document.getElementById('appliance-name').value;
+            var appType = document.getElementById('appliance-select').value;
+            var appDescription = document.getElementById('appliance-description').value;
+            var appRoom = document.getElementById('newCompRoomSelect').value;
+            var appHost = document.getElementById('newCompHostSelect').value;
+            var appPin = document.getElementById('pin-number').value;
+            var appPinText = document.getElementById('new-comp-pin-text').innerHTML;
+            
+            var appNameOkay = true;
+            var appTypeOkay = true;
+            var appDescOkay = true;
+            var appRoomOkay = true;
+            var appHostOkay = true;
+            var appPinOkay = true;
+
+            if (appName == "") {
+                appNameOkay = false;
+            }
+            if (appType == "") {
+                appTypeOkay = false;
+            }
+            if (appDescription == "") {
+                appDescOkay = false;
+            }
+            if (appRoom == "") {
+                appRoomOkay = false;
+            }
+            if (appHost == "") {
+                appHostOkay = false;
+            }
+            if (appPin == "" || appPinText == "Pin Taken!") {
+                appPinOkay = false;
+            }
+
+            if (appNameOkay && appTypeOkay && appDescOkay && appRoomOkay && appHostOkay && appPinOkay) {
+                
+                    $.post(
+                        "newApp.php",
+                        { aN: (appName), aD: (appDescription), aT: (appType), aR: (appRoom), aH: (appHost), aP: (appPin),  },
+                    );
+                
+
+                fnClearApplianceModal();
+                $('#newCompModal').modal('hide');
+                window.location.reload(true); 
+            }
+            else {
+                if (!appNameOkay || !appDescOkay || !appRoomOkay || !appTypeOkay) {
+                        document.getElementById('appliance-error-message').innerHTML = "Missing information!";
+                        document.getElementById('appliance-error-message').classList.remove('dont-display');
+                        document.getElementById('appliance-error-message').classList.add('display');
+                }
+                if (!appHostOkay || !appPinOkay) {
+                    document.getElementById('appliance-error-message').innerHTML = "Host/Pin invalid!";
+                    document.getElementById('appliance-error-message').classList.remove('dont-display');
+                    document.getElementById('appliance-error-message').classList.add('display');
+                }
+            }
+        }
+        
 
     </script>
 
@@ -852,7 +929,7 @@ if($_SESSION["guest"] == true) {
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" onclick="fnClearSceneModal()">&times;</button>
+                        <button type="button" class="close" data-dismiss="modal" onclick="fnClearApplianceModal()">&times;</button>
                         <h4 class="modal-title">New Appliance</h4>
                     </div>
                     <!-- Modal body-->
@@ -864,6 +941,9 @@ if($_SESSION["guest"] == true) {
                             <div class="automate-div">
                                 <label id="automate-error" class="automate-error dont-display"></label>
                             </div>
+                            <div id="appliance-error" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <label id="appliance-error-message" class="automate-error dont-display"></label>
+                                </div>
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
                                     <i class="fa fa-home fa-login"></i>
@@ -871,17 +951,17 @@ if($_SESSION["guest"] == true) {
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
                                     <i id="color-brush" class="fas fa-home home fa-login"></i>
-                                    <select id="applianceSelect" class="selects color-select">
-                                        <option value="l">Light</option>
-                                        <option value="s">Dimmable Light</option>
-                                        <option value="f">Fan</option>
+                                    <select id="appliance-select" class="selects color-select">
+                                        <option value="L">Light</option>
+                                        <option value="S">Dimmable Light</option>
+                                        <option value="F">Fan</option>
                                     </select>
                                     <i class="fas fa-caret-down color-caret"></i>
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
                                         <i class="fa fa-home fa-login"></i>
-                                        <input type="text" id="appliance-name" placeholder="Appliance Description" class="input-login scene-name-input">
+                                        <input type="text" id="appliance-description" placeholder="Appliance Description" class="input-login scene-name-input">
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
                                         <i class="fas fa-home home fa-login"></i>
@@ -1083,11 +1163,12 @@ if($_SESSION["guest"] == true) {
                         }
                         ?>
                     </select>
-                    <div style="width: 160px; margin-top: -6px; float: right;">
+                    <div style="width: 200px; margin-top: -6px; float: right;">
                         <button class="fa fa-sign-out-alt btn-sign-out" onclick="phpLogout()"></button>
                         <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='house-settings.php'"></button>
                         <button class="fa fa-users btn-sign-out btn-cog" onclick="window.location.href='groupSettings.php'"></button>
-                        <button class="fa fa-lock btn-sign-out btn-cog" onclick="window.location.href='groupSettings.php'"></button>
+                        <button class="fa fa-home btn-sign-out btn-cog" onclick="window.location.href='house-settings.php'"></button>
+                        <button class="fa fa-user btn-sign-out btn-cog" onclick="window.location.href='accountSettings.php'"></button>
                     </div>
                 </div>
             </div>

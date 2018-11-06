@@ -97,13 +97,11 @@ var componentBehavior = getParameterByName("componentBehavior");
 		var compId = urlArray[1].substring(1);
 			
 		var r = confirm("Do you want to delete " + document.getElementById('AppName').value + "?");
-		if (r == true) {
 		    $.post("deleteComponent.php",
 			    {
 				id: compId,
 			    });	
 			document.location.href = 'index.php';		
-		}		
 	}
 
     </script>
@@ -164,7 +162,6 @@ var componentBehavior = getParameterByName("componentBehavior");
                             </select>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <button type="button" class="btn-component-switch btn-setting-option btn-cancel">Delete</button>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                     <button type="button" class="btn-component-switch btn-setting-option btn-save-appliance" onclick="saveComponent()">Save</button>
