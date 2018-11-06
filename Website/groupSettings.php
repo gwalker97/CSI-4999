@@ -9,9 +9,9 @@
         
         if ($_SESSION['gID'] != 1) {
             if (isset($_SESSION['indexMsg'])) {
-                $_SESSION['indexMsg'] .= "<br>You must be an Admin to use the group page.";
+                $_SESSION['indexMsg'] .= "<br>You must be an Admin to use the Group page.";
             } else {
-                $_SESSION['indexMsg'] = "You must be an Admin to use the group page.";
+                $_SESSION['indexMsg'] = "You must be an Admin to use the Group page.";
             }
             header("Location: index.php");
         }
