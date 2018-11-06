@@ -92,9 +92,12 @@ I modified lines:
         function fnShowHouseJoin(arg) {
             if (arg == true) {
                 $('#enterHouseCode').show();
+                $('#houseCode').prop('required',true);
             }
             else {
                 $('#enterHouseCode').hide();
+                $('#houseCode').val('');
+                $('#houseCode').prop('required',false);
             }
         }
     </script>
