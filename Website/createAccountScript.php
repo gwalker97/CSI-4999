@@ -7,6 +7,7 @@
 		$uname = mysqli_real_escape_string($conn,$_POST['uname']);
 		$pass = mysqli_real_escape_string($conn,$_POST['passw1']);
         $pass2 = mysqli_real_escape_string($conn,$_POST['passw2']);
+        $houseCode = mysqli_real_escape_string($conn,$_POST['hCode']);
 
 		$sql = "select * from User where Username='$uname'";
 		$result = mysqli_query($conn,$sql);
@@ -31,19 +32,37 @@
                     $_SESSION['admin'] = $row3['Admin'];
                     $_SESSION['uID'] = $row3['User_ID'];
                     $_SESSION['guest'] = false;
-                    $_SESSION['home'] = 1;
-                    $success = true;
                     $id = $row3['User_ID'];
                     
-                    $sql4 = "insert into House_Assignment (Assign_House_ID, Assign_User_ID) values (1, " . $id . ")";
-                    $result4 = mysqli_query($conn,$sql4);
+                    //randomly generated house code
+                    $houseCode = substr(md5(mt_rand()), 0, 7);
                     
-                    if ($result4 === false) { $_SESSION['indexMsg'] = "House assignment failed."; }
+                    $sql4 = "SELECT * FROM House WHERE House_Code = '" . $houseCode ."'";
+                    $result4 = mysqli_query($conn, $sql4);
+                    
+                    if (!mysqli_num_rows($result4)==0) { //house code already exists
+                        $success = false;
+                        $_SESSION['createMsg'] = "House creation failed.";
+                    } else { //house code doesn't exist, perform insert
+                    $sql5 = "insert into House (House_Name, House_Code) values ('House Name', '" . $houseCode . "')";
+                    $result5 = mysqli_query($conn, $sql5);
+
+                    $newHouseID = $conn->insert_id;
+                    $_SESSION['home'] = $newHouseID;
+                        
+                    $sql6 = "insert into House_Assignment (Assign_House_ID, Assign_User_ID) values (" . $newHouseID . ", " . $id . ")";
+                    $result6 = mysqli_query($conn,$sql6);
+                    
+                    $success = true;
+                    }
+                    
+                    if ($result5 === false) { $_SESSION['createMsg'] = "House creation failed."; $success = false; }
+                    if ($result6 === false) { $_SESSION['createMsg'] = "House assignment failed."; $success = false; }
                 } else { $_SESSION['createMsg'] = "Could not add account to database."; }
             } else { $_SESSION['createMsg'] = "The password fields did not match."; }
         } else { $_SESSION['createMsg'] = "That username is taken."; }
     } else { $_SESSION['createMsg'] = "Method was not POST."; }
 
-    if ($success) { header('Location: index.php'); }
+    if ($success) { header('Location: set-up-house.php'); }
     else { header('Location: create-account.php'); }
 ?>

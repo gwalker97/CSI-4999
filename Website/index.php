@@ -1018,9 +1018,13 @@ if($_SESSION["guest"] == true) {
 
                     $F = $row["F"];
                     $C = $row["C"];
-
-                    echo '<span id="displayTempF" class="temp-display">' . $F . '°</span>';
-                    echo '<span id="displayTempC" class="temp-display-off">' . $C . '°</span>';
+                    if ($F == '' || $C == '') {
+                        echo '<span id="displayTempF" class="temp-display">N/A</span>';
+                        echo '<span id="displayTempC" class="temp-display-off">N/A</span>';
+                    } else {
+                        echo '<span id="displayTempF" class="temp-display">' . $F . '°</span>';
+                        echo '<span id="displayTempC" class="temp-display-off">' . $C . '°</span>';
+                    }
                     ?>
 
                     <button id="btnTempF" class="btn-temp btn-temp-left btn-temp-selected" onclick="fnTempChange(this.id)">F</button>

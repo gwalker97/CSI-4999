@@ -197,6 +197,7 @@ h4 {
 }
 
 .create-account-form-container {
+    overflow: auto;
     text-align: center;
     background-color: #ffffffe8;
     margin: 6% auto;
@@ -1108,4 +1109,16 @@ path {
     height: 25px;
     background-color: #80808063;
     border-radius: 50%;
+}
+
+.join-house-container {
+    margin: 10px 0;
+}
+
+.join-house-buttons {
+    margin: 10px 0;
+}
+
+.lbl-join-house {
+    margin: 0 5px;
 }

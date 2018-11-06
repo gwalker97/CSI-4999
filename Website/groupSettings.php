@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>HARP Config</title>
+        <title>Group Settings</title>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
@@ -83,7 +83,14 @@
         <div class="component-settings-form-container">
             <button class="btn-back" onclick="fnReturnHome()"><i class="fa fa-arrow-left" style="font-size: 10px;"></i> <i class="fa fa-home"></i></button>
             <h1 class="text-center h1-settings">Account Configuration</h1>
-            <p class="text-center p-user col-lg-12 col-md-12 col-sm-12 col-xs-12"><b>House Code:</b> 1x2y3z <i class="fa fa-question tool-tip"><span class="tool-tip-text">When someone creates a new account, they can use this code to join your house.</span></i></p>
+            <p class="text-center p-user col-lg-12 col-md-12 col-sm-12 col-xs-12"><b>House Code:</b> 
+                <?php 
+                    $sql = "SELECT House_Code FROM House WHERE House_ID = " . $_SESSION['home'] . "";
+                    $result = mysqli_query($conn,$sql);
+                    $row = mysqli_fetch_array($result);
+                    echo $row['House_Code'];
+                ?> 
+                <i class="fa fa-question tool-tip"><span class="tool-tip-text">When someone creates a new account, they can use this code to join your house.</span></i></p>
                 <?php
                     $sql = "select * from Groups";
                     $result = mysqli_query($conn,$sql);
