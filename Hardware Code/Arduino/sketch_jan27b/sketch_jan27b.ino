@@ -6,10 +6,10 @@
 #include <EEPROM.h>
 #include <MySQL_Connection.h>
 #include <MySQL_Cursor.h>
-
+//qjxu4534 is the old password
 // Replace with your network credentials
 const char *ssidHost = "ESPap";
-const char *passwordHost = "onewordlowercase";
+const char *passwordHost = "onewordalllowercase";
 IPAddress server_addr(192,168,43,219); // IP of the MySQL *server* here
 char* user = "root";              // MySQL user login username
 char* dbpass = "root";
@@ -26,11 +26,9 @@ char ssid[32];
 char password[32];
 char ipAddr[16] = "192,168,43,219";//Pi Access Point IP-Adr.
 
-void handleRoot() {
-  server.send(200, "text/html", "<h1>You are connected</h1>");
-}
 
 bool tryConn(){
+  EEPROM.begin(512);
   readEEPROM(0,32,ssid);
   readEEPROM(32,32,password);
   readEEPROM(64,16,ipAddr);
@@ -49,8 +47,11 @@ bool tryConn(){
   }
   if(connected){
     Serial.println("Connected to Wifi!");
+    
+WiFi.softAPdisconnect(true);
+Serial.println("Stopped AP");
     while(!conn.connect(server_addr, 3306, user, dbpass)){
-  delay(1000);
+     delay(1000);
   //Serial.println(".");
 }
 
@@ -58,11 +59,23 @@ bool tryConn(){
  cur_mem->execute("use SeniorProject");
 Serial.println("You have connected");
 }
-Serial.println(connected);
 return connected;
 }
 
-
+void hostWifi(){
+  Serial.println("Did not connect!");
+    Serial.println(ssidHost);
+    Serial.println(passwordHost);
+    WiFi.softAP(ssidHost, passwordHost);
+    IPAddress myIP = WiFi.softAPIP();
+  Serial.print("AP IP address: ");
+  Serial.println(myIP);
+  createWebServer(1);
+  //server.on("/", createWebServer(1));
+  server.begin();
+  Serial.println("HTTP server started");
+  hosting = true;
+}
   
 //setup function
 void setup(void){
@@ -81,20 +94,8 @@ void setup(void){
   //writeEEPROM(64,16, ipAddr);//16 byte max length
   /*85 byte saved in total?*/  
  if (!tryConn()){
-    Serial.println("Did not connect!");
-    Serial.println(ssidHost);
-    Serial.println(passwordHost);
-    WiFi.softAP(ssidHost, passwordHost);
-    IPAddress myIP = WiFi.softAPIP();
-  Serial.print("AP IP address: ");
-  Serial.println(myIP);
-  createWebServer(1);
-  //server.on("/", createWebServer(1));
-  server.begin();
-  Serial.println("HTTP server started");
-  hosting = true;
+    hostWifi();
   }
-
 }
  
 void loop(void){
@@ -105,9 +106,13 @@ void loop(void){
     //Serial.println("Hosting");
     server.handleClient();
     //handleRoot();
-    //createWebServer(1);
+    //server.createWebServer(1);
   }
- 
+  else{
+    hostWifi();
+    tryConn();
+    hosting = true;
+  }
 }
 
 void queryDB(){
@@ -198,13 +203,15 @@ void createWebServer(int webtype)
         content += ipStr;
         content += "<p>";
         content += st;
-        content += "</p><form method='get' action='setting'><label>SSID: </label><input name='ssid' length=32><input name='pass' length=64><input type='submit'></form>";
+        content += "</p><form method='get' action='setting'><label>SSID: </label><input name='ssid' length=32><label>Password: </label><input name='pass' length=64>";
+        content += "<label>Pi IP Address: </label><input name='dbip' length=64><input type='submit'></form>";
         content += "</html>";
         server.send(200, "text/html", content);  
     });
     server.on("/setting", []() {
         String qsid = server.arg("ssid");
         String qpass = server.arg("pass");
+        String qip = server.arg("dbip");
         if (qsid.length() > 0 && qpass.length() > 0) {
           Serial.println("clearing eeprom");
           for (int i = 0; i < 96; ++i) { EEPROM.write(i, 0); }
@@ -212,21 +219,14 @@ void createWebServer(int webtype)
           Serial.println("");
           Serial.println(qpass);
           Serial.println("");
-            
+          Serial.println(qip);
+          Serial.println("");
           Serial.println("writing eeprom ssid:");
-          for (int i = 0; i < qsid.length(); ++i)
-            {
-              EEPROM.write(i, qsid[i]);
-              Serial.print("Wrote: ");
-              Serial.println(qsid[i]); 
-            }
-          Serial.println("writing eeprom pass:"); 
-          for (int i = 0; i < qpass.length(); ++i)
-            {
-              EEPROM.write(32+i, qpass[i]);
-              Serial.print("Wrote: ");
-              Serial.println(qpass[i]); 
-            }    
+          writeEEPROM(0,32,qsid);
+          Serial.println("writing eeprom pass:");
+          writeEEPROM(32,32,qpass);
+          Serial.println("writing eeprom ip:"); 
+          writeEEPROM(64,16,qip); 
           EEPROM.commit();
           content = "{\"Success\":\"saved to eeprom... reset to boot into new wifi\"}";
           statusCode = 200;
@@ -257,7 +257,7 @@ void createWebServer(int webtype)
 
 
 //startAdr: offset (bytes), writeString: String to be written to EEPROM
-void writeEEPROM(int startAdr, int laenge, char* writeString) {
+void writeEEPROM(int startAdr, int laenge, String writeString) {
   EEPROM.begin(512); //Max bytes of eeprom to use
   yield();
   Serial.println();
