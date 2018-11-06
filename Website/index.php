@@ -1079,11 +1079,12 @@ if($_SESSION["guest"] == true) {
                         }
                         ?>
                     </select>
-                    <div style="width: 160px; margin-top: -6px; float: right;">
+                    <div style="width: 200px; margin-top: -6px; float: right;">
                         <button class="fa fa-sign-out-alt btn-sign-out" onclick="phpLogout()"></button>
                         <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='house-settings.php'"></button>
                         <button class="fa fa-users btn-sign-out btn-cog" onclick="window.location.href='groupSettings.php'"></button>
-                        <button class="fa fa-lock btn-sign-out btn-cog" onclick="window.location.href='groupSettings.php'"></button>
+                        <button class="fa fa-home btn-sign-out btn-cog" onclick="window.location.href='house-settings.php'"></button>
+                        <button class="fa fa-user btn-sign-out btn-cog" onclick="window.location.href='accountSettings.php'"></button>
                     </div>
                 </div>
             </div>
