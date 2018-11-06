@@ -118,7 +118,6 @@
                         echo '<label id="houseErrorText" class="lbl-setup-house-hidden col-lg-12 col-md-12 col-sm-12 col-xs-12"></label>';
                     }
                 ?>
-                <p class="text-center p-user col-lg-12 col-md-12 col-sm-12 col-xs-12"><b>House Code:</b> 1x2y3z <i class="fa fa-question tool-tip"><span class="tool-tip-text">When someone creates a new account, they can use this code to join your house.</span></i></p>
                 <form id="myForm" action="groupSettingsScript.php" method="post">
                     <div id="groupList" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <p class="text-center p-user"><b>Custom Groups</b><i class="fa fa-plus fa-plus-groups" onclick="addNewGroupBox()"></i></p>
