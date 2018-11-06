@@ -5,6 +5,16 @@
         $_SESSION['loginMsg'] = "Please login first.";
         header("Location: login.php");
         die();
+    } else {
+        
+        if ($_SESSION['gID'] != 1) {
+            if (isset($_SESSION['indexMsg'])) {
+                $_SESSION['indexMsg'] .= "<br>You must be an Admin to use the Group page.";
+            } else {
+                $_SESSION['indexMsg'] = "You must be an Admin to use the Group page.";
+            }
+            header("Location: index.php");
+        }
     }
 ?>
 <!DOCTYPE html>
@@ -39,6 +49,7 @@
             var inp = document.createElement("input");
                 inp.setAttribute("type", "text");
                 inp.setAttribute("class", "input-settings");
+                inp.setAttribute("name", "newGroups[]");
                 inp.setAttribute("style", "margin:4px");
             var btn = document.createElement("i");
                 btn.setAttribute("class", "fa fa-minus fa-settings-remove-room");
@@ -96,6 +107,7 @@
                 ?> 
                 <i class="fa fa-question tool-tip"><span class="tool-tip-text">When someone creates a new account, they can use this code to join your house.</span></i></p>
 =======
+            <p class="text-center lbl-setup-house-visible"><b>BE CAREFUL WHEN MAKING CHANGES ON THIS PAGE ! ! !</b></p>
 >>>>>>> 714d1b64346decc2fa613317cde291b078c83cd4
                 <?php
                     $sql = "select * from Groups";
@@ -106,10 +118,14 @@
                         $groups[] = $row;
                     }
             
+                    if (isset($_SESSION['groupSetMsg'])) {
+                        echo '<label id="houseErrorText" class="lbl-setup-house-visible col-lg-12 col-md-12 col-sm-12 col-xs-12">' . $_SESSION['groupSetMsg'] . '</label>';
+                        unset($_SESSION['groupSetMsg']);
                     } else {
                         echo '<label id="houseErrorText" class="lbl-setup-house-hidden col-lg-12 col-md-12 col-sm-12 col-xs-12"></label>';
                     }
                 ?>
+                <p class="text-center p-user col-lg-12 col-md-12 col-sm-12 col-xs-12"><b>House Code:</b> 1x2y3z <i class="fa fa-question tool-tip"><span class="tool-tip-text">When someone creates a new account, they can use this code to join your house.</span></i></p>
                 <form id="myForm" action="groupSettingsScript.php" method="post">
                     <div id="groupList" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <p class="text-center p-user"><b>Custom Groups</b><i class="fa fa-plus fa-plus-groups" onclick="addNewGroupBox()"></i></p>
