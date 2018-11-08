@@ -92,10 +92,8 @@
     <body class="login-body">
         <div class="component-settings-form-container">
             <button class="btn-back" onclick="fnReturnHome()"><i class="fa fa-arrow-left" style="font-size: 10px;"></i> <i class="fa fa-home"></i></button>
-            <p class="text-center lbl-setup-house-visible"><b>BE CAREFUL WHEN MAKING CHANGES ON THIS PAGE ! ! !</b></p>
             <h1 class="text-center h1-settings">Account Configuration</h1>
-            <p class="text-center p-user col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <?php
+            <?php
                     if (isset($_SESSION['groupSetMsg'])) {
                         echo '<label style="margin-bottom:30px" id="houseErrorText" class="lbl-setup-house-visible col-lg-12 col-md-12 col-sm-12 col-xs-12">' . $_SESSION['groupSetMsg'] . '</label>';
                         unset($_SESSION['groupSetMsg']);
@@ -103,6 +101,7 @@
                         echo '<label style="margin-bottom:30px" id="houseErrorText" class="lbl-setup-house-hidden col-lg-12 col-md-12 col-sm-12 col-xs-12"></label>';
                     }
                 ?>
+            <p class="text-center p-user col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <b>House Code: </b> 
                 <?php 
                     $sql = "SELECT House_Code FROM House WHERE House_ID = " . $_SESSION['home'] . "";
