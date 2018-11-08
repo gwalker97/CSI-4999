@@ -1098,9 +1098,13 @@ if($_SESSION["guest"] == true) {
 
                     $F = $row["F"];
                     $C = $row["C"];
-
-                    echo '<span id="displayTempF" class="temp-display">' . $F . '°</span>';
-                    echo '<span id="displayTempC" class="temp-display-off">' . $C . '°</span>';
+                    if ($F == '' || $C == '') {
+                        echo '<span id="displayTempF" class="temp-display">N/A</span>';
+                        echo '<span id="displayTempC" class="temp-display-off">N/A</span>';
+                    } else {
+                        echo '<span id="displayTempF" class="temp-display">' . $F . '°</span>';
+                        echo '<span id="displayTempC" class="temp-display-off">' . $C . '°</span>';
+                    }
                     ?>
 
                     <button id="btnTempF" class="btn-temp btn-temp-left btn-temp-selected" onclick="fnTempChange(this.id)">F</button>
@@ -1159,12 +1163,12 @@ if($_SESSION["guest"] == true) {
                         }
                         ?>
                     </select>
-                    <div style="width: 200px; margin-top: -6px; float: right;">
+                    <div style="margin-top: -6px; float: right;">
                         <button class="fa fa-sign-out-alt btn-sign-out" onclick="phpLogout()"></button>
-                        <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='house-settings.php'"></button>
+<!--                        <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='house-settings.php'"></button>-->
                         <button class="fa fa-users btn-sign-out btn-cog" onclick="window.location.href='groupSettings.php'"></button>
-                        <button class="fa fa-home btn-sign-out btn-cog" onclick="window.location.href='house-settings.php'"></button>
                         <button class="fa fa-user btn-sign-out btn-cog" onclick="window.location.href='accountSettings.php'"></button>
+                        <button class="fa fa-home btn-sign-out btn-cog" onclick="window.location.href='house-settings.php'"></button>
                     </div>
                 </div>
             </div>
@@ -1173,9 +1177,9 @@ if($_SESSION["guest"] == true) {
             <!--                    SCENES-->
             <div id="all-scenes" class="all-scenes-container">
                 <div class="scene-container">
-                    <button id="" class="scene-name all-on-off" type="button">All
+                    <button id="" class="scene-name all-on-off" type="button" disabled>All
                         <button id="all-off" class="btn-scene-settings all-off" onclick="fnAllOff()">Off</button>
-                        <button style="margin-top: 1px;" id="all-on" class="btn-scene-settings all-on" onclick="fnAllOn()">On</button>
+                        <button id="all-on" class="btn-scene-settings all-on" onclick="fnAllOn()">On</button>
                     </button>
                 </div>
                 <?php
