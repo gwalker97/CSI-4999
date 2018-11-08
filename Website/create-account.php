@@ -2,19 +2,7 @@
 require('config.php');
 ?>
 <!DOCTYPE html>
-<!--
 
-I did not write all of this code, please see create-account.html for full author history.
-
-I added lines:
-1-4
-68-75
-
-I modified lines:
-82
-86
-
--->
 <html>
     <head>
         <title>Create Account</title>
