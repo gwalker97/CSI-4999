@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>HARP Component</title>
+        <title>Appliance Settings</title>
 	<!-- AJAX & jQuery CDN, must go before Bootstrap -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>        
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -97,13 +97,16 @@ var componentBehavior = getParameterByName("componentBehavior");
 		var compId = urlArray[1].substring(1);
 			
 		var r = confirm("Do you want to delete " + document.getElementById('AppName').value + "?");
-		if (r == true) {
+		if (r) {
 		    $.post("deleteComponent.php",
 			    {
 				id: compId,
 			    });	
 			document.location.href = 'index.php';		
-		}		
+		}
+        else{
+            
+        }
 	}
 
     </script>
@@ -164,7 +167,7 @@ var componentBehavior = getParameterByName("componentBehavior");
                             </select>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <button type="button" class="btn-component-switch btn-setting-option btn-cancel">Delete</button>
+                    <button type="button" class="btn-component-switch btn-setting-option btn-cancel" onclick="deleteComponent()">Delete</button>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                     <button type="button" class="btn-component-switch btn-setting-option btn-save-appliance" onclick="saveComponent()">Save</button>

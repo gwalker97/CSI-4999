@@ -197,6 +197,7 @@ h4 {
 }
 
 .create-account-form-container {
+    overflow: auto;
     text-align: center;
     background-color: #ffffffe8;
     margin: 6% auto;
@@ -252,6 +253,15 @@ h4 {
     width: 80%;
 }
 
+.input-user {
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #0000003d;
+    width: 46%;
+}
+
 .fa-login {
     width: 42px;
     height: 42px;
@@ -292,12 +302,7 @@ h4 {
     color: #808080c9;
     background-color: #ffffff00;
     border: none;
-    margin-right: 4%;
     margin-top: 10px;
-}
-
-.btn-cog {
-    margin-right: 5px;
 }
 
 .main-page-container {
@@ -444,6 +449,11 @@ h4 {
     position: absolute;
 }
 
+.user-caret {
+    right: 8px;
+    position: relative;
+}
+
 .selects {
     background-color: white;
     height: 28px;
@@ -461,6 +471,7 @@ h4 {
 /*component settings*/
 
 .h1-settings {
+    font-size: 32px;
     letter-spacing: 0;
     margin-bottom: 25px;
 }
@@ -474,6 +485,7 @@ h4 {
     min-width: 320px;
     max-width: 550px;
     border-radius: 10px;
+    overflow: auto;
 }
 
 .component-settings-card {
@@ -517,6 +529,26 @@ h4 {
 
 .btn-save-appliance {
     background-color: #91c9ec99;
+}
+
+.btn-save-appliance:hover {
+    box-shadow: inset 0px 0px 6px 0px #4e86c3;
+}
+
+.btn-save-appliance:active {
+    box-shadow: inset 0px 0px 6px 0px #4e86c3;
+}
+
+.btn-delete-appliance {
+    background-color: #80808063;
+}
+
+.btn-delete-appliance:hover {
+    box-shadow: inset 0px 0px 6px 0px #4e86c3;
+}
+
+.btn-delete-appliance:active {
+    box-shadow: inset 0px 0px 6px 0px #4e86c3;
 }
 
 .btn-cancel {
@@ -563,7 +595,6 @@ h4 {
     background-color: #91c9ec99;
     border: 1px solid black;
     font-weight: bold;
-    width: 90%;
     margin-top: 10px;
 }
 
@@ -646,7 +677,7 @@ path {
 }
 
 .btn-temp-right {
-    margin-left: -5px;
+    margin-left: -4px;
     border: none;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -685,8 +716,6 @@ path {
 
 .scene-container {
     display: inline-block;
-    width: fit-content;
-    height: 35px;
     margin-left: 18px;
     margin-bottom: 12px;
 }
@@ -712,12 +741,10 @@ path {
 .all-on-off {
     padding: 6px;
     position: relative;
-    top: 1px;
 }
 
 .all-off {
     position: relative;
-    top: 1px;
     margin-left: -2px;
     border-radius: 0;
     background-color: #b7b7b7;
@@ -994,6 +1021,7 @@ path {
 
 .li-appliance:hover {
     cursor: pointer;
+    background-color: #ceedff;
 }
 
 .input-time {
@@ -1006,4 +1034,82 @@ path {
 
 .appliance-selected {
     background-color: #bcdff4;
+}
+
+.user-dropdown {
+    background-color: #80808063;
+    margin-left: -5px;
+    position: relative;
+    top: 0px;
+    width: 95px;
+    border: 1px solid #0000003d;
+    border-radius: 0;
+    -webkit-border-radius: 0px;
+    -webkit-appearance: none;
+}
+
+.p-user {
+    margin: 10px 0;
+}
+
+.fa-users {
+    padding: 1px 6px 0px;
+}
+
+.fa-question {
+    margin: 0 5px;
+    padding: 5px;
+    width: 25px;
+    height: 25px;
+    background-color: #80808063;
+    border-radius: 50%;
+}
+
+/* Tooltip text */
+.tool-tip > .tool-tip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: #b8dbf0;
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid black;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: normal;
+ 
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    right: 75px;
+    top: 25px;
+    z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tool-tip:hover .tool-tip-text {
+    visibility: visible;
+}
+
+.tool-tip:active .tool-tip-text {
+    visibility: visible;
+}
+
+.fa-plus-groups {
+    margin: 0 10px;
+    padding: 5px;
+    width: 25px;
+    height: 25px;
+    background-color: #80808063;
+    border-radius: 50%;
+}
+
+.join-house-container {
+    margin: 10px 0;
+}
+
+.join-house-buttons {
+    margin: 10px 0;
+}
+
+.lbl-join-house {
+    margin: 0 5px;
 }

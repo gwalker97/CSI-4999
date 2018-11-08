@@ -449,17 +449,23 @@ if($_SESSION["guest"] == true) {
                 appliance.classList.add('appliance-selected');
             }
         }
-
+        
+        /*
         function fnSelectCompHost(arg) {
             var appliance = document.getElementById(arg);
+            
+            
 
             if (appliance.classList.contains('appliance-selected')) {
                 appliance.classList.remove('appliance-selected');
+                newCompSelectedApp = "0";
             }
             else {
                 appliance.classList.add('appliance-selected');
+                newCompSelectedApp = (appliance.id).split(/[-]+/).pop();
             }
         }
+        */
 
         function fnClearSceneModal() {
             removeColorBrushClasses();
@@ -472,15 +478,18 @@ if($_SESSION["guest"] == true) {
             $('.li-appliance').each(function(i, obj) {
                 $('.li-appliance').removeClass('appliance-selected');
             });
-
+            
+            document.getElementById('lbl-scene-id').innerHTML = "";
+            document.getElementById('btn-save-scene').innerHTML = "Create";
+            
+            document.getElementById('btn-delete-scene').classList.remove('display');
+            document.getElementById('btn-delete-scene').classList.add('dont-display');
+            
             document.getElementById('scene-form').reset();
         }
 
         function fnSaveScene(arg) {
-            var sceneID = arg.substring(14);
-            var btnSaveScene = document.getElementsByClassName('btn-save-appliance');
-            //btnSaveScene.id = 'btn-save-scene';
-            //var IsUpdate = document.getElementById(btnSaveScene.id).innerHTML;
+            var sceneID = document.getElementById('lbl-scene-id').innerHTML;
 
             var sceneName = document.getElementById('scene-name').value;
             var sceneColor = document.getElementById('colorSelect').value;
@@ -558,6 +567,25 @@ if($_SESSION["guest"] == true) {
                 }
             }
         }
+        
+        function fnDeleteScene(arg) {
+            var sceneID = document.getElementById('lbl-scene-id').innerHTML;
+
+            if(confirm('Are you sure you want to delete this scene?')) {
+                fnLoad(true);
+                
+                $.post(
+                        "deleteScene.php",
+                        { sID: (sceneID),  },
+                    );
+                
+                fnClearSceneModal();
+                
+                $('#myModal').modal('hide');
+                $('#all-scenes').load(document.URL +  ' #all-scenes');
+                fnLoad(false);
+            }
+        }
 
         function fnAllOn() {
             fnLoad(true);
@@ -580,12 +608,8 @@ if($_SESSION["guest"] == true) {
         function fnSceneSettings(arg) {
             fnLoad(true);
             var sID = arg.substring(6);
-            var btnSaveScene = document.getElementById('btn-save-scene');
-            if (btnSaveScene == undefined) {
-                btnSaveScene = document.getElementsByClassName('btn-save-appliance');
-            }
-            btnSaveScene.id = 'btn-save-scene' + sID;
-            btnSaveScene.innerHTML = 'Update';
+            document.getElementById('lbl-scene-id').innerHTML = sID;
+            document.getElementById('btn-save-scene').innerHTML = "Update";
 
             $.post(
                 "sceneSettings.php",
@@ -644,7 +668,10 @@ if($_SESSION["guest"] == true) {
                     }
                 }, 'json'
             );
-
+            
+            document.getElementById('btn-delete-scene').classList.remove('dont-display');
+            document.getElementById('btn-delete-scene').classList.add('display');
+            
             $('#myModal').modal('show');
             fnLoad(false);
         }
@@ -658,9 +685,133 @@ if($_SESSION["guest"] == true) {
         }
 
         function fnNewAppPinSet(pin){
+            
             document.getElementById("pin-number").value = pin;
-            document.getElementById("new-comp-pin-text").innerHTML = "Pin Available!";
+            
+            if (newCompSelectedApp == "0"){
+            
+            document.getElementById("new-comp-pin-text").innerHTML = "Please select host!";
+            } else{
+            $.post(
+                "checkPin.php",
+                { hID: (newCompSelectedApp), pin: (pin) },
+                function(response) {	
+                   
+                    document.getElementById("new-comp-pin-text").innerHTML = response;
+                    
+                }, 'json'
+            );
+            }
         }
+        
+         var newCompSelectedApp = "0";
+        
+        $(function() {
+            $('#newCompHostSelect').change(function(){
+                newCompSelectedApp = document.getElementById('newCompHostSelect').value;
+                
+                document.getElementById("pin-number").value = "";
+                document.getElementById("new-comp-pin-text").innerHTML = " ";
+                document.getElementById('PiImg').classList.add('dont-display');
+                document.getElementById('ESPImg').classList.add('dont-display');
+                
+                $.post(
+                "checkHostType.php",
+                { hID: (newCompSelectedApp) },
+                function(response) {	
+                   
+                    if (response.model == "Pi") {
+                document.getElementById('PiImg').classList.remove('dont-display');
+                document.getElementById('PiImg').classList.add('display');
+            }
+            else if (response.model == "ESP") {
+                document.getElementById('ESPImg').classList.remove('dont-display');
+                document.getElementById('ESPImg').classList.add('display');
+            }
+                    
+                }, 'json'
+            );          
+        
+            });
+        });
+        
+        
+        function fnClearApplianceModal() {
+
+            document.getElementById('PiImg').classList.add('dont-display');
+            document.getElementById('ESPImg').classList.add('dont-display');
+            
+            document.getElementById('appliance-name').innerHTML = "";
+            document.getElementById('appliance-description').innerHTML = "";
+            
+            document.getElementById('btn-delete-scene').classList.remove('display');
+            document.getElementById('btn-delete-scene').classList.add('dont-display');
+            
+            document.getElementById('comp-form').reset();
+        }
+    
+        function fnSaveAppliance() {
+
+            var appName = document.getElementById('appliance-name').value;
+            var appType = document.getElementById('appliance-select').value;
+            var appDescription = document.getElementById('appliance-description').value;
+            var appRoom = document.getElementById('newCompRoomSelect').value;
+            var appHost = document.getElementById('newCompHostSelect').value;
+            var appPin = document.getElementById('pin-number').value;
+            var appPinText = document.getElementById('new-comp-pin-text').innerHTML;
+            
+            var appNameOkay = true;
+            var appTypeOkay = true;
+            var appDescOkay = true;
+            var appRoomOkay = true;
+            var appHostOkay = true;
+            var appPinOkay = true;
+
+            if (appName == "") {
+                appNameOkay = false;
+            }
+            if (appType == "") {
+                appTypeOkay = false;
+            }
+            if (appDescription == "") {
+                appDescOkay = false;
+            }
+            if (appRoom == "") {
+                appRoomOkay = false;
+            }
+            if (appHost == "") {
+                appHostOkay = false;
+            }
+            if (appPin == "" || appPinText == "Pin Taken!") {
+                appPinOkay = false;
+            }
+
+            if (appNameOkay && appTypeOkay && appDescOkay && appRoomOkay && appHostOkay && appPinOkay) {
+                
+                    $.post(
+                        "newApp.php",
+                        { aN: (appName), aD: (appDescription), aT: (appType), aR: (appRoom), aH: (appHost), aP: (appPin),  },
+                    );
+                
+
+                fnClearApplianceModal();
+                $('#newCompModal').modal('hide');
+                window.location.reload(true); 
+            }
+            else {
+                if (!appNameOkay || !appDescOkay || !appRoomOkay || !appTypeOkay) {
+                        document.getElementById('appliance-error-message').innerHTML = "Missing information!";
+                        document.getElementById('appliance-error-message').classList.remove('dont-display');
+                        document.getElementById('appliance-error-message').classList.add('display');
+                }
+                if (!appHostOkay || !appPinOkay) {
+                    document.getElementById('appliance-error-message').innerHTML = "Host/Pin invalid!";
+                    document.getElementById('appliance-error-message').classList.remove('dont-display');
+                    document.getElementById('appliance-error-message').classList.add('display');
+                }
+            }
+        }
+        
 
     </script>
 
@@ -756,7 +907,10 @@ if($_SESSION["guest"] == true) {
                             </div>
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <button type="button" id="btn-save-scene" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene(this.id)">Save</button>
+                                    <button type="button" id="btn-save-scene" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene(this.id)">Create</button>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <button type="button" id="btn-delete-scene" class="btn-component-save-cancel btn-setting-option btn-delete-appliance dont-display" onclick="fnDeleteScene(this.id)">Delete</button>
                                 </div>
                             </div>
                         </form>
@@ -775,7 +929,7 @@ if($_SESSION["guest"] == true) {
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" onclick="fnClearSceneModal()">&times;</button>
+                        <button type="button" class="close" data-dismiss="modal" onclick="fnClearApplianceModal()">&times;</button>
                         <h4 class="modal-title">New Appliance</h4>
                     </div>
                     <!-- Modal body-->
@@ -783,9 +937,13 @@ if($_SESSION["guest"] == true) {
                         <!-- Modal form-->
 
                         <form id="comp-form" class="row">
+                            <label hidden id="lbl-scene-id"></label>
                             <div class="automate-div">
                                 <label id="automate-error" class="automate-error dont-display"></label>
                             </div>
+                            <div id="appliance-error" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <label id="appliance-error-message" class="automate-error dont-display"></label>
+                                </div>
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
                                     <i class="fa fa-home fa-login"></i>
@@ -793,21 +951,21 @@ if($_SESSION["guest"] == true) {
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
                                     <i id="color-brush" class="fas fa-home home fa-login"></i>
-                                    <select id="applianceSelect" class="selects color-select">
-                                        <option value="l">Light</option>
-                                        <option value="s">Dimmable Light</option>
-                                        <option value="f">Fan</option>
+                                    <select id="appliance-select" class="selects color-select">
+                                        <option value="L">Light</option>
+                                        <option value="S">Dimmable Light</option>
+                                        <option value="F">Fan</option>
                                     </select>
                                     <i class="fas fa-caret-down color-caret"></i>
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
                                         <i class="fa fa-home fa-login"></i>
-                                        <input type="text" id="appliance-name" placeholder="Appliance Description" class="input-login scene-name-input">
+                                        <input type="text" id="appliance-description" placeholder="Appliance Description" class="input-login scene-name-input">
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
-                                        <i id="color-brush" class="fas fa-home home fa-login"></i>
-                                        <select id="roomSelect" class="selects color-select">
+                                        <i class="fas fa-home home fa-login"></i>
+                                        <select id="newCompRoomSelect" class="selects color-select">
                                             <?php
                                             $sql = "select * from Room where House_ID=" . $_SESSION['home'];
                                             $result = mysqli_query($conn,$sql);
@@ -824,7 +982,10 @@ if($_SESSION["guest"] == true) {
                                 </div>
                             </div>
                             <div id="choose-appliance" class="appliance-list-selector col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                
                                 <label class="lbl-choose-appliances">Select the host device:</label>
+                                <br>
+                                <!--
                                 <ul id="appliance-list" class="ul-appliance-list">
                                     <?php
                                     $sql = "select * from Hosts";
@@ -837,11 +998,28 @@ if($_SESSION["guest"] == true) {
                                     }
                                     ?>
                                 </ul>
+                                -->
+                                
+
+                                <select id="newCompHostSelect" class="selects color-select">
+                                            <option>Select a host...</option>
+                                            <?php
+                                            $sql = "select * from Hosts";
+                                            $result = mysqli_query($conn,$sql);
+
+                                            while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+                                                $hID = $row['Host_ID'];
+                                                $hN = $row['Host_Name'];
+                                                echo '<option value="' . $hID . '">' . $hN . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                
                             </div>
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-                                    <img src="Images/layouts/pi_third.png" usemap="#pi-map">
+                                    <img id="PiImg" src="Images/layouts/pi_third.png" class="center-block dont-display" usemap="#pi-map">
 
                                     <map name="pi-map">
                                         <area alt="14" title="14" href="javascript:fnNewAppPinSet(14)" coords="144,29,6" shape="circle">
@@ -871,6 +1049,23 @@ if($_SESSION["guest"] == true) {
                                         <area alt="19" title="19" href="javascript:fnNewAppPinSet(19)" coords="422,53,7" shape="circle">
                                         <area alt="26" title="26" href="javascript:fnNewAppPinSet(26)" coords="443,52,9" shape="circle">
                                     </map>
+                                    
+                                    <img id="ESPImg" class="center-block dont-display" src="Images/layouts/ESP8266_375.png" usemap="#ESP-map">
+                                    
+                                    <map name="ESP-map">
+                                        <area alt="16" title="16" href="javascript:fnNewAppPinSet(16)" coords="107,35,215,62" shape="rect">
+                                        <area alt="5" title="5" href="javascript:fnNewAppPinSet(5)" coords="109,66,215,90" shape="rect">
+                                        <area alt="4" title="4" href="javascript:fnNewAppPinSet(4)" coords="109,93,213,118" shape="rect">
+                                        <area alt="0" title="0" href="javascript:fnNewAppPinSet(0)" coords="109,121,213,147" shape="rect">
+                                        <area alt="2" title="2" href="javascript:fnNewAppPinSet(2)" coords="109,151,213,176" shape="rect">
+                                        <area alt="14" title="14" href="javascript:fnNewAppPinSet(14)" coords="108,238,213,261" shape="rect">
+                                        <area alt="12" title="12" href="javascript:fnNewAppPinSet(12)" coords="109,269,213,291" shape="rect">
+                                        <area alt="13" title="13" href="javascript:fnNewAppPinSet(13)" coords="110,299,212,320" shape="rect">
+                                        <area alt="15" title="15" href="javascript:fnNewAppPinSet(15)" coords="110,328,211,348" shape="rect">
+                                        <area alt="3" title="3" href="javascript:fnNewAppPinSet(3)" coords="106,353,212,377" shape="rect">
+                                        <area alt="1" title="1" href="javascript:fnNewAppPinSet(1)" coords="104,382,213,406" shape="rect">
+                                    </map>
+                                    
                                 </div>	
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"> 
                                     <i class="fa fa-home fa-login"></i>
@@ -880,7 +1075,7 @@ if($_SESSION["guest"] == true) {
                                     <p id="new-comp-pin-text"></p>
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
-                                    <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveScene()">Save</button>
+                                    <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveAppliance()">Save</button>
                                 </div>
                             </div>
                         </form>
@@ -903,9 +1098,13 @@ if($_SESSION["guest"] == true) {
 
                     $F = $row["F"];
                     $C = $row["C"];
-
-                    echo '<span id="displayTempF" class="temp-display">' . $F . '°</span>';
-                    echo '<span id="displayTempC" class="temp-display-off">' . $C . '°</span>';
+                    if ($F == '' || $C == '') {
+                        echo '<span id="displayTempF" class="temp-display">N/A</span>';
+                        echo '<span id="displayTempC" class="temp-display-off">N/A</span>';
+                    } else {
+                        echo '<span id="displayTempF" class="temp-display">' . $F . '°</span>';
+                        echo '<span id="displayTempC" class="temp-display-off">' . $C . '°</span>';
+                    }
                     ?>
 
                     <button id="btnTempF" class="btn-temp btn-temp-left btn-temp-selected" onclick="fnTempChange(this.id)">F</button>
@@ -964,9 +1163,19 @@ if($_SESSION["guest"] == true) {
                         }
                         ?>
                     </select>
-                    <div style="width: 120px; margin-top: -6px; float: right;">
+                    <div style="margin-top: -6px; float: right;">
                         <button class="fa fa-sign-out-alt btn-sign-out" onclick="phpLogout()"></button>
-                        <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='house-settings.php'"></button>
+<!--                        <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='house-settings.php'"></button>-->
+                        <?php
+                        
+                            if ($_SESSION['gID'] == 1) {
+                                echo '<button class="fa fa-users btn-sign-out btn-cog" onclick="window.location.href=\'groupSettings.php\'"></button>';
+                            }
+                        
+                            if ($_SESSION['gID'] != 2) {
+                                echo '<button class="fa fa-home btn-sign-out btn-cog" onclick="window.location.href=\'house-settings.php\'"></button>';
+                            }
+                        ?>
                         <button class="fa fa-user btn-sign-out btn-cog" onclick="window.location.href='accountSettings.php'"></button>
                     </div>
                 </div>
@@ -976,7 +1185,7 @@ if($_SESSION["guest"] == true) {
             <!--                    SCENES-->
             <div id="all-scenes" class="all-scenes-container">
                 <div class="scene-container">
-                    <button id="" class="scene-name all-on-off" type="button">All
+                    <button id="" class="scene-name all-on-off" type="button" disabled>All
                         <button id="all-off" class="btn-scene-settings all-off" onclick="fnAllOff()">Off</button>
                         <button id="all-on" class="btn-scene-settings all-on" onclick="fnAllOn()">On</button>
                     </button>
