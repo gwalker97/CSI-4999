@@ -1166,9 +1166,17 @@ if($_SESSION["guest"] == true) {
                     <div style="margin-top: -6px; float: right;">
                         <button class="fa fa-sign-out-alt btn-sign-out" onclick="phpLogout()"></button>
 <!--                        <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='house-settings.php'"></button>-->
-                        <button class="fa fa-users btn-sign-out btn-cog" onclick="window.location.href='groupSettings.php'"></button>
+                        <?php
+                        
+                            if ($_SESSION['gID'] == 1) {
+                                echo '<button class="fa fa-users btn-sign-out btn-cog" onclick="window.location.href=\'groupSettings.php\'"></button>';
+                            }
+                        
+                            if ($_SESSION['gID'] != 2) {
+                                echo '<button class="fa fa-home btn-sign-out btn-cog" onclick="window.location.href=\'house-settings.php\'"></button>';
+                            }
+                        ?>
                         <button class="fa fa-user btn-sign-out btn-cog" onclick="window.location.href='accountSettings.php'"></button>
-                        <button class="fa fa-home btn-sign-out btn-cog" onclick="window.location.href='house-settings.php'"></button>
                     </div>
                 </div>
             </div>
