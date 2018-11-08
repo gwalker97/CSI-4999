@@ -21,6 +21,7 @@ bool dbConn = true;
 bool hosting = false;
 String st;
 String content;
+MDNSResponder mdns;
 int statusCode;
 char ssid[32];
 char password[32];
@@ -29,22 +30,25 @@ char ipAddr[16] = "192,168,43,219";//Pi Access Point IP-Adr.
 
 void tryConnDB(){
   int count = 0;
-  while(!conn.connect(server_addr, 3306, user, dbpass)){
+ /* while(!conn.connect(server_addr, 3306, user, dbpass)){
+    Serial.println(WiFi.status());
       delay(500);
       }
+      if(WiFi.status() == WL_CONNECTED){
       Serial.println(".");
  MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
  cur_mem->execute("use SeniorProject");
  Serial.println("db Conn!");
+      }else{
+        Serial.println("nope");
+      }
+      */
 }
 
 
 bool tryConn(){
   wificonnect = true;
   EEPROM.begin(512);
-  readEEPROM(0,32,ssid);
-  readEEPROM(32,32,password);
-  readEEPROM(64,16,ipAddr);
   WiFi.begin(ssid, password);
   Serial.println("");
   int count = 0; // Holds the timing variable.
@@ -56,13 +60,13 @@ bool tryConn(){
       wificonnect = false;
       break;
     }
-    Serial.println(".");
   }
   Serial.println(wificonnect);
  if(wificonnect){
     Serial.println("Connected to Wifi!");
     WiFi.softAPdisconnect(true);
     Serial.println("Stopped AP");
+    tryConnDB();
     hosting = false;
 }
 return wificonnect;
@@ -82,18 +86,29 @@ void hostWifi(){
     IPAddress myIP = WiFi.softAPIP();
   Serial.print("AP IP address: ");
   Serial.println(myIP);
+ // server.on("/", createWebServer);
   createWebServer(1);
-  //server.on("/", createWebServer(1));
   server.begin();
   Serial.println("HTTP server started");
   hosting = true;
+}
+
+void readWifi(){
+  readEEPROM(0,32,ssid);
+  readEEPROM(32,32,password);
+  readEEPROM(64,16,ipAddr);
 }
   
 //setup function
 void setup(void){
   EEPROM.begin(512);
+  readWifi();
+  
+  WiFi.begin(ssid, password);
+  //WiFi.setAutoReconnect(false);
   pinMode(LED, OUTPUT);
   // preparing GPIOs
+ // WiFi.mode(WIFI_AP);
   Serial.begin(115200);
   delay(100);
  if (!tryConn()){
@@ -107,22 +122,27 @@ void setup(void){
 void loop(void){
   if(WiFi.status() == WL_CONNECTED){
     digitalWrite(LED, LOW);
-   // Serial.println("high");
-   // queryDB();
+    if(hosting){
+      hosting = false;
+      WiFi.softAPdisconnect(true);
+    }
+    //Serial.println("high");
+   //queryDB();
   }else if(!hosting){
     hostWifi();
+  }else{
+    tryConn();
   }
   server.handleClient();
 }
 
 void queryDB(){
   delay(50);
- digitalWrite(LED, LOW);
+ digitalWrite(LED, HIGH);
  if(WiFi.status() != WL_CONNECTED){
   wificonnect = false;
  }else{
-  wificonnect = true;  
- }
+  wificonnect = true; 
    //Serial.println("\nRunning SELECT and printing results\n");
   // Initiate the query class instance
   MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
@@ -159,11 +179,10 @@ void queryDB(){
          //Serial.print(", ");
         }
       }
-     // Serial.println();
     }
   } while (row != NULL);
-  //Serial.println("Deleting Cursor");
   delete cur_mem;
+ }
 }
 
 //This function is passed a pin and state to determine if it is to be shut off or turned on.
@@ -203,8 +222,8 @@ void createWebServer(int webtype)
         content += ipStr;
         content += "<p>";
         content += st;
-        content += "</p><form method='get' action='setting'><label>SSID: </label><input name='ssid' length=32><label>Password: </label><input name='pass' length=64>";
-        content += "<label>Pi IP Address: </label><input name='dbip' length=64><input type='submit'></form>";
+        content += "</p><form method='get' action='setting'><label>SSID: </label><input name='ssid' length=32><br /><label>Password: </label><input name='pass' length=64>";
+        content += "<br/><label>Pi IP Address: </label><input name='dbip' length=64><input type='submit'></form>";
         content += "</html>";
         server.send(200, "text/html", content);  
     });
@@ -232,6 +251,7 @@ void createWebServer(int webtype)
           statusCode = 200;
           delay(200);
           WiFi.disconnect();
+          readWifi();
           tryConn();
         } else {
           content = "{\"Error\":\"404 not found\"}";
