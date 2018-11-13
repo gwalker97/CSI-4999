@@ -101,26 +101,34 @@
         if (array_key_exists('delRooms', $_POST)) {
 
             if ($_SESSION['gID'] == 1) {
-/* need to remove from scene_assignment, then delete addons, then delete rooms
+                
                 foreach ($_POST['delRooms'] as $val) {
-
-                    //Scene_assignment
                     $val2 = mysqli_real_escape_string($conn, $val);
-                    $sql4 = "select * from Room where Room_ID=" . $val2;
+                    $sql4 = "select A.Addon_ID, Scene_Assignment.Scene_ID, A.Addon_Room_ID from Scene_Assignment right join ( select Addon_ID, Addon_Room_ID from Addon where Addon_Room_ID=" . $val2 . " ) as A on A.Addon_ID = Scene_Assignment.Addon_ID";
                     $result4 = mysqli_query($conn,$sql4);
-                    $row4 = mysqli_fetch_array($result4,MYSQLI_ASSOC);
-                    $sql5 = "delete from Room where Room_ID=" . $val2;
-                    $result5 = mysqli_query($conn,$sql5);
+                    
+                    if (mysqli_num_rows($result4) == 1) {
+                        $row4 = mysqli_fetch_array($result4,MYSQLI_ASSOC);
 
-                    if ($result5 === false) {
+                        $sql5 = "delete from Scene_Assignment where Addon_ID=" . $row4['Addon_ID'];
+                        $result5 = mysqli_query($conn,$sql5);
+                        
+                        $sql6 = "delete from Addon where Addon_ID=" . $row4['Addon_ID'];
+                        $result6 = mysqli_query($conn,$sql6);
+                    }
+                    
+                    $sql7 = "delete from Room where Room_ID=" . $val2;
+                    $result7 = mysqli_query($conn,$sql7);
+                    
+                    if ($result7 === false) {
                         if (isset($_SESSION['houseSetMsg'])) {
-                            $_SESSION['houseSetMsg'] .= "<br>Could not delete [" . $row4['Room_Name'] . "].";
+                            $_SESSION['houseSetMsg'] .= "<br>Could not delete room [" . $val2 . "].";
                         } else {
-                            $_SESSION['houseSetMsg'] = "Could not delete [" . $row4['Room_Name'] . "].";
+                            $_SESSION['houseSetMsg'] = "Could not delete room [" . $val2 . "].";
                         }
                     }
                 }
-*/
+
             } else {
                 if (isset($_SESSION['houseSetMsg'])) {
                     $_SESSION['houseSetMsg'] .= "<br>You cannot delete rooms.";
@@ -133,29 +141,31 @@
         //createRooms
         if (array_key_exists('newRooms', $_POST)) {
 
-                if ($_SESSION['gID'] == 1) {
-                    foreach ($_POST['newRooms'] as $val3) {
-                        $val4 = mysqli_real_escape_string($conn, $val3);
-                        $sql6 = "insert into Room(House_ID, Room_Name) values (" . $_SESSION['home'] . ", '" . $val4 . "')";
-                        $result6 = mysqli_query($conn,$sql6);
+            if ($_SESSION['gID'] == 1) {
+                
+                foreach ($_POST['newRooms'] as $val3) {
+                    $val4 = mysqli_real_escape_string($conn, $val3);
+                    $sql8 = "insert into Room(House_ID, Room_Name) values (" . $_SESSION['home'] . ", '" . $val4 . "')";
+                    $result8 = mysqli_query($conn,$sql8);
 
-                        if ($result6 === false) {
-                            if (isset($_SESSION['houseSetMsg'])) {
-                                $_SESSION['houseSetMsg'] .= "<br>Could not create [" . $val4 ."].";
-                            } else {
-                                $_SESSION['houseSetMsg'] = "Could not create [" . $val4 ."].";
-                            }
-                            break;
+                    if ($result8 === false) {
+                        if (isset($_SESSION['houseSetMsg'])) {
+                            $_SESSION['houseSetMsg'] .= "<br>Could not create [" . $val4 ."].";
+                        } else {
+                            $_SESSION['houseSetMsg'] = "Could not create [" . $val4 ."].";
                         }
-                    }
-                } else {
-                    if (isset($_SESSION['houseSetMsg'])) {
-                        $_SESSION['houseSetMsg'] .= "<br>You cannot create rooms.";
-                    } else {
-                        $_SESSION['houseSetMsg'] = "You cannot create rooms.";
+                        break;
                     }
                 }
+                
+            } else {
+                if (isset($_SESSION['houseSetMsg'])) {
+                    $_SESSION['houseSetMsg'] .= "<br>You cannot create rooms.";
+                } else {
+                    $_SESSION['houseSetMsg'] = "You cannot create rooms.";
+                }
             }
+        }
     }
 
     header('Location: house-settings.php');

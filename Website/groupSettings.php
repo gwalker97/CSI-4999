@@ -93,15 +93,28 @@
         <div class="component-settings-form-container">
             <button class="btn-back" onclick="fnReturnHome()"><i class="fa fa-arrow-left" style="font-size: 10px;"></i> <i class="fa fa-home"></i></button>
             <h1 class="text-center h1-settings">Account Configuration</h1>
-            <p class="text-center p-user col-lg-12 col-md-12 col-sm-12 col-xs-12"><b>House Code:</b> 
+            <?php
+                    if (isset($_SESSION['groupSetMsg'])) {
+                        echo '<label style="margin-bottom:30px" id="houseErrorText" class="lbl-setup-house-visible col-lg-12 col-md-12 col-sm-12 col-xs-12">' . $_SESSION['groupSetMsg'] . '</label>';
+                        unset($_SESSION['groupSetMsg']);
+                    } else {
+                        echo '<label style="margin-bottom:30px" id="houseErrorText" class="lbl-setup-house-hidden col-lg-12 col-md-12 col-sm-12 col-xs-12"></label>';
+                    }
+                ?>
+            <p class="text-center p-user col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <b>House Code: </b> 
                 <?php 
                     $sql = "SELECT House_Code FROM House WHERE House_ID = " . $_SESSION['home'] . "";
                     $result = mysqli_query($conn,$sql);
                     $row = mysqli_fetch_array($result);
-                    echo $row['House_Code'];
+                    
+                    if (strlen($row['House_Code']) == 0) {
+                        echo substr(md5(rand()), 0, 7);
+                    } else {
+                        echo $row['House_Code'];
+                    }
                 ?> 
                 <i class="fa fa-question tool-tip"><span class="tool-tip-text">When someone creates a new account, they can use this code to join your house.</span></i></p>
-            <p class="text-center lbl-setup-house-visible"><b>BE CAREFUL WHEN MAKING CHANGES ON THIS PAGE ! ! !</b></p>
                 <?php
                     $sql = "select * from Groups";
                     $result = mysqli_query($conn,$sql);
@@ -109,13 +122,6 @@
 
                     while ($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
                         $groups[] = $row;
-                    }
-            
-                    if (isset($_SESSION['groupSetMsg'])) {
-                        echo '<label id="houseErrorText" class="lbl-setup-house-visible col-lg-12 col-md-12 col-sm-12 col-xs-12">' . $_SESSION['groupSetMsg'] . '</label>';
-                        unset($_SESSION['groupSetMsg']);
-                    } else {
-                        echo '<label id="houseErrorText" class="lbl-setup-house-hidden col-lg-12 col-md-12 col-sm-12 col-xs-12"></label>';
                     }
                 ?>
                 <form id="myForm" action="groupSettingsScript.php" method="post">

@@ -5,7 +5,29 @@
         $_SESSION['loginMsg'] = "Please login first.";
         header("Location: login.php");
         die();
+    } elseif ($_SESSION['gID'] == 2) {
+        $_SESSION['indexMsg'] = "You cannot use the House Settings page.";
+        header("Location: index.php");
+        die();
     }
+
+            if (isset($_SESSION['home'])) {
+                $hID = $_SESSION['home'];
+                
+                if ($_SESSION['gID'] == 1) {
+                    $sql = "select * from Room where House_ID='$hID'";
+                } else {
+                    $sql = "select * from Room where House_ID='$hID' and Room_gID=" . $_SESSION['gID'];
+                }
+                
+                $result = mysqli_query($conn,$sql);
+                $count = mysqli_num_rows($result);
+
+                if ($count == 0 and $_SESSION['gID'] != 1) {
+                    $_SESSION['indexMsg'] = "There are no rooms you can edit.";
+                    header("Location: index.php");
+                    die();
+                }
 ?>
 <!DOCTYPE html>
 <html>
@@ -96,33 +118,32 @@
     </script>
     
     <body class="login-body">
+        <?php
+            $sql2 = "select * from House where House_ID='$hID'";
+            $result2 = mysqli_query($conn,$sql2);
+            $row2 = mysqli_fetch_array($result2,MYSQLI_ASSOC);
+        ?>
         <div class="component-settings-form-container">
             <button class="btn-back" onclick="fnReturnHome()"><i class="fa fa-arrow-left" style="font-size: 10px;"></i> <i class="fa fa-home"></i></button>
             <h1 class="text-center h1-settings">House Configuration</h1>
-                <?php
-                    if (isset($_SESSION['home'])) {
-                        $hID = $_SESSION['home'];
-                        $sql = "select * from Room where House_ID='$hID'";
-                        $result = mysqli_query($conn,$sql);
-                        $count = mysqli_num_rows($result);
-
-                        $sql2 = "select * from House where House_ID='$hID'";
-                        $result2 = mysqli_query($conn,$sql2);
-                        $row2 = mysqli_fetch_array($result2,MYSQLI_ASSOC);
-
-                        if (isset($_SESSION['houseSetMsg'])) {
-                            echo '<label id="houseErrorText" class="lbl-setup-house-visible">' . $_SESSION['houseSetMsg'] . '</label>';
-                            unset($_SESSION['houseSetMsg']);
-                        } else {
-                            echo '<label id="houseErrorText" class="lbl-setup-house-hidden"></label>';
-                        }
-                ?>
+            <?php
+                if (isset($_SESSION['houseSetMsg'])) {
+                    echo '<label id="houseErrorText" class="lbl-setup-house-visible">' . $_SESSION['houseSetMsg'] . '</label>';
+                    unset($_SESSION['houseSetMsg']);
+                } else {
+                    echo '<label id="houseErrorText" class="lbl-setup-house-hidden"></label>';
+                }
+            ?>
                 <form id="myForm" action="house-settingsScript.php" method="post">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <i class="fa fa-home fa-login"></i>
                 <?php
-                        echo '<input style="width:72%" type="text" placeholder="House Name" value="' . $row2['House_Name'] . '" class="input-login" name="houseName">
-                              <i class="fa fa-plus fa-settings-add-room" onclick="addNewRoomBox()"></i>';
+                        if ($_SESSION['gID'] == 1) {
+                            echo '<input style="width:72%" type="text" placeholder="House Name" value="' . $row2['House_Name'] . '" class="input-login" name="houseName">
+                            <i class="fa fa-plus fa-settings-add-room" onclick="addNewRoomBox()"></i>';
+                        } else {
+                            echo '<input style="width:72%" type="text" placeholder="House Name" value="' . $row2['House_Name'] . '" class="input-login" name="houseName" disabled>';
+                        }
                 ?>
                 </div>
                 <?php
@@ -136,28 +157,45 @@
                         
                         if ($count == 0) {
                             echo '<div class="col-md-12">
-                                    <i class="fa fa-map-marker fa-login"></i>
-                                    <input type="text" placeholder="Room Name" class="input-settings" name="newRooms[]">
-                                    <select style="background-color:black" class="fa fa-lock fa-login"></select></div>';
+                                    <p><b>There are no rooms associated with this house.</b></p>
+                                  </div>';
                         } else {
                             
                             while ($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-                                echo '<div id="' . $row['Room_ID'] . '" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <i class="fa fa-map-marker fa-login"></i>
-                                        <input style="width:53%" type="text" placeholder="Room Name" value="' . $row['Room_Name'] . '" class="input-settings" name="updateRooms[' . $row['Room_ID'] . '][]">
-                                        <i class="fa fa-minus fa-settings-remove-room" onclick="removeRoomBox(this.parentNode)"></i>
-                                            <select class="fa fa-lock fa-login user-dropdown" name="updateRooms[' . $row['Room_ID'] . '][]">';
-                                                foreach ($groups as $row3) {
-                                                    
-                                                    if ($row['Room_gID'] == $row3['Groups_gID']) {
-                                                        echo '<option selected value="' . $row3['Groups_gID'] . '">' . $row3['Groups_Name'] .'</option>';
-                                                    } else {
-                                                        echo '<option value="' . $row3['Groups_gID'] . '">' . $row3['Groups_Name'] .'</option>';
-                                                    }
-                                                }
-                                echo '</select><i class="fas fa-caret-down user-caret"></i>
-                                      </div>';
                                 
+                                if ($_SESSION['gID'] == 1) {
+                                    echo '<div id="' . $row['Room_ID'] . '" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <i class="fa fa-map-marker fa-login"></i>
+                                            <input style="width:53%" type="text" placeholder="Room Name" value="' . $row['Room_Name'] . '" class="input-settings" name="updateRooms[' . $row['Room_ID'] . '][]">
+                                            <i class="fa fa-minus fa-settings-remove-room" onclick="removeRoomBox(this.parentNode)"></i>
+                                                <select class="fa fa-lock fa-login user-dropdown" name="updateRooms[' . $row['Room_ID'] . '][]">';
+                                                    foreach ($groups as $row3) {
+
+                                                        if ($row['Room_gID'] == $row3['Groups_gID']) {
+                                                            echo '<option selected value="' . $row3['Groups_gID'] . '">' . $row3['Groups_Name'] .'</option>';
+                                                        } else {
+                                                            echo '<option value="' . $row3['Groups_gID'] . '">' . $row3['Groups_Name'] .'</option>';
+                                                        }
+                                                    }
+                                    echo '</select><i class="fas fa-caret-down user-caret"></i>
+                                          </div>';
+                                } elseif ($_SESSION['gID'] == $row['Room_gID']) {
+                                    echo '<div id="' . $row['Room_ID'] . '" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <i class="fa fa-map-marker fa-login"></i>
+                                            <input style="width:53%" type="text" placeholder="Room Name" value="' . $row['Room_Name'] . '" class="input-settings" name="updateRooms[' . $row['Room_ID'] . '][]">
+                                                <select style="display:none" class="fa fa-lock fa-login user-dropdown" name="updateRooms[' . $row['Room_ID'] . '][]">';
+                                                    foreach ($groups as $row3) {
+
+                                                        if ($row['Room_gID'] == $row3['Groups_gID']) {
+                                                            echo '<option selected value="' . $row3['Groups_gID'] . '">' . $row3['Groups_Name'] .'</option>';
+                                                        } else {
+                                                            echo '<option value="' . $row3['Groups_gID'] . '">' . $row3['Groups_Name'] .'</option>';
+                                                        }
+                                                    }
+                                    echo '</select>
+                                          </div>';
+                                    
+                                }
                             }
                         }
                     } else { 
