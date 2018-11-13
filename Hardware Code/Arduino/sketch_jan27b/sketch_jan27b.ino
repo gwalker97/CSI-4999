@@ -1,14 +1,14 @@
-
+#include <HashMap.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
+#include <time.h>
 #include <EEPROM.h>
 #include <MySQL_Connection.h>
 #include <MySQL_Cursor.h>
 //qjxu4534 is the old password
 // Replace with your network credentials
-//const char *passwordHost = "onewordalllowercase";
 const char *passwordHost = "00000000";
 IPAddress server_addr(192,168,43,219); // IP of the MySQL *server* here
 char* user = "root";              // MySQL user login username
@@ -21,13 +21,19 @@ bool wificonnect = true;
 bool dbConn = true;
 bool hosting = false;
 String st;
+// For scenes
+int sceneID[25];
+const byte HASH_SIZE = 25;
+//storage 
+HashType<time_t, int> startScene[HASH_SIZE];
+HashType<time_t, int> endScene[HASH_SIZE];
+
 String content;
 MDNSResponder mdns;
 int statusCode;
 char ssid[32];
 char password[32];
 char ipAddr[16] = "192,168,43,219";//Pi Access Point IP-Adr.
-int gpins[8] = { 5, 4, 0, 14, 12, 13, 3, 1 }; // Index between 0 - 7
 
 void tryConnDB(){
   int count = 0;
@@ -153,7 +159,7 @@ void queryDB(){
    //Serial.println("\nRunning SELECT and printing results\n");
   // Initiate the query class instance
   MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
-  char* query = "SELECT Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID;";
+  char* query = "Select x.a, y.b FROM (SELECT Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID)as x, (SELECT Scenes.Scene_ID, Scene.Start_Time, Scene.End_Time, Scene.IS_Automated) as y;"
   //char* query = "Select * from SeniorProject.Addon";
   cur_mem->execute(query);
   // Fetch the columns and print them
@@ -194,7 +200,6 @@ void queryDB(){
 
 //This function is passed a pin and state to determine if it is to be shut off or turned on.
 void gpio(int pin, float state, String type){
-  pin = gpins[pin];
   pinMode(pin, OUTPUT);
   //Serial.println(type);
   //Serial.println(state);
