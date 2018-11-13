@@ -8,7 +8,8 @@
 #include <MySQL_Cursor.h>
 //qjxu4534 is the old password
 // Replace with your network credentials
-const char *passwordHost = "onewordalllowercase";
+//const char *passwordHost = "onewordalllowercase";
+const char *passwordHost = "00000000";
 IPAddress server_addr(192,168,43,219); // IP of the MySQL *server* here
 char* user = "root";              // MySQL user login username
 char* dbpass = "root";
@@ -26,23 +27,20 @@ int statusCode;
 char ssid[32];
 char password[32];
 char ipAddr[16] = "192,168,43,219";//Pi Access Point IP-Adr.
-
+int gpins[8] = { 5, 4, 0, 14, 12, 13, 3, 1 }; // Index between 0 - 7
 
 void tryConnDB(){
   int count = 0;
- /* while(!conn.connect(server_addr, 3306, user, dbpass)){
+  if(WiFi.status() == WL_CONNECTED){
+ while(!conn.connect(server_addr, 3306, user, dbpass)){
     Serial.println(WiFi.status());
       delay(500);
       }
-      if(WiFi.status() == WL_CONNECTED){
       Serial.println(".");
  MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
  cur_mem->execute("use SeniorProject");
  Serial.println("db Conn!");
-      }else{
-        Serial.println("nope");
-      }
-      */
+  }
 }
 
 
@@ -98,17 +96,26 @@ void readWifi(){
   readEEPROM(32,32,password);
   readEEPROM(64,16,ipAddr);
 }
+void eraseWifi(){
   
+}
 //setup function
-void setup(void){
+void setup(void){ 
+  Serial.println("We're alive") ;
+  rst_info *rinfo;
+  rinfo = ESP.getResetInfoPtr();
+  Serial.println(String("ResetInfo.reason = ") + (*rinfo).reason);
+
   EEPROM.begin(512);
-  readWifi();
-  
+  //if(rebootInt == 6){
+    
+  //}else{
+  //readWifi();
+  //}
   WiFi.begin(ssid, password);
   //WiFi.setAutoReconnect(false);
   pinMode(LED, OUTPUT);
   // preparing GPIOs
- // WiFi.mode(WIFI_AP);
   Serial.begin(115200);
   delay(100);
  if (!tryConn()){
@@ -127,7 +134,7 @@ void loop(void){
       WiFi.softAPdisconnect(true);
     }
     //Serial.println("high");
-   //queryDB();
+   queryDB();
   }else if(!hosting){
     hostWifi();
   }else{
@@ -187,6 +194,7 @@ void queryDB(){
 
 //This function is passed a pin and state to determine if it is to be shut off or turned on.
 void gpio(int pin, float state, String type){
+  pin = gpins[pin];
   pinMode(pin, OUTPUT);
   //Serial.println(type);
   //Serial.println(state);
@@ -244,7 +252,7 @@ void createWebServer(int webtype)
           writeEEPROM(0,32,qsid);
           Serial.println("writing eeprom pass:");
           writeEEPROM(32,32,qpass);
-          Serial.println("writing eeprom ip:"); 
+          Serial.println("writing eeprom ip:");
           writeEEPROM(64,16,qip); 
           EEPROM.commit();
           content = "{\"Success\":\"saved to eeprom... reset to boot into new wifi\"}";
