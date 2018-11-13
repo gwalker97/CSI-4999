@@ -7,20 +7,6 @@
         die();
     }
 ?>
-<!--
-
-I (Alex Manaila) did not write all of this code, please see login.html for full author history.
-
-I added lines:
-1-9
-76-83
-
-I modified lines:
-78
-86
-90
-
--->
 <!DOCTYPE html>
 <html>
     <head>
