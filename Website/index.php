@@ -308,7 +308,8 @@ if($_SESSION["guest"] == true) {
             var idNameC = document.getElementById('displayTempC');
             var IdStore = new Array();
             IdStore.push(idNameF.id);
-            IdStore.push(idNameC.id)
+            //Added semi-colon 11/13
+            IdStore.push(idNameC.id);
 
             var idArr = new Array();			
             for (var i = 0; i < IdStore.length; i++) {	
@@ -324,7 +325,7 @@ if($_SESSION["guest"] == true) {
             );
         }
 
-        //Execute functions every 2 seconds
+        //Execute functions every 1 second(s)
         window.setInterval(function(){
             checkButtons();
             checkSliders();
