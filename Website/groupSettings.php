@@ -92,7 +92,7 @@
     <body class="login-body">
         <div class="component-settings-form-container">
             <button class="btn-back" onclick="fnReturnHome()"><i class="fa fa-arrow-left" style="font-size: 10px;"></i> <i class="fa fa-home"></i></button>
-            <h1 class="text-center h1-settings">Account Configuration</h1>
+            <h1 class="text-center h1-settings">Permission Settings</h1>
             <?php
                     if (isset($_SESSION['groupSetMsg'])) {
                         echo '<label style="margin-bottom:30px" id="houseErrorText" class="lbl-setup-house-visible col-lg-12 col-md-12 col-sm-12 col-xs-12">' . $_SESSION['groupSetMsg'] . '</label>';

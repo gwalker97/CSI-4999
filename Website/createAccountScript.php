@@ -33,7 +33,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    if($count == 0) {
+    if($count == 0) { //session home and gID not being set properly when joining existing house
 
         if ($pass === $pass2) {            
             $sql2 = "insert into User (Username, Password) values ('" . $uname . "', '" . $pass . "')";
