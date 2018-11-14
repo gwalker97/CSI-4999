@@ -1,3 +1,4 @@
+#include <QueueList.h>
 #include <HashMap.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
@@ -24,10 +25,12 @@ String st;
 // For scenes
 int sceneID[25];
 const byte HASH_SIZE = 25;
-//storage 
-HashType<int, time_t> startScene[HASH_SIZE];
-HashType<int, time_t> endScene[HASH_SIZE];
-
+//storage. Both values are stored as integers for easier comparisons. First int is the time, second int is the Scene_ID.
+HashType<int, int> startScene[HASH_SIZE];
+HashMap<int, int> startMap = HashMap<int, int>(startScene, HASH_SIZE);
+HashType<int, int> endScene[HASH_SIZE];
+HashMap<int , int> endMap = HashMap<int, int>(endScene, HASH_SIZE);
+QueueList<int> queue;
 String content;
 MDNSResponder mdns;
 int statusCode;
@@ -161,16 +164,35 @@ void loop(void){
   server.handleClient();
 }
 
-bool isCollision(time_t *rinfo, HashType<time_t, int> hash){
-  // check the time agains the hash given
+bool isCollision(int timeUsed, HashMap<int, int> hash, bool checkScene, int sceneID){ // 'timeUsed' could be current time, or time from database
+  Serial.println(hash.getIndexOf(timeUsed));
+  if(hash.getIndexOf(timeUsed) != NULL){
+    if(!hash.getValueOf(timeUsed) == sceneID){
+      return true;
+    }else{
+      return false;
+    }
+  }else{
+    return false;
+  }
 }
 
-void queryTime(){
+int parseTime(char* timeString){
+  // Parses the values from the 
+  String finalTime = "";
+  timeString = strtok(timeString, ":");
+  while (timeString != NULL){
+    finalTime += strtok(timeString, ":")
+  }
+}
+
+int queryTime(){
   MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
-  char* query = "DATE_FORMAT(NOW(), '%k:%i:%s')";
+  char* query = "DATE_FORMAT(NOW(), '%k%i%s')";
   cur_mem->execute(query); 
-  String timeNow = cur_mem->get_next_row()->values[0];
+  const char* timeNow = cur_mem->get_next_row()->values[0];
   Serial.println(timeNow);
+  return atoi(timeNow);
 }
 
 void queryDB(bool scene){
@@ -216,10 +238,13 @@ void queryDB(bool scene){
         if(mac == WiFi.macAddress() && !scene){
           gpio(atoi(row->values[1]), atof(row->values[2]), row->values[3]);
          // Serial.println("Made it here");
-       }else{
+       }else if (scene){
         // First check to see if it collides based on ID. Then check the time.
-          if ( row->values
-          startScene[
+        int sceneID = atoi(row->values[0]);
+        char* timeStart = row->values[3];
+        char* timeEnd = row->values[4];
+          if ( !isCollsion(timeStart, sceneMap, true, sceneID) )
+          startScene[sceneID](parseTime(timeStart), 
        }
         if (f < cols->num_fields-1) {
          //Serial.print(", ");
