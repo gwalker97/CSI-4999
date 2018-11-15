@@ -1091,8 +1091,6 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
                             </div>
                         </form>
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -1136,9 +1134,6 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
                             </div>
                         </form>
                     </div>
-
-
-
                 </div>
             </div>
         </div>
@@ -1228,9 +1223,6 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
 
                         if ($_SESSION['gID'] == 1) {
                             echo '<button class="fa fa-users btn-sign-out btn-cog" onclick="window.location.href=\'groupSettings.php\'"></button>';
-                        }
-                        if ($_SESSION['gID'] != 2) {
-                            echo '<button class="fa fa-home btn-sign-out btn-cog" onclick="window.location.href=\'house-settings.php\'"></button>';
                         }
 
                         echo '<button class="fa fa-user btn-sign-out btn-cog" onclick="window.location.href=\'accountSettings.php\'"></button>';
