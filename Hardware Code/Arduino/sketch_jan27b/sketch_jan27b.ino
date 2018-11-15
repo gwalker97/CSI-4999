@@ -136,9 +136,9 @@ void loop(void){
       WiFi.softAPdisconnect(true);
     }
     //Serial.println("high");
-   queryDB(false);
-   
-   queryDB(true);
+   queryDB(false, false);
+   queryDB(true, false);
+   queryDB(false, true);
    queryTime();
    //Check current time against both hashses for collisions
   }else if(!hosting){
@@ -168,7 +168,7 @@ int queryTime(){
   return atoi(timeNow);
 }
 
-void queryDB(bool scene){
+void queryDB(bool sceneStart, bool sceneEnd){
  delay(50);
  digitalWrite(LED, HIGH);
  if(WiFi.status() != WL_CONNECTED){
@@ -179,11 +179,13 @@ void queryDB(bool scene){
    //Serial.println("\nRunning SELECT and printing results\n");
   // Initiate the query class instance
   MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
-  if(!scene){
+  if(!sceneStart && !sceneEnd){
   query = "SELECT Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID;";
   //char* query = "Select * from SeniorProject.Addon";
-  }else{
+  }else if(sceneStart){
  query = "Select Hosts.Host_Mac, Addon.Addon_ID, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (Start_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW(), '%k:%i') <= DATE_FORMAT(Start_Time + INTERVAL 1 MINUTE, '%k:%i'))));";
+  }else if(sceneEnd){
+     query = "Select Hosts.Host_Mac, Addon.Addon_ID, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (End_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW(), '%k:%i') <= DATE_FORMAT(End_Time + INTERVAL 1 MINUTE, '%k:%i'))));";
   }
   cur_mem->execute(query);
   // Fetch the columns and print them
