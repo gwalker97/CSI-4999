@@ -308,7 +308,8 @@ if($_SESSION["guest"] == true) {
             var idNameC = document.getElementById('displayTempC');
             var IdStore = new Array();
             IdStore.push(idNameF.id);
-            IdStore.push(idNameC.id)
+            //Added semi-colon 11/13
+            IdStore.push(idNameC.id);
 
             var idArr = new Array();			
             for (var i = 0; i < IdStore.length; i++) {	
@@ -324,7 +325,7 @@ if($_SESSION["guest"] == true) {
             );
         }
 
-        //Execute functions every 2 seconds
+        //Execute functions every 1 second(s)
         window.setInterval(function(){
             checkButtons();
             checkSliders();
@@ -449,12 +450,12 @@ if($_SESSION["guest"] == true) {
                 appliance.classList.add('appliance-selected');
             }
         }
-        
+
         /*
         function fnSelectCompHost(arg) {
             var appliance = document.getElementById(arg);
-            
-            
+
+
 
             if (appliance.classList.contains('appliance-selected')) {
                 appliance.classList.remove('appliance-selected');
@@ -478,13 +479,13 @@ if($_SESSION["guest"] == true) {
             $('.li-appliance').each(function(i, obj) {
                 $('.li-appliance').removeClass('appliance-selected');
             });
-            
+
             document.getElementById('lbl-scene-id').innerHTML = "";
             document.getElementById('btn-save-scene').innerHTML = "Create";
-            
+
             document.getElementById('btn-delete-scene').classList.remove('display');
             document.getElementById('btn-delete-scene').classList.add('dont-display');
-            
+
             document.getElementById('scene-form').reset();
         }
 
@@ -567,20 +568,20 @@ if($_SESSION["guest"] == true) {
                 }
             }
         }
-        
+
         function fnDeleteScene(arg) {
             var sceneID = document.getElementById('lbl-scene-id').innerHTML;
 
             if(confirm('Are you sure you want to delete this scene?')) {
                 fnLoad(true);
-                
+
                 $.post(
-                        "deleteScene.php",
-                        { sID: (sceneID),  },
-                    );
-                
+                    "deleteScene.php",
+                    { sID: (sceneID),  },
+                );
+
                 fnClearSceneModal();
-                
+
                 $('#myModal').modal('hide');
                 $('#all-scenes').load(document.URL +  ' #all-scenes');
                 fnLoad(false);
@@ -668,10 +669,10 @@ if($_SESSION["guest"] == true) {
                     }
                 }, 'json'
             );
-            
+
             document.getElementById('btn-delete-scene').classList.remove('dont-display');
             document.getElementById('btn-delete-scene').classList.add('display');
-            
+
             $('#myModal').modal('show');
             fnLoad(false);
         }
@@ -685,71 +686,71 @@ if($_SESSION["guest"] == true) {
         }
 
         function fnNewAppPinSet(pin){
-            
+
             document.getElementById("pin-number").value = pin;
-            
+
             if (newCompSelectedApp == "0"){
-            
-            document.getElementById("new-comp-pin-text").innerHTML = "Please select host!";
+
+                document.getElementById("new-comp-pin-text").innerHTML = "Please select host!";
             } else{
-            $.post(
-                "checkPin.php",
-                { hID: (newCompSelectedApp), pin: (pin) },
-                function(response) {	
-                   
-                    document.getElementById("new-comp-pin-text").innerHTML = response;
-                    
-                }, 'json'
-            );
+                $.post(
+                    "checkPin.php",
+                    { hID: (newCompSelectedApp), pin: (pin) },
+                    function(response) {	
+
+                        document.getElementById("new-comp-pin-text").innerHTML = response;
+
+                    }, 'json'
+                );
             }
         }
-        
-         var newCompSelectedApp = "0";
-        
+
+        var newCompSelectedApp = "0";
+
         $(function() {
             $('#newCompHostSelect').change(function(){
                 newCompSelectedApp = document.getElementById('newCompHostSelect').value;
-                
+
                 document.getElementById("pin-number").value = "";
                 document.getElementById("new-comp-pin-text").innerHTML = " ";
                 document.getElementById('PiImg').classList.add('dont-display');
                 document.getElementById('ESPImg').classList.add('dont-display');
-                
+
                 $.post(
-                "checkHostType.php",
-                { hID: (newCompSelectedApp) },
-                function(response) {	
-                   
-                    if (response.model == "Pi") {
-                document.getElementById('PiImg').classList.remove('dont-display');
-                document.getElementById('PiImg').classList.add('display');
-            }
-            else if (response.model == "ESP") {
-                document.getElementById('ESPImg').classList.remove('dont-display');
-                document.getElementById('ESPImg').classList.add('display');
-            }
-                    
-                }, 'json'
-            );          
-        
+                    "checkHostType.php",
+                    { hID: (newCompSelectedApp) },
+                    function(response) {	
+
+                        if (response.model == "Pi") {
+                            document.getElementById('PiImg').classList.remove('dont-display');
+                            document.getElementById('PiImg').classList.add('display');
+                        }
+                        else if (response.model == "ESP") {
+                            document.getElementById('ESPImg').classList.remove('dont-display');
+                            document.getElementById('ESPImg').classList.add('display');
+                        }
+
+                    }, 'json'
+                );          
+
             });
         });
-        
-        
+
+
         function fnClearApplianceModal() {
 
             document.getElementById('PiImg').classList.add('dont-display');
             document.getElementById('ESPImg').classList.add('dont-display');
-            
+
             document.getElementById('appliance-name').innerHTML = "";
             document.getElementById('appliance-description').innerHTML = "";
-            
+
             document.getElementById('btn-delete-scene').classList.remove('display');
             document.getElementById('btn-delete-scene').classList.add('dont-display');
-            
+
             document.getElementById('comp-form').reset();
         }
-    
+
         function fnSaveAppliance() {
 
             var appName = document.getElementById('appliance-name').value;
@@ -759,7 +760,7 @@ if($_SESSION["guest"] == true) {
             var appHost = document.getElementById('newCompHostSelect').value;
             var appPin = document.getElementById('pin-number').value;
             var appPinText = document.getElementById('new-comp-pin-text').innerHTML;
-            
+
             var appNameOkay = true;
             var appTypeOkay = true;
             var appDescOkay = true;
@@ -787,12 +788,12 @@ if($_SESSION["guest"] == true) {
             }
 
             if (appNameOkay && appTypeOkay && appDescOkay && appRoomOkay && appHostOkay && appPinOkay) {
-                
-                    $.post(
-                        "newApp.php",
-                        { aN: (appName), aD: (appDescription), aT: (appType), aR: (appRoom), aH: (appHost), aP: (appPin),  },
-                    );
-                
+
+                $.post(
+                    "newApp.php",
+                    { aN: (appName), aD: (appDescription), aT: (appType), aR: (appRoom), aH: (appHost), aP: (appPin),  },
+                );
+
 
                 fnClearApplianceModal();
                 $('#newCompModal').modal('hide');
@@ -800,9 +801,9 @@ if($_SESSION["guest"] == true) {
             }
             else {
                 if (!appNameOkay || !appDescOkay || !appRoomOkay || !appTypeOkay) {
-                        document.getElementById('appliance-error-message').innerHTML = "Missing information!";
-                        document.getElementById('appliance-error-message').classList.remove('dont-display');
-                        document.getElementById('appliance-error-message').classList.add('display');
+                    document.getElementById('appliance-error-message').innerHTML = "Missing information!";
+                    document.getElementById('appliance-error-message').classList.remove('dont-display');
+                    document.getElementById('appliance-error-message').classList.add('display');
                 }
                 if (!appHostOkay || !appPinOkay) {
                     document.getElementById('appliance-error-message').innerHTML = "Host/Pin invalid!";
@@ -811,7 +812,7 @@ if($_SESSION["guest"] == true) {
                 }
             }
         }
-        
+
 
     </script>
 
@@ -942,8 +943,8 @@ if($_SESSION["guest"] == true) {
                                 <label id="automate-error" class="automate-error dont-display"></label>
                             </div>
                             <div id="appliance-error" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <label id="appliance-error-message" class="automate-error dont-display"></label>
-                                </div>
+                                <label id="appliance-error-message" class="automate-error dont-display"></label>
+                            </div>
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
                                     <i class="fa fa-home fa-login"></i>
@@ -958,35 +959,49 @@ if($_SESSION["guest"] == true) {
                                     </select>
                                     <i class="fas fa-caret-down color-caret"></i>
                                 </div>
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
-                                        <i class="fa fa-home fa-login"></i>
-                                        <input type="text" id="appliance-description" placeholder="Appliance Description" class="input-login scene-name-input">
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
-                                        <i class="fas fa-home home fa-login"></i>
-                                        <select id="newCompRoomSelect" class="selects color-select">
-                                            <?php
-                                            $sql = "select * from Room where House_ID=" . $_SESSION['home'];
-                                            $result = mysqli_query($conn,$sql);
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+                                    <i class="fa fa-home fa-login"></i>
+                                    <input type="text" id="appliance-description" placeholder="Appliance Description" class="input-login scene-name-input">
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+                                    <i class="fas fa-home home fa-login"></i>
+                                    <select id="newCompRoomSelect" class="selects color-select">
+                                        <?php
+                                        $sql = "select * from Room where House_ID=" . $_SESSION['home'];
+                                        $result = mysqli_query($conn,$sql);
 
-                                            while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-                                                $rID = $row['Room_ID'];
-                                                $rN = $row['Room_Name'];
-                                                echo '<option value="' . $rID . '">' . $rN . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                        <i class="fas fa-caret-down color-caret"></i>
-                                    </div>
+                                        while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+                                            $rID = $row['Room_ID'];
+                                            $rN = $row['Room_Name'];
+                                            echo '<option value="' . $rID . '">' . $rN . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                    <i class="fas fa-caret-down color-caret"></i>
                                 </div>
                             </div>
                             <div id="choose-appliance" class="appliance-list-selector col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                
+
                                 <label class="lbl-choose-appliances">Select the host device:</label>
                                 <br>
                                 <!--
-                                <ul id="appliance-list" class="ul-appliance-list">
+<ul id="appliance-list" class="ul-appliance-list">
+<?php
+$sql = "select * from Hosts";
+$result = mysqli_query($conn,$sql);
+
+while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
+    $hID = $row['Host_ID'];
+    $hN = $row['Host_Name'];
+    echo '<li id="comp-app-' . $hID . '" class="li-appliance" onclick="fnSelectCompHost(this.id)">' . $hN . '</li>';
+}
+?>
+</ul>
+-->
+                                <select id="newCompHostSelect" class="selects color-select">
+                                    <option>Select a host...</option>
                                     <?php
                                     $sql = "select * from Hosts";
                                     $result = mysqli_query($conn,$sql);
@@ -994,89 +1009,72 @@ if($_SESSION["guest"] == true) {
                                     while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
                                         $hID = $row['Host_ID'];
                                         $hN = $row['Host_Name'];
-                                        echo '<li id="comp-app-' . $hID . '" class="li-appliance" onclick="fnSelectCompHost(this.id)">' . $hN . '</li>';
+                                        echo '<option value="' . $hID . '">' . $hN . '</option>';
                                     }
                                     ?>
-                                </ul>
-                                -->
-                                
-
-                                <select id="newCompHostSelect" class="selects color-select">
-                                            <option>Select a host...</option>
-                                            <?php
-                                            $sql = "select * from Hosts";
-                                            $result = mysqli_query($conn,$sql);
-
-                                            while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-                                                $hID = $row['Host_ID'];
-                                                $hN = $row['Host_Name'];
-                                                echo '<option value="' . $hID . '">' . $hN . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                
+                                </select>
                             </div>
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-                                    <img id="PiImg" src="Images/layouts/pi_third.png" class="center-block dont-display" usemap="#pi-map">
+                                <img id="PiImg" src="Images/layouts/pi_third.png" class="center-block dont-display" usemap="#pi-map">
 
-                                    <map name="pi-map">
-                                        <area alt="14" title="14" href="javascript:fnNewAppPinSet(14)" coords="144,29,6" shape="circle">
-                                        <area alt="15" title="15" href="javascript:fnNewAppPinSet(15)" coords="163,28,7" shape="circle">
-                                        <area alt="18" title="18" href="javascript:fnNewAppPinSet(18)" coords="184,28,8" shape="circle">
-                                        <area alt="23" title="23" href="javascript:fnNewAppPinSet(23)" coords="223,28,8" shape="circle">
-                                        <area alt="24" title="24" href="javascript:fnNewAppPinSet(24)" coords="243,28,9" shape="circle">
-                                        <area alt="25" title="25" href="javascript:fnNewAppPinSet(25)" coords="282,28,8" shape="circle">
-                                        <area alt="8" title="8" href="javascript:fnNewAppPinSet(8)" coords="304,28,8" shape="circle">
-                                        <area alt="7" title="7" href="javascript:fnNewAppPinSet(7)" coords="323,28,8" shape="circle">
-                                        <area alt="12" title="12" href="javascript:fnNewAppPinSet(12)" coords="383,29,7" shape="circle">
-                                        <area alt="16" title="16" href="javascript:fnNewAppPinSet(16)" coords="423,28,9" shape="circle">
-                                        <area alt="20" title="20" href="javascript:fnNewAppPinSet(20)" coords="443,29,8" shape="circle">
-                                        <area alt="21" title="21" href="javascript:fnNewAppPinSet(21)" coords="462,28,7" shape="circle">
-                                        <area alt="2" title="2" href="javascript:fnNewAppPinSet(2)" coords="104,53,8" shape="circle">
-                                        <area alt="3" title="3" href="javascript:fnNewAppPinSet(3)" coords="124,52,8" shape="circle">
-                                        <area alt="4" title="4" href="javascript:fnNewAppPinSet(4)" coords="144,53,8" shape="circle">
-                                        <area alt="17" title="17" href="javascript:fnNewAppPinSet(17)" coords="184,52,9" shape="circle">
-                                        <area alt="27" title="27" href="javascript:fnNewAppPinSet(27)" coords="204,53,8" shape="circle">
-                                        <area alt="22" title="22" href="javascript:fnNewAppPinSet(22)" coords="224,52,9" shape="circle">
-                                        <area alt="10" title="10" href="javascript:fnNewAppPinSet(10)" coords="264,52,8" shape="circle">
-                                        <area alt="9" title="9" href="javascript:fnNewAppPinSet(9)" coords="283,52,9" shape="circle">
-                                        <area alt="11" title="11" href="javascript:fnNewAppPinSet(11)" coords="303,52,9" shape="circle">
-                                        <area alt="5" title="5" href="javascript:fnNewAppPinSet(5)" coords="363,53,9" shape="circle">
-                                        <area alt="6" title="6" href="javascript:fnNewAppPinSet(6)" coords="383,53,8" shape="circle">
-                                        <area alt="13" title="13" href="javascript:fnNewAppPinSet(13)" coords="403,54,7" shape="circle">
-                                        <area alt="19" title="19" href="javascript:fnNewAppPinSet(19)" coords="422,53,7" shape="circle">
-                                        <area alt="26" title="26" href="javascript:fnNewAppPinSet(26)" coords="443,52,9" shape="circle">
-                                    </map>
-                                    
-                                    <img id="ESPImg" class="center-block dont-display" src="Images/layouts/ESP8266_375.png" usemap="#ESP-map">
-                                    
-                                    <map name="ESP-map">
-                                        <area alt="16" title="16" href="javascript:fnNewAppPinSet(16)" coords="107,35,215,62" shape="rect">
-                                        <area alt="5" title="5" href="javascript:fnNewAppPinSet(5)" coords="109,66,215,90" shape="rect">
-                                        <area alt="4" title="4" href="javascript:fnNewAppPinSet(4)" coords="109,93,213,118" shape="rect">
-                                        <area alt="0" title="0" href="javascript:fnNewAppPinSet(0)" coords="109,121,213,147" shape="rect">
-                                        <area alt="2" title="2" href="javascript:fnNewAppPinSet(2)" coords="109,151,213,176" shape="rect">
-                                        <area alt="14" title="14" href="javascript:fnNewAppPinSet(14)" coords="108,238,213,261" shape="rect">
-                                        <area alt="12" title="12" href="javascript:fnNewAppPinSet(12)" coords="109,269,213,291" shape="rect">
-                                        <area alt="13" title="13" href="javascript:fnNewAppPinSet(13)" coords="110,299,212,320" shape="rect">
-                                        <area alt="15" title="15" href="javascript:fnNewAppPinSet(15)" coords="110,328,211,348" shape="rect">
-                                        <area alt="3" title="3" href="javascript:fnNewAppPinSet(3)" coords="106,353,212,377" shape="rect">
-                                        <area alt="1" title="1" href="javascript:fnNewAppPinSet(1)" coords="104,382,213,406" shape="rect">
-                                    </map>
-                                    
-                                </div>	
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"> 
+                                <map name="pi-map">
+                                    <area alt="14" title="14" href="javascript:fnNewAppPinSet(14)" coords="144,29,6" shape="circle">
+                                    <area alt="15" title="15" href="javascript:fnNewAppPinSet(15)" coords="163,28,7" shape="circle">
+                                    <area alt="18" title="18" href="javascript:fnNewAppPinSet(18)" coords="184,28,8" shape="circle">
+                                    <area alt="23" title="23" href="javascript:fnNewAppPinSet(23)" coords="223,28,8" shape="circle">
+                                    <area alt="24" title="24" href="javascript:fnNewAppPinSet(24)" coords="243,28,9" shape="circle">
+                                    <area alt="25" title="25" href="javascript:fnNewAppPinSet(25)" coords="282,28,8" shape="circle">
+                                    <area alt="8" title="8" href="javascript:fnNewAppPinSet(8)" coords="304,28,8" shape="circle">
+                                    <area alt="7" title="7" href="javascript:fnNewAppPinSet(7)" coords="323,28,8" shape="circle">
+                                    <area alt="12" title="12" href="javascript:fnNewAppPinSet(12)" coords="383,29,7" shape="circle">
+                                    <area alt="16" title="16" href="javascript:fnNewAppPinSet(16)" coords="423,28,9" shape="circle">
+                                    <area alt="20" title="20" href="javascript:fnNewAppPinSet(20)" coords="443,29,8" shape="circle">
+                                    <area alt="21" title="21" href="javascript:fnNewAppPinSet(21)" coords="462,28,7" shape="circle">
+                                    <area alt="2" title="2" href="javascript:fnNewAppPinSet(2)" coords="104,53,8" shape="circle">
+                                    <area alt="3" title="3" href="javascript:fnNewAppPinSet(3)" coords="124,52,8" shape="circle">
+                                    <area alt="4" title="4" href="javascript:fnNewAppPinSet(4)" coords="144,53,8" shape="circle">
+                                    <area alt="17" title="17" href="javascript:fnNewAppPinSet(17)" coords="184,52,9" shape="circle">
+                                    <area alt="27" title="27" href="javascript:fnNewAppPinSet(27)" coords="204,53,8" shape="circle">
+                                    <area alt="22" title="22" href="javascript:fnNewAppPinSet(22)" coords="224,52,9" shape="circle">
+                                    <area alt="10" title="10" href="javascript:fnNewAppPinSet(10)" coords="264,52,8" shape="circle">
+                                    <area alt="9" title="9" href="javascript:fnNewAppPinSet(9)" coords="283,52,9" shape="circle">
+                                    <area alt="11" title="11" href="javascript:fnNewAppPinSet(11)" coords="303,52,9" shape="circle">
+                                    <area alt="5" title="5" href="javascript:fnNewAppPinSet(5)" coords="363,53,9" shape="circle">
+                                    <area alt="6" title="6" href="javascript:fnNewAppPinSet(6)" coords="383,53,8" shape="circle">
+                                    <area alt="13" title="13" href="javascript:fnNewAppPinSet(13)" coords="403,54,7" shape="circle">
+                                    <area alt="19" title="19" href="javascript:fnNewAppPinSet(19)" coords="422,53,7" shape="circle">
+                                    <area alt="26" title="26" href="javascript:fnNewAppPinSet(26)" coords="443,52,9" shape="circle">
+                                </map>
+
+                                <img id="ESPImg" class="center-block dont-display" src="Images/layouts/ESP8266_375.png" usemap="#ESP-map">
+
+                                <map name="ESP-map">
+                                    <area alt="16" title="16" href="javascript:fnNewAppPinSet(16)" coords="107,35,215,62" shape="rect">
+                                    <area alt="5" title="5" href="javascript:fnNewAppPinSet(5)" coords="109,66,215,90" shape="rect">
+                                    <area alt="4" title="4" href="javascript:fnNewAppPinSet(4)" coords="109,93,213,118" shape="rect">
+                                    <area alt="0" title="0" href="javascript:fnNewAppPinSet(0)" coords="109,121,213,147" shape="rect">
+                                    <!-- <area alt="2" title="2" href="javascript:fnNewAppPinSet(2)" coords="109,151,213,176" shape="rect"> -->
+                                    <area alt="14" title="14" href="javascript:fnNewAppPinSet(14)" coords="108,238,213,261" shape="rect">
+                                    <area alt="12" title="12" href="javascript:fnNewAppPinSet(12)" coords="109,269,213,291" shape="rect">
+                                    <area alt="13" title="13" href="javascript:fnNewAppPinSet(13)" coords="110,299,212,320" shape="rect">
+                                    <area alt="15" title="15" href="javascript:fnNewAppPinSet(15)" coords="110,328,211,348" shape="rect">
+                                    <area alt="3" title="3" href="javascript:fnNewAppPinSet(3)" coords="106,353,212,377" shape="rect">
+                                    <area alt="1" title="1" href="javascript:fnNewAppPinSet(1)" coords="104,382,213,406" shape="rect">
+                                </map>
+
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center"> 
                                     <i class="fa fa-home fa-login"></i>
                                     <input type="text" id="pin-number" placeholder="Pin Number" class="input-login scene-name-input center" disabled="true">
                                 </div>
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
                                     <p id="new-comp-pin-text"></p>
                                 </div>
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
-                                    <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveAppliance()">Save</button>
-                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
+                                <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveAppliance()">Save</button>
                             </div>
                         </form>
                     </div>
@@ -1165,18 +1163,20 @@ if($_SESSION["guest"] == true) {
                     </select>
                     <div style="margin-top: -6px; float: right;">
                         <button class="fa fa-sign-out-alt btn-sign-out" onclick="phpLogout()"></button>
-<!--                        <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='house-settings.php'"></button>-->
+                        <!--                        <button class="fa fa-cog btn-sign-out btn-cog" onclick="window.location.href='house-settings.php'"></button>-->
                         <?php
+
+                        if ($_SESSION['gID'] == 1) {
+                            echo '<button class="fa fa-users btn-sign-out btn-cog" onclick="window.location.href=\'groupSettings.php\'"></button>';
+                        }
                         
-                            if ($_SESSION['gID'] == 1) {
-                                echo '<button class="fa fa-users btn-sign-out btn-cog" onclick="window.location.href=\'groupSettings.php\'"></button>';
-                            }
+                        echo '<button class="fa fa-user btn-sign-out btn-cog" onclick="window.location.href=\'accountSettings.php\'"></button>';
                         
-                            if ($_SESSION['gID'] != 2) {
-                                echo '<button class="fa fa-home btn-sign-out btn-cog" onclick="window.location.href=\'house-settings.php\'"></button>';
-                            }
+                         if ($_SESSION['gID'] != 2) {
+                            echo '<button class="fa fa-home btn-sign-out btn-cog" onclick="window.location.href=\'house-settings.php\'"></button>';
+                        }
                         ?>
-                        <button class="fa fa-user btn-sign-out btn-cog" onclick="window.location.href='accountSettings.php'"></button>
+
                     </div>
                 </div>
             </div>

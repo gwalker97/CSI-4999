@@ -1,14 +1,16 @@
-
+#include <QueueList.h>
+#include <HashMap.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
+#include <time.h>
 #include <EEPROM.h>
 #include <MySQL_Connection.h>
 #include <MySQL_Cursor.h>
 //qjxu4534 is the old password
 // Replace with your network credentials
-const char *passwordHost = "onewordalllowercase";
+char *passwordHost = "00000000";
 IPAddress server_addr(192,168,43,219); // IP of the MySQL *server* here
 char* user = "root";              // MySQL user login username
 char* dbpass = "root";
@@ -20,29 +22,35 @@ bool wificonnect = true;
 bool dbConn = true;
 bool hosting = false;
 String st;
+// For scenes
+int sceneID[25];
+const byte HASH_SIZE = 25;
+//storage. Both values are stored as integers for easier comparisons. First int is the time, second int is the Scene_ID.
+HashType<int, int> startScene[HASH_SIZE];
+HashMap<int, int> startMap = HashMap<int, int>(startScene, HASH_SIZE);
+HashType<int, int> endScene[HASH_SIZE];
+HashMap<int , int> endMap = HashMap<int, int>(endScene, HASH_SIZE);
+QueueList<int> queue;
 String content;
 MDNSResponder mdns;
 int statusCode;
 char ssid[32];
 char password[32];
 char ipAddr[16] = "192,168,43,219";//Pi Access Point IP-Adr.
-
-
+int timezone = 7 * 3600;
+int dst = 0;
 void tryConnDB(){
   int count = 0;
- /* while(!conn.connect(server_addr, 3306, user, dbpass)){
+  if(WiFi.status() == WL_CONNECTED){
+ while(!conn.connect(server_addr, 3306, user, dbpass)){
     Serial.println(WiFi.status());
       delay(500);
       }
-      if(WiFi.status() == WL_CONNECTED){
       Serial.println(".");
  MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
  cur_mem->execute("use SeniorProject");
  Serial.println("db Conn!");
-      }else{
-        Serial.println("nope");
-      }
-      */
+  }
 }
 
 
@@ -66,6 +74,8 @@ bool tryConn(){
     Serial.println("Connected to Wifi!");
     WiFi.softAPdisconnect(true);
     Serial.println("Stopped AP");
+   configTime(timezone, dst, "pool.ntp.org","time.nist.gov");
+  Serial.println("\nWaiting for Internet time");
     tryConnDB();
     hosting = false;
 }
@@ -73,7 +83,7 @@ return wificonnect;
 }
 
 void hostWifi(){
-  String ssidHost = "ESPap-";
+  String ssidHost = "HARP ESP-";
   byte mac[6];
   WiFi.macAddress(mac);
   ssidHost += String(mac[5], HEX);
@@ -94,21 +104,36 @@ void hostWifi(){
 }
 
 void readWifi(){
+  char* temp;
   readEEPROM(0,32,ssid);
   readEEPROM(32,32,password);
   readEEPROM(64,16,ipAddr);
+ // readEEPROM(80,32, temp);
+  //if(temp == NULL){
+    //Serial.println("Yeet");
+  //}
 }
+void eraseWifi(){
   
+}
 //setup function
-void setup(void){
+void setup(void){ 
+  Serial.println("We're alive") ;
+  rst_info *rinfo;
+  rinfo = ESP.getResetInfoPtr();
+  Serial.println(String("ResetInfo.reason = ") + (*rinfo).reason);
+
   EEPROM.begin(512);
+  //if(rebootInt == 6){
+    
+  //}else{
   readWifi();
-  
+  //}
   WiFi.begin(ssid, password);
+  
   //WiFi.setAutoReconnect(false);
   pinMode(LED, OUTPUT);
   // preparing GPIOs
- // WiFi.mode(WIFI_AP);
   Serial.begin(115200);
   delay(100);
  if (!tryConn()){
@@ -127,7 +152,10 @@ void loop(void){
       WiFi.softAPdisconnect(true);
     }
     //Serial.println("high");
-   //queryDB();
+   queryDB(false);
+   queryDB(true);
+   queryTime();
+   //Check current time against both hashses for collisions
   }else if(!hosting){
     hostWifi();
   }else{
@@ -136,18 +164,54 @@ void loop(void){
   server.handleClient();
 }
 
-void queryDB(){
+bool isCollision(int timeUsed, HashMap<int, int> hash, bool checkScene, int sceneID){ // 'timeUsed' could be current time, or time from database
+  Serial.println(hash.getIndexOf(timeUsed));
+  if(hash.getIndexOf(timeUsed) != NULL){
+    if(!hash.getValueOf(timeUsed) == sceneID){
+      return true;
+    }else{
+      return false;
+    }
+  }else{
+    return false;
+  }
+}
+
+int parseTime(char* timeString){
+  // Parses the values from the 
+  String finalTime = "";
+  timeString = strtok(timeString, ":");
+  while (timeString != NULL){
+    finalTime += strtok(timeString, ":")
+  }
+}
+
+int queryTime(){
+  MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
+  char* query = "DATE_FORMAT(NOW(), '%k%i%s')";
+  cur_mem->execute(query); 
+  const char* timeNow = cur_mem->get_next_row()->values[0];
+  Serial.println(timeNow);
+  return atoi(timeNow);
+}
+
+void queryDB(bool scene){
   delay(50);
  digitalWrite(LED, HIGH);
  if(WiFi.status() != WL_CONNECTED){
   wificonnect = false;
  }else{
+  char* query;
   wificonnect = true; 
    //Serial.println("\nRunning SELECT and printing results\n");
   // Initiate the query class instance
   MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
-  char* query = "SELECT Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID;";
+  if(!scene){
+  query = "SELECT Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID;";
   //char* query = "Select * from SeniorProject.Addon";
+  }else{
+ query = "SELECT Scenes.Scene_ID, Scene.Start_Time, Scene.End_Time, Scene.IS_Automated;";
+  }
   cur_mem->execute(query);
   // Fetch the columns and print them
   column_names *cols = cur_mem->get_columns();
@@ -171,9 +235,16 @@ void queryDB(){
           //Serial.print("From db: ");
          // Serial.println(row->values[0]);
           // Serial.println(WiFi.macAddress());
-        if(mac == WiFi.macAddress()){
+        if(mac == WiFi.macAddress() && !scene){
           gpio(atoi(row->values[1]), atof(row->values[2]), row->values[3]);
          // Serial.println("Made it here");
+       }else if (scene){
+        // First check to see if it collides based on ID. Then check the time.
+        int sceneID = atoi(row->values[0]);
+        char* timeStart = row->values[3];
+        char* timeEnd = row->values[4];
+          if ( !isCollsion(timeStart, sceneMap, true, sceneID) )
+          startScene[sceneID](parseTime(timeStart), 
        }
         if (f < cols->num_fields-1) {
          //Serial.print(", ");
@@ -244,7 +315,7 @@ void createWebServer(int webtype)
           writeEEPROM(0,32,qsid);
           Serial.println("writing eeprom pass:");
           writeEEPROM(32,32,qpass);
-          Serial.println("writing eeprom ip:"); 
+          Serial.println("writing eeprom ip:");
           writeEEPROM(64,16,qip); 
           EEPROM.commit();
           content = "{\"Success\":\"saved to eeprom... reset to boot into new wifi\"}";
@@ -281,7 +352,6 @@ void createWebServer(int webtype)
 
 //startAdr: offset (bytes), writeString: String to be written to EEPROM
 void writeEEPROM(int startAdr, int laenge, String writeString) {
-  EEPROM.begin(512); //Max bytes of eeprom to use
   yield();
   Serial.println();
   Serial.print("writing EEPROM: ");
@@ -296,7 +366,6 @@ void writeEEPROM(int startAdr, int laenge, String writeString) {
 }
 
 void readEEPROM(int startAdr, int maxLength, char* dest) {
-  EEPROM.begin(512);
   delay(10);
   for (int i = 0; i < maxLength; i++)
     {
