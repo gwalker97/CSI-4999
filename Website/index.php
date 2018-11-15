@@ -440,6 +440,19 @@ if($_SESSION["guest"] == true) {
             }
         }
 
+        function fnHideShowTempAutomation(arg) {
+            var isAutomated = arg;
+
+            if (isAutomated == 1) {
+                document.getElementById('automate-temp').classList.remove('dont-display');
+                document.getElementById('automate-temp').classList.add('display');
+            }
+            else {
+                document.getElementById('automate-temp').classList.remove('display');
+                document.getElementById('automate-temp').classList.add('dont-display');
+            }
+        }
+
         function fnSelectSceneAppliance(arg) {
             var appliance = document.getElementById(arg);
 
@@ -1084,6 +1097,52 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
             </div>
         </div>
 
+        <div id="tempModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" onclick="fnClearSceneModal()">&times;</button>
+                        <h4 class="modal-title">Temperature Settings</h4>
+                    </div>
+                    <!-- Modal body-->
+                    <div class="modal-body">
+                        <!-- Modal form-->
+                        <form id="temp-form" class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="automate-temp-div">
+                                    <label class="lbl-automate">Would you like to set a temperature for automated cooling?</label>
+
+                                    <label style="margin: 0 5px;">Yes</label>
+                                    <input type="radio" style="margin: 0 5px;" id="yesTempAutomated" name="tempAutomate" value="1" onclick="fnHideShowTempAutomation(this.value)"/>
+
+                                    <label style="margin: 0 5px;">No</label>
+                                    <input type="radio" style="margin: 0 5px;" id="noTempAutomated" name="tempAutomate" value="0" onclick="fnHideShowTempAutomation(this.value)" checked />
+                                </div>
+                            </div>
+                            <div id="automate-temp" class="dont-display automate-temp-div col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 10px;">
+                                    Temperature
+                                    <input type="number" placeholder="Temperature" style="margin-left: 10px;">
+                                </div>
+                                <label style="margin: 0 5px;">°F</label>
+                                <input type="radio" style="margin: 0 5px;" id="tempF" name="tempType" value="F" checked/>
+                                <label style="margin: 0 5px;">°C</label>
+                                <input type="radio" style="margin: 0 5px;" id="tempC" name="tempType" value="C" />
+                            </div>
+
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <button type="button" id="btn-save-temp-settings" class="btn-component-save-cancel btn-setting-option btn-save-appliance" style="margin-top: 15px;">Save</button>
+                            </div>
+                        </form>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+
         <div class="main-page-container">
             <div class="temp-container">
                 <div class="temp-container-inside">
@@ -1106,6 +1165,7 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
                     ?>
 
                     <button id="btnTempF" class="btn-temp btn-temp-left btn-temp-selected" onclick="fnTempChange(this.id)">F</button>
+                    <button id="btnTempSettings" class="btn-temp btn-temp-settings" data-toggle="modal" data-target="#tempModal"><i class="fa fa-cog"></i></button>
                     <button id="btnTempC" class="btn-temp btn-temp-right btn-temp-not-selected" onclick="fnTempChange(this.id)">C</button>
                 </div>
             </div>
@@ -1173,7 +1233,7 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
                         if ($_SESSION['gID'] != 2) {
                             echo '<button class="fa fa-home btn-sign-out btn-cog" onclick="window.location.href=\'house-settings.php\'"></button>';
                         }
-                        
+
                         echo '<button class="fa fa-user btn-sign-out btn-cog" onclick="window.location.href=\'accountSettings.php\'"></button>';
                         ?>
 

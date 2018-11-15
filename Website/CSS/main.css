@@ -670,10 +670,17 @@ path {
 }
 
 .btn-temp-left {
-    margin-left: 15px;
+    margin-right: -4px;
+    margin-left: 3px;
     border: none;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
+}
+
+.btn-temp-settings {
+    padding-left: 6px;
+    background-color: #9b9b9b;
+    border: none;
 }
 
 .btn-temp-right {
@@ -940,6 +947,11 @@ path {
 }
 
 .automate-div {
+    margin: 15px auto;
+    text-align: center;
+}
+
+.automate-temp-div {
     margin: 15px auto;
     text-align: center;
 }
