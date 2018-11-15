@@ -1,6 +1,13 @@
 <?php
 require('config.php');
 
+if($_SESSION["guest"] == true) {
+    $_SESSION['loginMsg'] = "Please login first.";
+
+    header("Location: login.php");
+    die();
+}
+
 if($_SERVER["REQUEST_METHOD"] == "POST") {
     $uname = mysqli_real_escape_string($conn,$_POST['uname']);
     $pass = mysqli_real_escape_string($conn,$_POST['passw1']);
