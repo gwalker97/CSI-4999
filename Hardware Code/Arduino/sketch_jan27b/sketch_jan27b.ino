@@ -1,5 +1,3 @@
-#include <QueueList.h>
-#include <HashMap.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
@@ -23,14 +21,6 @@ bool dbConn = true;
 bool hosting = false;
 String st;
 // For scenes
-int sceneID[25];
-const byte HASH_SIZE = 25;
-//storage. Both values are stored as integers for easier comparisons. First int is the time, second int is the Scene_ID.
-HashType<int, int> startScene[HASH_SIZE];
-HashMap<int, int> startMap = HashMap<int, int>(startScene, HASH_SIZE);
-HashType<int, int> endScene[HASH_SIZE];
-HashMap<int , int> endMap = HashMap<int, int>(endScene, HASH_SIZE);
-QueueList<int> queue;
 String content;
 MDNSResponder mdns;
 int statusCode;
@@ -41,6 +31,7 @@ int timezone = 7 * 3600;
 int dst = 0;
 void tryConnDB(){
   int count = 0;
+  int dbQueryCnt = 0;
   if(WiFi.status() == WL_CONNECTED){
  while(!conn.connect(server_addr, 3306, user, dbpass)){
     Serial.println(WiFi.status());
@@ -108,13 +99,6 @@ void readWifi(){
   readEEPROM(0,32,ssid);
   readEEPROM(32,32,password);
   readEEPROM(64,16,ipAddr);
- // readEEPROM(80,32, temp);
-  //if(temp == NULL){
-    //Serial.println("Yeet");
-  //}
-}
-void eraseWifi(){
-  
 }
 //setup function
 void setup(void){ 
@@ -153,6 +137,7 @@ void loop(void){
     }
     //Serial.println("high");
    queryDB(false);
+   
    queryDB(true);
    queryTime();
    //Check current time against both hashses for collisions
@@ -164,25 +149,13 @@ void loop(void){
   server.handleClient();
 }
 
-bool isCollision(int timeUsed, HashMap<int, int> hash, bool checkScene, int sceneID){ // 'timeUsed' could be current time, or time from database
-  Serial.println(hash.getIndexOf(timeUsed));
-  if(hash.getIndexOf(timeUsed) != NULL){
-    if(!hash.getValueOf(timeUsed) == sceneID){
-      return true;
-    }else{
-      return false;
-    }
-  }else{
-    return false;
-  }
-}
 
 int parseTime(char* timeString){
   // Parses the values from the 
   String finalTime = "";
   timeString = strtok(timeString, ":");
   while (timeString != NULL){
-    finalTime += strtok(timeString, ":")
+    finalTime += strtok(timeString, ":");
   }
 }
 
@@ -196,7 +169,7 @@ int queryTime(){
 }
 
 void queryDB(bool scene){
-  delay(50);
+ delay(50);
  digitalWrite(LED, HIGH);
  if(WiFi.status() != WL_CONNECTED){
   wificonnect = false;
@@ -211,6 +184,7 @@ void queryDB(bool scene){
   //char* query = "Select * from SeniorProject.Addon";
   }else{
  query = "SELECT Scenes.Scene_ID, Scene.Start_Time, Scene.End_Time, Scene.IS_Automated;";
+ // Select * from Scenes Where (DATE_FORMAT(NOW(), '%k:%i:%s') > DATE_FORMAT(Start_Time + INTERVAL 4 HOUR, '%k:%i:%s') AND (DATE_FORMAT(NOW() + INTERVAL 2 MINUTE, '%k:%i:%s') < DATE_FORMAT(Start_Time + INTERVAL 280 MINUTE, '%k:%i:%s')));
   }
   cur_mem->execute(query);
   // Fetch the columns and print them
@@ -243,8 +217,6 @@ void queryDB(bool scene){
         int sceneID = atoi(row->values[0]);
         char* timeStart = row->values[3];
         char* timeEnd = row->values[4];
-          if ( !isCollsion(timeStart, sceneMap, true, sceneID) )
-          startScene[sceneID](parseTime(timeStart), 
        }
         if (f < cols->num_fields-1) {
          //Serial.print(", ");
@@ -352,6 +324,7 @@ void createWebServer(int webtype)
 
 //startAdr: offset (bytes), writeString: String to be written to EEPROM
 void writeEEPROM(int startAdr, int laenge, String writeString) {
+  EEPROM.begin(512);
   yield();
   Serial.println();
   Serial.print("writing EEPROM: ");
@@ -366,6 +339,8 @@ void writeEEPROM(int startAdr, int laenge, String writeString) {
 }
 
 void readEEPROM(int startAdr, int maxLength, char* dest) {
+  
+  EEPROM.begin(512);
   delay(10);
   for (int i = 0; i < maxLength; i++)
     {
