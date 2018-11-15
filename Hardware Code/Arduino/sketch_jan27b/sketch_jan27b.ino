@@ -184,10 +184,8 @@ void queryDB(bool scene){
   //char* query = "Select * from SeniorProject.Addon";
   }else{
  query = "SELECT Scenes.Scene_ID, Scene.Start_Time, Scene.End_Time, Scene.IS_Automated;";
- // Select * from Scenes Where (DATE_FORMAT(NOW(), '%k:%i:%s') >
- //DATE_FORMAT(Start_Time + INTERVAL 4 HOUR, '%k:%i:%s') AND 
- //(DATE_FORMAT(NOW() + INTERVAL 2 MINUTE, '%k:%i:%s') 
- //< DATE_FORMAT(Start_Time + INTERVAL 280 MINUTE, '%k:%i:%s')));
+ //Select * from Scenes Where (DATE_FORMAT(NOW(), '%k:%i:%s') > DATE_FORMAT(Start_Time, '%k:%i:%s') AND (DATE_FORMAT(NOW() + INTERVAL 2 MINUTE, '%k:%i:%s') < DATE_FORMAT(Start_Time + INTERVAL 2 MINUTE, '%k:%i:%s')));
+
   }
   cur_mem->execute(query);
   // Fetch the columns and print them
