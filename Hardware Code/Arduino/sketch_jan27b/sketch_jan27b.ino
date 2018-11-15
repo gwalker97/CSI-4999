@@ -183,9 +183,7 @@ void queryDB(bool scene){
   query = "SELECT Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID;";
   //char* query = "Select * from SeniorProject.Addon";
   }else{
- query = "SELECT Scenes.Scene_ID, Scene.Start_Time, Scene.End_Time, Scene.IS_Automated;";
- //Select * from Scenes Where (DATE_FORMAT(NOW(), '%k:%i:%s') > DATE_FORMAT(Start_Time, '%k:%i:%s') AND (DATE_FORMAT(NOW() + INTERVAL 2 MINUTE, '%k:%i:%s') < DATE_FORMAT(Start_Time + INTERVAL 2 MINUTE, '%k:%i:%s')));
-
+ query = "Select Hosts.Host_Mac, Addon.Addon_ID, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (Start_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW(), '%k:%i') <= DATE_FORMAT(Start_Time + INTERVAL 1 MINUTE, '%k:%i'))));";
   }
   cur_mem->execute(query);
   // Fetch the columns and print them
