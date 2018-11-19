@@ -59,6 +59,10 @@ def mysqlConn():
 	myconn = mysql.connector.connect(host=hostname, user=username, passwd=password, db=dbname)
 	return myconn
 
+
+def getTemp(int Target_Temp)
+	return (Target_Temp * 9.0 / 5.0 + 32.0)
+
 def reading():
 	global coolVal
 	conn = mysqlConn()
@@ -67,13 +71,16 @@ def reading():
 		try:
 		#The following query will pull the temp
 		#At which the fan turns on at, from the database
-			#cur.execute("select CoolTemp from *The Table*;")
-			#if cur.rowcount > 0 : #Check if any rows were returned
-          			# for "Enter the target temp here" in cur.fetchall() :
-                    		   # coolVAl = "The target ID"
-
+			cur.execute("select Is_Automated, Target_Temp, Target_Temp_Type from Temp;")
+			if cur.rowcount > 0 : #Check if any rows were returned
+          			for Is_Automated, Target_Temp, Target_Temp_Type in cur.fetchall() :
+					if Is_Automated == 1 :
+						if Target_Temp_Type = "F" :					
+							coolVal = Target_Temp
+						else:
+							coolVal = getTemp(Target_Temp)
 			temps = read_temp()
-			if (temps[1] >= 80):
+			if (temps[1] >= coolVal):
 				cooling.coolOn()
 			else:
 				cooling.coolOff()
