@@ -183,9 +183,9 @@ void queryDB(bool sceneStart, bool sceneEnd){
   query = "SELECT Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID;";
   //char* query = "Select * from SeniorProject.Addon";
   }else if(sceneStart){
- query = "Select Hosts.Host_Mac, Addon.Addon_ID, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (Start_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW(), '%k:%i') <= DATE_FORMAT(Start_Time + INTERVAL 1 MINUTE, '%k:%i'))));";
+ query = "Select Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (Start_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW(), '%k:%i') <= DATE_FORMAT(Start_Time + INTERVAL 1 MINUTE, '%k:%i'))));";
   }else if(sceneEnd){
-     query = "Select Hosts.Host_Mac, Addon.Addon_ID, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (End_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW(), '%k:%i') <= DATE_FORMAT(End_Time + INTERVAL 1 MINUTE, '%k:%i'))));";
+     query = "Select Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (End_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW(), '%k:%i') <= DATE_FORMAT(End_Time + INTERVAL 1 MINUTE, '%k:%i'))));";
   }
   cur_mem->execute(query);
   // Fetch the columns and print them
@@ -210,14 +210,9 @@ void queryDB(bool sceneStart, bool sceneEnd){
           //Serial.print("From db: ");
          // Serial.println(row->values[0]);
           // Serial.println(WiFi.macAddress());
-        if(mac == WiFi.macAddress() && !scene){
+        if(mac == WiFi.macAddress()){
           gpio(atoi(row->values[1]), atof(row->values[2]), row->values[3]);
          // Serial.println("Made it here");
-       }else if (scene){
-        // First check to see if it collides based on ID. Then check the time.
-        int sceneID = atoi(row->values[0]);
-        char* timeStart = row->values[3];
-        char* timeEnd = row->values[4];
        }
         if (f < cols->num_fields-1) {
          //Serial.print(", ");
