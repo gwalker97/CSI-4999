@@ -1136,7 +1136,7 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
                                         $result = mysqli_query($conn,$sql);
                                         $row = mysqli_fetch_array($result);
                                     
-                                        if ($row['Is_Automated'] == 0) {
+                                        if ($row['Is_Automated'] == 0 || is_null($row['Is_Automated'])) {
                                             echo '<label style="margin: 0 5px;">Yes</label>
                                                 <input type="radio" style="margin: 0 5px;" id="yesTempAutomated" name="tempAutomate" value="1" onclick="fnHideShowTempAutomation(this.value)"/>
 
@@ -1159,7 +1159,7 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
                                         $result = mysqli_query($conn,$sql);
                                         $row = mysqli_fetch_array($result);
                                     
-                                        if ($row['Is_Automated'] == 0) {
+                                        if ($row['Is_Automated'] == 0 || is_null($row['Is_Automated'])) {
                                             echo '<div id="automate-temp" class="dont-display automate-temp-div col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 10px;">
                                                     Temperature

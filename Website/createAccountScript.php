@@ -88,6 +88,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 
                         $sql6 = "insert into House_Assignment (Assign_House_ID, Assign_User_ID) values (" . $newHouseID . ", " . $id . ")";
                         $result6 = mysqli_query($conn,$sql6);
+                        
+                        $sql7 = "INSERT INTO Temp (House_ID, F, C, Is_Automated, Target_Temp, Target_Temp_Type) VALUES (" . $newHouseID . ", 0, 0, 0, 0, 'F')";
+                        $result7 = mysqli_query($conn,$sql7);
 
                         $success = true;
                     }
