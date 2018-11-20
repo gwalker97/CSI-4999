@@ -826,7 +826,26 @@ if($_SESSION["guest"] == true) {
             }
         }
 
-
+        function fnSaveAutomatedTemp() {
+            var isAutomated = document.querySelector('input[name="tempAutomate"]:checked').value;
+            
+            if (isAutomated == 0) {
+                $.post(
+                    "automateTemp.php",
+                    { isA: (isAutomated), aT: (0), aTT: ('F'),  },
+                );
+            } else {
+                var temp = document.getElementById('automatedTemp').value;
+                var tempType = document.querySelector('input[name="tempType"]:checked').value;
+                
+                $.post(
+                    "automateTemp.php",
+                    { isA: (isAutomated), aT: (temp), aTT: (tempType),  },
+                );
+            }
+            
+            $('#tempModal').modal('hide');
+        }
     </script>
 
     <body class="login-body">
@@ -1110,27 +1129,77 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="automate-temp-div">
                                     <label class="lbl-automate">Would you like to set a temperature for automated cooling?</label>
+                                    
+                                    <?php
+                                        $hID = $_SESSION['home'];
+                                        $sql = "SELECT * FROM Temp WHERE House_ID = '$hID'";
+                                        $result = mysqli_query($conn,$sql);
+                                        $row = mysqli_fetch_array($result);
+                                    
+                                        if ($row['Is_Automated'] == 0) {
+                                            echo '<label style="margin: 0 5px;">Yes</label>
+                                                <input type="radio" style="margin: 0 5px;" id="yesTempAutomated" name="tempAutomate" value="1" onclick="fnHideShowTempAutomation(this.value)"/>
 
-                                    <label style="margin: 0 5px;">Yes</label>
-                                    <input type="radio" style="margin: 0 5px;" id="yesTempAutomated" name="tempAutomate" value="1" onclick="fnHideShowTempAutomation(this.value)"/>
+                                                <label style="margin: 0 5px;">No</label>
+                                                <input type="radio" style="margin: 0 5px;" id="noTempAutomated" name="tempAutomate" value="0" onclick="fnHideShowTempAutomation(this.value)" checked />';
+                                        } else {
+                                            echo '<label style="margin: 0 5px;">Yes</label>
+                                                <input type="radio" style="margin: 0 5px;" id="yesTempAutomated" name="tempAutomate" value="1" onclick="fnHideShowTempAutomation(this.value)" checked />
 
-                                    <label style="margin: 0 5px;">No</label>
-                                    <input type="radio" style="margin: 0 5px;" id="noTempAutomated" name="tempAutomate" value="0" onclick="fnHideShowTempAutomation(this.value)" checked />
+                                                <label style="margin: 0 5px;">No</label>
+                                                <input type="radio" style="margin: 0 5px;" id="noTempAutomated" name="tempAutomate" value="0" onclick="fnHideShowTempAutomation(this.value)" />';
+                                        }
+                                    ?>
                                 </div>
                             </div>
-                            <div id="automate-temp" class="dont-display automate-temp-div col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 10px;">
-                                    Temperature
-                                    <input type="number" placeholder="Temperature" style="margin-left: 10px;">
-                                </div>
-                                <label style="margin: 0 5px;">°F</label>
-                                <input type="radio" style="margin: 0 5px;" id="tempF" name="tempType" value="F" checked/>
-                                <label style="margin: 0 5px;">°C</label>
-                                <input type="radio" style="margin: 0 5px;" id="tempC" name="tempType" value="C" />
-                            </div>
+                            
+                            <?php
+                                        $hID = $_SESSION['home'];
+                                        $sql = "SELECT * FROM Temp WHERE House_ID = '$hID'";
+                                        $result = mysqli_query($conn,$sql);
+                                        $row = mysqli_fetch_array($result);
+                                    
+                                        if ($row['Is_Automated'] == 0) {
+                                            echo '<div id="automate-temp" class="dont-display automate-temp-div col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 10px;">
+                                                    Temperature
+                                                    <input id="automatedTemp" type="number" placeholder="Temperature" style="margin-left: 10px;">
+                                                </div>
+                                                <label style="margin: 0 5px;">°F</label>
+                                                <input type="radio" style="margin: 0 5px;" id="tempF" name="tempType" value="F" checked/>
+                                                <label style="margin: 0 5px;">°C</label>
+                                                <input type="radio" style="margin: 0 5px;" id="tempC" name="tempType" value="C" />
+                                            </div>';
+                                        } else {
+                                            $temp = $row['Target_Temp'];
+                                            $tempType = $row['Target_Temp_Type'];
+                                            
+                                            echo '<div id="automate-temp" class="automate-temp-div col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 10px;">
+                                                    Temperature
+                                                    <input id="automatedTemp" type="number" placeholder="Temperature" style="margin-left: 10px;" value="' . $temp . '">
+                                                </div>
+                                                <label style="margin: 0 5px;">°F</label>';
+                                            
+                                            if ($tempType == "F") {
+                                                echo '<input type="radio" style="margin: 0 5px;" id="tempF" name="tempType" value="F" checked/>
+                                                <label style="margin: 0 5px;">°C</label>
+                                                <input type="radio" style="margin: 0 5px;" id="tempC" name="tempType" value="C" />
+                                                </div>';
+                                            }
+                                            else {
+                                                echo '<input type="radio" style="margin: 0 5px;" id="tempF" name="tempType" value="F"/>
+                                                <label style="margin: 0 5px;">°C</label>
+                                                <input type="radio" style="margin: 0 5px;" id="tempC" name="tempType" value="C" checked />
+                                                </div>';
+                                            }
+                                            
+                                        }
+                                    ?>
+                            
 
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <button type="button" id="btn-save-temp-settings" class="btn-component-save-cancel btn-setting-option btn-save-appliance" style="margin-top: 15px;">Save</button>
+                                <button type="button" id="btn-save-temp-settings" class="btn-component-save-cancel btn-setting-option btn-save-appliance" style="margin-top: 15px;" onclick="fnSaveAutomatedTemp()">Save</button>
                             </div>
                         </form>
                     </div>
