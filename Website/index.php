@@ -846,6 +846,57 @@ if($_SESSION["guest"] == true) {
             
             $('#tempModal').modal('hide');
         }
+        
+        function fnClearControllerModal() {
+
+            document.getElementById('controller-name').innerHTML = "";
+            document.getElementById('controller-MAC').innerHTML = "";
+
+            document.getElementById('controller-form').reset();
+        }
+
+        function fnSaveController() {
+
+            var contName = document.getElementById('controller-name').value;
+            var contMAC = document.getElementById('controller-MAC').value;
+
+            var contNameOkay = true;
+            var contMACOkay = true;
+
+            if (contName == "") {
+                contNameOkay = false;
+            }
+            if (contMAC == "" | !document.getElementById('controller-MAC').checkValidity()) {
+                contMACOkay = false;
+            }
+            
+
+            if (contNameOkay && contMACOkay) {
+
+                $.post(
+                    "newController.php",
+                    { cN: (contName), cM: (contMAC) },
+                );
+
+
+                fnClearControllerModal();
+                $('#controllerModal').modal('hide');
+                window.location.reload(true); 
+            }
+            else {
+                if (!contNameOkay) {
+                    document.getElementById('controller-error-message').innerHTML = "Missing name!";
+                    document.getElementById('controller-error-message').classList.remove('dont-display');
+                    document.getElementById('controller-error-message').classList.add('display');
+                }
+                if (!contMACOkay) {
+                    document.getElementById('controller-error-message').innerHTML = "Invalid MAC Address!";
+                    document.getElementById('controller-error-message').classList.remove('dont-display');
+                    document.getElementById('controller-error-message').classList.add('display');
+                }
+            }
+        }
+        
     </script>
 
     <body class="login-body">
@@ -1200,6 +1251,46 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
 
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <button type="button" id="btn-save-temp-settings" class="btn-component-save-cancel btn-setting-option btn-save-appliance" style="margin-top: 15px;" onclick="fnSaveAutomatedTemp()">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- New Controller Modal content -->
+        <div id="controllerModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" onclick="fnClearControllerModal()">&times;</button>
+                        <h4 class="modal-title">New Controller</h4>
+                    </div>
+                    <!-- Modal body-->
+                    <div class="modal-body">
+                        <!-- Modal form-->
+
+                        <form id="controller-form" class="row">
+                            <div id="controller-error" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label id="controller-error-message" class="automate-error dont-display"></label>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                            <p>If you haven't done so already, join the controller to your network.</p>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                                    <i class="fa fa-home fa-login"></i>
+                                    <input type="text" id="controller-name" placeholder="Controller Name" class="input-login scene-name-input">
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                                    <i class="fa fa-home fa-login"></i>
+                                    <input type="text" required id="controller-MAC" placeholder="MAC Address" class="input-login scene-name-input" pattern="^(([0-9A-Fa-f]{2}:){5})[0-9A-Fa-f]{2}$">
+                                <p>Seperate each two characters by ":".</p>
+                            </div>
+
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
+                                <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveController()">Save</button>
                             </div>
                         </form>
                     </div>
