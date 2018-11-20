@@ -1358,6 +1358,7 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
                         <div class="dropdown-menu new-dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#newCompModal">Appliance</a>
                             <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#myModal" onclick="fnClearSceneModal()">Scene</a>
+                            <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#controllerModal" onclick="fnClearControllerModal()">Controller</a>
                         </div>
                     </div>
                 </div>
