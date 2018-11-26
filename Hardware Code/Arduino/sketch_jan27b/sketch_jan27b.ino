@@ -8,9 +8,8 @@
 #include <MySQL_Cursor.h>
 //qjxu4534 is the old password
 // Replace with your network credentials
-char *passwordHost = "00000000";
-IPAddress server_addr(192,168,43,219); // IP of the MySQL *server* here
-char* user = "root";              // MySQL user login username
+char *passwordHost = "00000000"; // IP of the MySQL *server* here
+char* user = "root";         // MySQL user login username
 char* dbpass = "root";
 int LED = 2;
 WiFiClient client;
@@ -19,6 +18,8 @@ MySQL_Connection conn((Client *)&client);
 bool wificonnect = true;
 bool dbConn = true;
 bool hosting = false;
+int ip[4];
+int dbQueryCnt = 0;
 String st;
 // For scenes
 String content;
@@ -26,12 +27,19 @@ MDNSResponder mdns;
 int statusCode;
 char ssid[32];
 char password[32];
-char ipAddr[16] = "192,168,43,219";//Pi Access Point IP-Adr.
-int timezone = 7 * 3600;
-int dst = 0;
+char ipAddr[16];//Pi Access Point IP-Adr.
+int count = 0;
+void parseIP(){
+  char* newIP = strtok(ipAddr, ".");
+  for(int i = 0; i < 4; i++){
+    ip[i] = atoi(newIP);
+    newIP = strtok(0, ".");
+  }
+ }
+
 void tryConnDB(){
-  int count = 0;
-  int dbQueryCnt = 0;
+  parseIP();
+  IPAddress server_addr(ip[0], ip[1], ip[2], ip[3]);
   if(WiFi.status() == WL_CONNECTED){
  while(!conn.connect(server_addr, 3306, user, dbpass)){
     Serial.println(WiFi.status());
@@ -65,8 +73,6 @@ bool tryConn(){
     Serial.println("Connected to Wifi!");
     WiFi.softAPdisconnect(true);
     Serial.println("Stopped AP");
-   configTime(timezone, dst, "pool.ntp.org","time.nist.gov");
-  Serial.println("\nWaiting for Internet time");
     tryConnDB();
     hosting = false;
 }
@@ -95,21 +101,15 @@ void hostWifi(){
 }
 
 void readWifi(){
-  char* temp;
   readEEPROM(0,32,ssid);
   readEEPROM(32,32,password);
   readEEPROM(64,16,ipAddr);
 }
 //setup function
 void setup(void){ 
-  Serial.println("We're alive") ;
-  rst_info *rinfo;
-  rinfo = ESP.getResetInfoPtr();
-  Serial.println(String("ResetInfo.reason = ") + (*rinfo).reason);
 
   EEPROM.begin(512);
   //if(rebootInt == 6){
-    
   //}else{
   readWifi();
   //}
@@ -137,9 +137,15 @@ void loop(void){
     }
     //Serial.println("high");
    queryDB(false, false);
+   Serial.println(dbQueryCnt);
+   if (dbQueryCnt >= 30){
+    Serial.println("new");
    queryDB(true, false);
+   Serial.println("start");
    queryDB(false, true);
-   queryTime();
+   Serial.println("end");
+   dbQueryCnt = 0;
+   }
    //Check current time against both hashses for collisions
   }else if(!hosting){
     hostWifi();
@@ -147,7 +153,9 @@ void loop(void){
     tryConn();
   }
   server.handleClient();
+  dbQueryCnt = dbQueryCnt + 1;
 }
+
 
 
 int parseTime(char* timeString){
@@ -157,15 +165,6 @@ int parseTime(char* timeString){
   while (timeString != NULL){
     finalTime += strtok(timeString, ":");
   }
-}
-
-int queryTime(){
-  MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
-  char* query = "DATE_FORMAT(NOW(), '%k%i%s')";
-  cur_mem->execute(query); 
-  const char* timeNow = cur_mem->get_next_row()->values[0];
-  Serial.println(timeNow);
-  return atoi(timeNow);
 }
 
 void queryDB(bool sceneStart, bool sceneEnd){
@@ -181,21 +180,23 @@ void queryDB(bool sceneStart, bool sceneEnd){
   MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
   if(!sceneStart && !sceneEnd){
   query = "SELECT Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID;";
-  //char* query = "Select * from SeniorProject.Addon";
+ // Serial.println("gottem");
   }else if(sceneStart){
- query = "Select Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (Start_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW(), '%k:%i') <= DATE_FORMAT(Start_Time + INTERVAL 1 MINUTE, '%k:%i'))));";
+ query = "Select Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (Start_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW() - INTERVAL 50 SECOND, '%k:%i') <= DATE_FORMAT(Start_Time, '%k:%i'))));";
   }else if(sceneEnd){
-     query = "Select Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (End_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW(), '%k:%i') <= DATE_FORMAT(End_Time + INTERVAL 1 MINUTE, '%k:%i'))));";
+     query = "Select Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (End_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW() - INTERVAL 50 SECOND, '%k:%i') < DATE_FORMAT(End_Time, '%k:%i'))));";
   }
   cur_mem->execute(query);
   // Fetch the columns and print them
   column_names *cols = cur_mem->get_columns();
   // printing the column names.
   for (int f = 0; f < cols->num_fields; f++) {
-    //Serial.print(cols->fields[f]->name);
+   if (sceneStart || sceneEnd){
+    Serial.print(cols->fields[f]->name);
     if (f < cols->num_fields-1) {
-      //Serial.print(", ");
+      Serial.print(", ");
     }
+  }
   }
   //Serial.println();
   // Read the rows and print them
@@ -206,13 +207,26 @@ void queryDB(bool sceneStart, bool sceneEnd){
       for (int f = 0; f < cols->num_fields; f++) {
         // Printing each value. Send the values to the gpio function for pin manipulation
         // Send specific index to the gpio function. As of now, check the ip, index length-1, and index length-2
-         String mac = row->values[0];
-          //Serial.print("From db: ");
-         // Serial.println(row->values[0]);
-          // Serial.println(WiFi.macAddress());
+        String mac = row->values[0];
+         //Serial.print("From db: ");
+         //Serial.println(mac);
+        // Serial.println(row->values[1]);
+        // Serial.println(WiFi.macAddress());
         if(mac == WiFi.macAddress()){
+          if(sceneStart){
+            Serial.println(row->values[1]);
+            Serial.println(row->values[2]);
+            Serial.println(row->values[3]);
+            gpio(atoi(row->values[1]), 1, row->values[3]);
+          }else if(sceneEnd){
+            Serial.println(row->values[1]);
+            Serial.println(row->values[2]);
+            Serial.println(row->values[3]);
+            gpio(atoi(row->values[1]), 0, row->values[3]);
+          }else{
           gpio(atoi(row->values[1]), atof(row->values[2]), row->values[3]);
-         // Serial.println("Made it here");
+         //Serial.println("Made it here");
+          }
        }
         if (f < cols->num_fields-1) {
          //Serial.print(", ");
@@ -220,6 +234,17 @@ void queryDB(bool sceneStart, bool sceneEnd){
       }
     }
   } while (row != NULL);
+  if(sceneStart){
+    String x = "update Addon set Addon_State = 1 where Addon_ID = ";
+            x += row->values[1];
+            x += ";";
+            cur_mem->execute(x.c_str());
+  }else if(sceneEnd){
+    String x = "update Addon set Addon_State = 0 where Addon_ID = ";
+            x += row->values[1];
+            x += ";";
+            cur_mem->execute(x.c_str());
+  }
   delete cur_mem;
  }
 }
@@ -259,10 +284,13 @@ void createWebServer(int webtype)
         String ipStr = String(ip[0]) + '.' + String(ip[1]) + '.' + String(ip[2]) + '.' + String(ip[3]);
         content = "<!DOCTYPE HTML>\r\n<html>Hello from ESP8266 at ";
         content += ipStr;
+        content += "<br/><label>My MAC Address is: ";
+        content += WiFi.macAddress();
+        content += "</label><br/>";
         content += "<p>";
         content += st;
         content += "</p><form method='get' action='setting'><label>SSID: </label><input name='ssid' length=32><br /><label>Password: </label><input name='pass' length=64>";
-        content += "<br/><label>Pi IP Address: </label><input name='dbip' length=64><input type='submit'></form>";
+        content += "<br/><label>Pi IP Address: </label><input name='dbip' length=64><label> (Seperate with '.') </label><input type='submit'></form>";
         content += "</html>";
         server.send(200, "text/html", content);  
     });
