@@ -826,7 +826,77 @@ if($_SESSION["guest"] == true) {
             }
         }
 
+        function fnSaveAutomatedTemp() {
+            var isAutomated = document.querySelector('input[name="tempAutomate"]:checked').value;
+            
+            if (isAutomated == 0) {
+                $.post(
+                    "automateTemp.php",
+                    { isA: (isAutomated), aT: (0), aTT: ('F'),  },
+                );
+            } else {
+                var temp = document.getElementById('automatedTemp').value;
+                var tempType = document.querySelector('input[name="tempType"]:checked').value;
+                
+                $.post(
+                    "automateTemp.php",
+                    { isA: (isAutomated), aT: (temp), aTT: (tempType),  },
+                );
+            }
+            
+            $('#tempModal').modal('hide');
+        }
+        
+        function fnClearControllerModal() {
 
+            document.getElementById('controller-name').innerHTML = "";
+            document.getElementById('controller-MAC').innerHTML = "";
+
+            document.getElementById('controller-form').reset();
+        }
+
+        function fnSaveController() {
+
+            var contName = document.getElementById('controller-name').value;
+            var contMAC = document.getElementById('controller-MAC').value;
+
+            var contNameOkay = true;
+            var contMACOkay = true;
+
+            if (contName == "") {
+                contNameOkay = false;
+            }
+            if (contMAC == "" | !document.getElementById('controller-MAC').checkValidity()) {
+                contMACOkay = false;
+            }
+            
+
+            if (contNameOkay && contMACOkay) {
+
+                $.post(
+                    "newController.php",
+                    { cN: (contName), cM: (contMAC) },
+                );
+
+
+                fnClearControllerModal();
+                $('#controllerModal').modal('hide');
+                window.location.reload(true); 
+            }
+            else {
+                if (!contNameOkay) {
+                    document.getElementById('controller-error-message').innerHTML = "Missing name!";
+                    document.getElementById('controller-error-message').classList.remove('dont-display');
+                    document.getElementById('controller-error-message').classList.add('display');
+                }
+                if (!contMACOkay) {
+                    document.getElementById('controller-error-message').innerHTML = "Invalid MAC Address!";
+                    document.getElementById('controller-error-message').classList.remove('dont-display');
+                    document.getElementById('controller-error-message').classList.add('display');
+                }
+            }
+        }
+        
     </script>
 
     <body class="login-body">
@@ -1110,27 +1180,117 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="automate-temp-div">
                                     <label class="lbl-automate">Would you like to set a temperature for automated cooling?</label>
+                                    
+                                    <?php
+                                        $hID = $_SESSION['home'];
+                                        $sql = "SELECT * FROM Temp WHERE House_ID = '$hID'";
+                                        $result = mysqli_query($conn,$sql);
+                                        $row = mysqli_fetch_array($result);
+                                    
+                                        if ($row['Is_Automated'] == 0 || is_null($row['Is_Automated'])) {
+                                            echo '<label style="margin: 0 5px;">Yes</label>
+                                                <input type="radio" style="margin: 0 5px;" id="yesTempAutomated" name="tempAutomate" value="1" onclick="fnHideShowTempAutomation(this.value)"/>
 
-                                    <label style="margin: 0 5px;">Yes</label>
-                                    <input type="radio" style="margin: 0 5px;" id="yesTempAutomated" name="tempAutomate" value="1" onclick="fnHideShowTempAutomation(this.value)"/>
+                                                <label style="margin: 0 5px;">No</label>
+                                                <input type="radio" style="margin: 0 5px;" id="noTempAutomated" name="tempAutomate" value="0" onclick="fnHideShowTempAutomation(this.value)" checked />';
+                                        } else {
+                                            echo '<label style="margin: 0 5px;">Yes</label>
+                                                <input type="radio" style="margin: 0 5px;" id="yesTempAutomated" name="tempAutomate" value="1" onclick="fnHideShowTempAutomation(this.value)" checked />
 
-                                    <label style="margin: 0 5px;">No</label>
-                                    <input type="radio" style="margin: 0 5px;" id="noTempAutomated" name="tempAutomate" value="0" onclick="fnHideShowTempAutomation(this.value)" checked />
+                                                <label style="margin: 0 5px;">No</label>
+                                                <input type="radio" style="margin: 0 5px;" id="noTempAutomated" name="tempAutomate" value="0" onclick="fnHideShowTempAutomation(this.value)" />';
+                                        }
+                                    ?>
                                 </div>
                             </div>
-                            <div id="automate-temp" class="dont-display automate-temp-div col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 10px;">
-                                    Temperature
-                                    <input type="number" placeholder="Temperature" style="margin-left: 10px;">
-                                </div>
-                                <label style="margin: 0 5px;">°F</label>
-                                <input type="radio" style="margin: 0 5px;" id="tempF" name="tempType" value="F" checked/>
-                                <label style="margin: 0 5px;">°C</label>
-                                <input type="radio" style="margin: 0 5px;" id="tempC" name="tempType" value="C" />
-                            </div>
+                            
+                            <?php
+                                        $hID = $_SESSION['home'];
+                                        $sql = "SELECT * FROM Temp WHERE House_ID = '$hID'";
+                                        $result = mysqli_query($conn,$sql);
+                                        $row = mysqli_fetch_array($result);
+                                    
+                                        if ($row['Is_Automated'] == 0 || is_null($row['Is_Automated'])) {
+                                            echo '<div id="automate-temp" class="dont-display automate-temp-div col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 10px;">
+                                                    Temperature
+                                                    <input id="automatedTemp" type="number" placeholder="Temperature" style="margin-left: 10px;">
+                                                </div>
+                                                <label style="margin: 0 5px;">°F</label>
+                                                <input type="radio" style="margin: 0 5px;" id="tempF" name="tempType" value="F" checked/>
+                                                <label style="margin: 0 5px;">°C</label>
+                                                <input type="radio" style="margin: 0 5px;" id="tempC" name="tempType" value="C" />
+                                            </div>';
+                                        } else {
+                                            $temp = $row['Target_Temp'];
+                                            $tempType = $row['Target_Temp_Type'];
+                                            
+                                            echo '<div id="automate-temp" class="automate-temp-div col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 10px;">
+                                                    Temperature
+                                                    <input id="automatedTemp" type="number" placeholder="Temperature" style="margin-left: 10px;" value="' . $temp . '">
+                                                </div>
+                                                <label style="margin: 0 5px;">°F</label>';
+                                            
+                                            if ($tempType == "F") {
+                                                echo '<input type="radio" style="margin: 0 5px;" id="tempF" name="tempType" value="F" checked/>
+                                                <label style="margin: 0 5px;">°C</label>
+                                                <input type="radio" style="margin: 0 5px;" id="tempC" name="tempType" value="C" />
+                                                </div>';
+                                            }
+                                            else {
+                                                echo '<input type="radio" style="margin: 0 5px;" id="tempF" name="tempType" value="F"/>
+                                                <label style="margin: 0 5px;">°C</label>
+                                                <input type="radio" style="margin: 0 5px;" id="tempC" name="tempType" value="C" checked />
+                                                </div>';
+                                            }
+                                            
+                                        }
+                                    ?>
+                            
 
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <button type="button" id="btn-save-temp-settings" class="btn-component-save-cancel btn-setting-option btn-save-appliance" style="margin-top: 15px;">Save</button>
+                                <button type="button" id="btn-save-temp-settings" class="btn-component-save-cancel btn-setting-option btn-save-appliance" style="margin-top: 15px;" onclick="fnSaveAutomatedTemp()">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- New Controller Modal content -->
+        <div id="controllerModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" onclick="fnClearControllerModal()">&times;</button>
+                        <h4 class="modal-title">New Controller</h4>
+                    </div>
+                    <!-- Modal body-->
+                    <div class="modal-body">
+                        <!-- Modal form-->
+
+                        <form id="controller-form" class="row">
+                            <div id="controller-error" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label id="controller-error-message" class="automate-error dont-display"></label>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                            <p>If you haven't done so already, join the controller to your network.</p>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                                    <i class="fa fa-home fa-login"></i>
+                                    <input type="text" id="controller-name" placeholder="Controller Name" class="input-login scene-name-input">
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                                    <i class="fa fa-home fa-login"></i>
+                                    <input type="text" required id="controller-MAC" placeholder="MAC Address" class="input-login scene-name-input" pattern="^(([0-9A-Fa-f]{2}:){5})[0-9A-Fa-f]{2}$">
+                                <p>Seperate each two characters by ":".</p>
+                            </div>
+
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
+                                <button type="button" class="btn-component-save-cancel btn-setting-option btn-save-appliance" onclick="fnSaveController()">Save</button>
                             </div>
                         </form>
                     </div>
@@ -1198,6 +1358,7 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
                         <div class="dropdown-menu new-dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#newCompModal">Appliance</a>
                             <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#myModal" onclick="fnClearSceneModal()">Scene</a>
+                            <a class="dropdown-item new-dropdown" data-toggle="modal" data-target="#controllerModal" onclick="fnClearControllerModal()">Controller</a>
                         </div>
                     </div>
                 </div>
