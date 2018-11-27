@@ -81,7 +81,7 @@
 
             foreach ($_POST['newGroups'] as $val) {
                 $val2 = mysqli_real_escape_string($conn, $val);
-                $sql5 = "insert into Groups (Groups_Name) values ('" . $val2 . "')";
+                $sql5 = "insert into Groups (Groups_Name, House_ID) values ('" . $val2 . "', " . $_SESSION['home'] . ")";
                 $result5 = mysqli_query($conn,$sql5);
 
                 if ($result5 === false) {
