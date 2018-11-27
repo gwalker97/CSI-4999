@@ -86,6 +86,11 @@ var componentBehavior = getParameterByName("componentBehavior");
 				name: document.getElementById('AppName').value,
 				description: document.getElementById('AppDesc').value,
 				roomid: document.getElementById("roomList").options[document.getElementById("roomList").selectedIndex].value,
+                <?php 
+                    if ($_SESSION['gID'] == 1) {
+                        echo 'gID: document.getElementById("gIDList").value';
+                    }
+                ?>
 			    });	
 			document.location.href = 'index.php';	
 	}
@@ -136,21 +141,27 @@ var componentBehavior = getParameterByName("componentBehavior");
                     <input type="text" id="AppDesc" placeholder="Appliance Description" class="input-login">
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <select id="roomList" class="select-rooms">
-                                <?php
+                    <?php
+                    
+                        if ($_SESSION['gID'] == 1) {
+                            echo '<div><select style="width:50%;margin-right:10px" id="roomList" class="select-rooms">';
+                        } else {
+                            echo '<select id="roomList" class="select-rooms">';
+                        }
                                 
 				
 				//Get component ID, minus prefix
 				$compNum = substr(htmlspecialchars($_GET['component-id']), 1);
 
 		//Get room name of current component, insert first into list
-		$sql3 = "SELECT A.Addon_Room_ID, Room.Room_Name 
+		$sql3 = "SELECT A.Addon_Room_ID, Room.Room_Name, A.Addon_Group_ID 
                             FROM Room
                             INNER JOIN 
                             (select * from Addon where Addon_ID='$compNum') as A
                             ON Room.Room_ID=A.Addon_Room_ID";
                 $result3 = mysqli_query($conn,$sql3);
 		$row4 = mysqli_fetch_array($result3,MYSQLI_ASSOC);
+                    $curGID = $row4['Addon_Group_ID'];
 		echo '<option selected="true" value="'.$row4['Addon_Room_ID'].'">'.$row4['Room_Name'].'</option>';
 
 				//Get all room names, minus the one associated with component
@@ -165,6 +176,25 @@ var componentBehavior = getParameterByName("componentBehavior");
                                 }}
                             ?>
                             </select>
+                    <?php
+                
+                        if ($_SESSION['gID'] == 1) {
+                            
+                            $sql5 = "select * from Groups where House_ID = " . $_SESSION['home'];
+                            $result5 = mysqli_query($conn,$sql5);
+                            
+                            echo '<select id="gIDList" style="width:35%;float:right;margin-top:5px;margin-left:5%" class="fa fa-lock fa-login select-rooms">';
+                                while ($row5 = mysqli_fetch_array($result5,MYSQLI_ASSOC)) {
+
+                                    if ($curGID == $row5['Groups_gID']) {
+                                        echo '<option selected value="' . $row5['Groups_gID'] . '">' . $row5['Groups_Name'] .'</option>';
+                                    } else {
+                                        echo '<option value="' . $row5['Groups_gID'] . '">' . $row5['Groups_Name'] .'</option>';
+                                    }
+                                }
+                            echo '</select></div>';
+                        }
+                    ?>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                     <button type="button" class="btn-component-switch btn-setting-option btn-cancel" onclick="deleteComponent()">Delete</button>

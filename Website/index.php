@@ -1366,7 +1366,12 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
                 <div style="display: inline-block; margin-top: 10px;">
                     <select id="roomList" class="selects">
                         <?php
-                        $sql2 = "select * from Room where House_ID='$hID'";
+                        
+                        if ($_SESSION['gID'] == 1) {
+                            $sql2 = "select * from Room where House_ID='$hID'";
+                        } else {
+                            $sql2 = "select * from Room where House_ID='$hID' and (Room_gID=2 or Room_gID=" . $_SESSION['gID'] . ")";   
+                        }
                         $result2 = mysqli_query($conn,$sql2);
 
                         echo '<option value="All Rooms">All Rooms</option>';
@@ -1431,11 +1436,20 @@ while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
 
             <div id="all-components">
                 <?php
-                $sql3 = "SELECT Addon.Addon_Name, Addon.Addon_Description, Addon.Addon_ID, A.Room_Name, Addon.Addon_State, Addon.Addon_Type 
-                            FROM Addon 
+                
+                if ($_SESSION['gID'] == 1) {
+                    $sql3 = "SELECT Addon.Addon_Name, Addon.Addon_Description, Addon.Addon_ID, A.Room_Name, Addon.Addon_State, Addon.Addon_Type 
+                            FROM Addon
                             INNER JOIN 
                             (select * from Room where House_ID=" . $_SESSION['home'] . ") as A
                             ON A.Room_ID=Addon.Addon_Room_ID;";
+                } else {
+                    $sql3 = "SELECT A.Addon_Name, A.Addon_Description, A.Addon_ID, B.Room_Name, A.Addon_State, A.Addon_Type 
+                                FROM (select * from Addon where (Addon_Group_ID = 2 or Addon_Group_ID = " . $_SESSION['gID'] . ")) as A
+                                INNER JOIN 
+                                (select * from Room where House_ID='$hID') as B
+                                ON B.Room_ID=A.Addon_Room_ID;";
+                }
                 $result3 = mysqli_query($conn,$sql3);
                 $i = -1;
                 while($row3 = mysqli_fetch_array($result3,MYSQLI_ASSOC)) {
