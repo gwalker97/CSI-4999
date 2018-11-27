@@ -18,7 +18,7 @@ MySQL_Connection conn((Client *)&client);
 bool wificonnect = true;
 bool dbConn = true;
 bool hosting = false;
-int ip[4];
+int ip[4] = {0, 0, 0, 0};
 int dbQueryCnt = 0;
 String st;
 // For scenes
@@ -30,10 +30,14 @@ char password[32];
 char ipAddr[16];//Pi Access Point IP-Adr.
 int count = 0;
 void parseIP(){
+  if(ipAddr != NULL){
   char* newIP = strtok(ipAddr, ".");
   for(int i = 0; i < 4; i++){
     ip[i] = atoi(newIP);
     newIP = strtok(0, ".");
+  }
+  }else{
+    
   }
  }
 
@@ -41,17 +45,17 @@ void tryConnDB(){
   parseIP();
   IPAddress server_addr(ip[0], ip[1], ip[2], ip[3]);
   if(WiFi.status() == WL_CONNECTED){
- while(!conn.connect(server_addr, 3306, user, dbpass)){
+ if (!conn.connect(server_addr, 3306, user, dbpass)){
     Serial.println(WiFi.status());
-      delay(500);
-      }
+    return;
+ }else{
       Serial.println(".");
  MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
  cur_mem->execute("use SeniorProject");
  Serial.println("db Conn!");
   }
 }
-
+}
 
 bool tryConn(){
   wificonnect = true;
@@ -75,6 +79,7 @@ bool tryConn(){
     Serial.println("Stopped AP");
     tryConnDB();
     hosting = false;
+
 }
 return wificonnect;
 }
@@ -104,6 +109,7 @@ void readWifi(){
   readEEPROM(0,32,ssid);
   readEEPROM(32,32,password);
   readEEPROM(64,16,ipAddr);
+  Serial.println(ipAddr);
 }
 //setup function
 void setup(void){ 
@@ -112,6 +118,7 @@ void setup(void){
   //if(rebootInt == 6){
   //}else{
   readWifi();
+  Serial.println("Here");
   //}
   WiFi.begin(ssid, password);
   
@@ -138,7 +145,7 @@ void loop(void){
     //Serial.println("high");
    queryDB(false, false);
    Serial.println(dbQueryCnt);
-   if (dbQueryCnt >= 30){
+   if (dbQueryCnt >= 45){
     Serial.println("new");
    queryDB(true, false);
    Serial.println("start");
@@ -178,13 +185,14 @@ void queryDB(bool sceneStart, bool sceneEnd){
    //Serial.println("\nRunning SELECT and printing results\n");
   // Initiate the query class instance
   MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
+  MySQL_Cursor *cur_new = new MySQL_Cursor(&conn);
   if(!sceneStart && !sceneEnd){
   query = "SELECT Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID;";
  // Serial.println("gottem");
   }else if(sceneStart){
- query = "Select Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (Start_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW() - INTERVAL 50 SECOND, '%k:%i') <= DATE_FORMAT(Start_Time, '%k:%i'))));";
+ query = "Select Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type, Addon.Addon_ID from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (Start_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW() - INTERVAL 50 SECOND, '%k:%i') <= DATE_FORMAT(Start_Time, '%k:%i'))));";
   }else if(sceneEnd){
-     query = "Select Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (End_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW() - INTERVAL 50 SECOND, '%k:%i') < DATE_FORMAT(End_Time, '%k:%i'))));";
+     query = "Select Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type, Addon.Addon_ID from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (End_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW() - INTERVAL 50 SECOND, '%k:%i') < DATE_FORMAT(End_Time, '%k:%i'))));";
   }
   cur_mem->execute(query);
   // Fetch the columns and print them
@@ -198,7 +206,6 @@ void queryDB(bool sceneStart, bool sceneEnd){
     }
   }
   }
-  //Serial.println();
   // Read the rows and print them
   row_values *row = NULL;
   do {
@@ -218,11 +225,19 @@ void queryDB(bool sceneStart, bool sceneEnd){
             Serial.println(row->values[2]);
             Serial.println(row->values[3]);
             gpio(atoi(row->values[1]), 1, row->values[3]);
+            String x = "update Addon set Addon_State = 1 where Addon_ID = ";
+            x += row->values[4];
+            x += ";";
+            cur_new->execute(x.c_str());
           }else if(sceneEnd){
             Serial.println(row->values[1]);
             Serial.println(row->values[2]);
             Serial.println(row->values[3]);
             gpio(atoi(row->values[1]), 0, row->values[3]);
+            String x = "update Addon set Addon_State = 1 where Addon_ID = ";
+            x += row->values[4];
+            x += ";";
+            cur_new->execute(x.c_str());
           }else{
           gpio(atoi(row->values[1]), atof(row->values[2]), row->values[3]);
          //Serial.println("Made it here");
@@ -234,20 +249,10 @@ void queryDB(bool sceneStart, bool sceneEnd){
       }
     }
   } while (row != NULL);
-  if(sceneStart){
-    String x = "update Addon set Addon_State = 1 where Addon_ID = ";
-            x += row->values[1];
-            x += ";";
-            cur_mem->execute(x.c_str());
-  }else if(sceneEnd){
-    String x = "update Addon set Addon_State = 0 where Addon_ID = ";
-            x += row->values[1];
-            x += ";";
-            cur_mem->execute(x.c_str());
-  }
   delete cur_mem;
+  delete cur_new;
  }
-}
+ }
 
 //This function is passed a pin and state to determine if it is to be shut off or turned on.
 void gpio(int pin, float state, String type){
