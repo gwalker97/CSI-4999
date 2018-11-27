@@ -101,78 +101,64 @@
         if (array_key_exists('delRooms', $_POST)) {
 
             if ($_SESSION['gID'] == 1) {
-                $conf = array_key_exists($_POST['confirmed']);
                 
                 foreach ($_POST['delRooms'] as $val) {
                     $val2 = mysqli_real_escape_string($conn, $val);
-                    $sql4 = "select A.Addon_ID, Scene_Assignment.Scene_ID, A.Addon_Room_ID from Scene_Assignment right join ( select Addon_ID, Addon_Room_ID from Addon where Addon_Room_ID=" . $val2 . " ) as A on A.Addon_ID = Scene_Assignment.Addon_ID";
+                    
+                    if (array_key_exists('confirmedRooms', $_POST) && array_key_exists($val2, $_POST['confirmedRooms'])) {
+                        $conf = true;
+                    }
+                    $sql4 = "select Scenes.Scene_Name, B.Scene_ID, B.Addon_ID, B.Addon_Room_ID, B.Addon_Name from (select Scene_assignment.Scene_ID, A.Addon_ID, A.Addon_Room_ID, A.Addon_Name from (select Addon_ID, Addon_Room_ID, Addon_Name from Addon where Addon_Room_ID=" . $val2 . ") as A join Scene_Assignment on A.Addon_ID = Scene_Assignment.Addon_ID ) as B join Scenes on Scenes.Scene_ID = B.Scene_ID";
                     $result4 = mysqli_query($conn,$sql4);
+                    $sct = "";
+                    $at = "";
                     
                     while ($row4 = mysqli_fetch_array($result4,MYSQLI_ASSOC)) {
-                        $sct = "";
-                        $at = "";
-                        
+                         
                         if ($conf) {
                             $sql5 = "delete from Scene_Assignment where Addon_ID=" . $row4['Addon_ID'];
                             $result5 = mysqli_query($conn,$sql5);
-
+                        } else {
+                            $sct .= "     " . $row4['Addon_Name'] . " will be removed from " . $row4['Scene_Name'] . ".<br>";
+                        }
+                    }
+                    
+                    $sql4 = "select Addon_ID, Addon_Room_ID, Addon_Name from Addon where Addon_Room_ID=" . $val2;
+                    $result4 = mysqli_query($conn,$sql4);
+                    
+                    while ($row4 = mysqli_fetch_array($result4,MYSQLI_ASSOC)) {
+                        
+                        if ($conf) {
                             $sql6 = "delete from Addon where Addon_ID=" . $row4['Addon_ID'];
                             $result6 = mysqli_query($conn,$sql6);
                         } else {
-                            
-                            if ($row4['Scene_ID'] !== "") {
-                                $sct .= "     Addon [" . $row4['Addon_ID'] . "] will be removed from scene [" . $row4['Scene_ID'] . "].<br>";
-                            }
-                            
-                            $at = "     Addon [" . $row4['Addon_ID'] . "] will be deleted.<br>";
+                            $at .= "     " . $row4['Addon_Name'] . " will be deleted.<br>";
+                            $_SESSION['confirmed'][$val2] = true;
+                        }
                     }
                     
                     if (!isset($row4) || $conf) {
                         $sql7 = "delete from Room where Room_ID=" . $val2;
                         $result7 = mysqli_query($conn,$sql7);
-                        
+
                         if ($result7 === false) {
-                            
+
                             if (isset($_SESSION['houseSetMsg'])) {
                                 $_SESSION['houseSetMsg'] .= "<br>Could not delete room [" . $val2 . "].";
                             } else {
                                 $_SESSION['houseSetMsg'] = "Could not delete room [" . $val2 . "].";
                             }
                         }
-                    } else {
-                        $url = 'confirm.php';
-                        $confText = "";
-                        
-                        if ($sct != "") {
-                            $confText .= "The following scene changes will occur:<br>" . $sct;
-                        }
-                        
-                        if ($at != "") {
-                            $confText .= "The following addon changes will occur:<br>" . $at;
-                        }
-                        
-                        $data['source'] = "house-settingsScript.php";
-                        $data['confMsg'] = $confText;
-                        $_SESSION['houseSetScrPOST'] = $_POST;
-                        
-                        $options = array(
-                            'http' => array(
-                                'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-                                'method'  => 'POST',
-                                'content' => http_build_query($data)
-                            )
-                        );
-                        $context  = stream_context_create($options);
-                        $result = file_get_contents($url, false, $context);
-                        
-                        if ($result === FALSE) {
-                            if (isset($_SESSION['houseSetMsg'])) {
-                                $_SESSION['houseSetMsg'] .= "<br>Something went wrong.";
-                            } else {
-                                $_SESSION['houseSetMsg'] = "Something went wrong.";
-                            }
-                        }
                     }
+                }
+                
+                if ($at != "") {
+                    
+                    if ($sct != "") {
+                        $_SESSION['houseSetConfMsg'][0] = $sct;
+                    }
+
+                    $_SESSION['houseSetConfMsg'][1] = $at;
                 }
 
             } else {
@@ -212,6 +198,7 @@
                 }
             }
         }
+
     }
 
     header('Location: house-settings.php');

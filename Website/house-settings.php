@@ -42,6 +42,17 @@
     </head>
     
     <script>
+        
+        function test() {
+            $('#myModal').modal('show');
+        }
+        
+        <?php
+            if (array_key_exists('confirmed', array_filter($_SESSION))) {
+                echo "window.onload = test;";
+            }
+        ?>
+        
         /*window.onload = function(){
             var houseBehavior = getParameterByName("houseBehavior");
             
@@ -115,9 +126,58 @@
                 target.style.display = "none";
             }
         }
+        
+        function hideScene() {
+            document.getElementById("myModal").setAttribute("style", "display:none");   
+        }
     </script>
     
     <body class="login-body">
+        
+        <!-- Modal content -->
+        <div <?php
+                if (!isset($_SESSION['houseSetConfMsg'])) {
+                    echo 'style="display:none"';
+                }
+             ?> id="myModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" onclick="hideScene()">&times;</button>
+                        <center><h3 class="modal-title">WARNING</h3></center>
+                    </div>
+                    <!-- Modal body-->
+                    <div class="modal-body" style="overflow:none;scroll:auto">
+                        <center>
+                        <?php
+                
+                            if (array_key_exists('houseSetConfMsg', $_SESSION)) {
+                                
+                                if (array_key_exists(0, array_filter($_SESSION['houseSetConfMsg']))) {
+                                    echo '<h4>The following <b>Scene</b> changes will take place:</h4><div style="text-align:center"><p style="display:inline-block;text-align:left">' . $_SESSION['houseSetConfMsg'][0] . '</p></div><br>';
+                                }
+
+                                if (array_key_exists(1, array_filter($_SESSION['houseSetConfMsg']))) {
+                                    echo '<h4>The following <b>Addon</b> changes will take place:</h4><div style="text-align:center"><p style="color:red;display:inline-block;text-align:left">' . $_SESSION['houseSetConfMsg'][1] . '</p></div>';
+                                }
+                                
+                                unset($_SESSION['houseSetConfMsg']);
+                                
+                                echo '<h5><b>Delete again to confirm these changes.</b></h5>';
+                            }
+                        ?>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        
+        
         <?php
             $sql2 = "select * from House where House_ID='$hID'";
             $result2 = mysqli_query($conn,$sql2);
@@ -167,7 +227,13 @@
                                     echo '<div id="' . $row['Room_ID'] . '" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <i class="fa fa-map-marker fa-login"></i>
                                             <input style="width:53%" type="text" placeholder="Room Name" value="' . $row['Room_Name'] . '" class="input-settings" name="updateRooms[' . $row['Room_ID'] . '][]">
-                                            <i class="fa fa-minus fa-settings-remove-room" onclick="removeRoomBox(this.parentNode)"></i>
+                                            ';
+                                    
+                                            if (array_key_exists('confirmed', $_SESSION) && array_key_exists($row['Room_ID'], $_SESSION['confirmed'])) {
+                                                echo '<input style="display:none" type="text" value="1" name="confirmedRooms[' . $row['Room_ID'] . ']">';
+                                                unset($_SESSION['confirmed'][$row['Room_ID']]);
+                                            }
+                                            echo '<i class="fa fa-minus fa-settings-remove-room" onclick="removeRoomBox(this.parentNode)"></i>
                                                 <select class="fa fa-lock fa-login user-dropdown" name="updateRooms[' . $row['Room_ID'] . '][]">';
                                                     foreach ($groups as $row3) {
 
