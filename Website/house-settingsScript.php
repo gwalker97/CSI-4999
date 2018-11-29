@@ -110,8 +110,9 @@
                     }
                     $sql4 = "select Scenes.Scene_Name, B.Scene_ID, B.Addon_ID, B.Addon_Room_ID, B.Addon_Name from (select Scene_assignment.Scene_ID, A.Addon_ID, A.Addon_Room_ID, A.Addon_Name from (select Addon_ID, Addon_Room_ID, Addon_Name from Addon where Addon_Room_ID=" . $val2 . ") as A join Scene_Assignment on A.Addon_ID = Scene_Assignment.Addon_ID ) as B join Scenes on Scenes.Scene_ID = B.Scene_ID";
                     $result4 = mysqli_query($conn,$sql4);
-                    $sct = "";
-                    $at = "";
+                    
+                    if (!isset($sct)) { $sct = ""; }
+                    if (!isset($at)) { $at = ""; }
                     
                     while ($row4 = mysqli_fetch_array($result4,MYSQLI_ASSOC)) {
                          
