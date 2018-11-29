@@ -48,6 +48,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['pass'] = $row['Password'];
                 $_SESSION['admin'] = $row3['Admin'];
                 $_SESSION['uID'] = $row3['User_ID'];
+                $_SESSION['gID'] = $row3['User_gID'];
                 $_SESSION['guest'] = false;
                 $id = $row3['User_ID'];
 
