@@ -34,6 +34,7 @@ void parseIP(){
   if(addr.length() > 0){
     Serial.println("parse IP");
   char* newIP = strtok(ipAddr, ".");
+  Serial.println(addr);
   for(int i = 0; i < 4; i++){
     ip[i] = atoi(newIP);
     newIP = strtok(0, ".");
@@ -45,16 +46,20 @@ void parseIP(){
     ip[3] = 1; 
   }
  }
-
 bool tryConnDB(){
   parseIP();
+  int test = 0;
   IPAddress server_addr(ip[0], ip[1], ip[2], ip[3]);
   if(WiFi.status() == WL_CONNECTED){
     Serial.println("Attempting to Conn to DB");
  if (!conn.connect(server_addr, 3306, user, dbpass)){
     //Serial.println(WiFi.status());
+    if(test >= 2){
     Serial.println("no dbconnection");
     return false;
+    }else{
+      test += 1;
+    }
  }else{
       Serial.println(".");
  MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
