@@ -6,22 +6,23 @@ import RPi.GPIO as gpio
 from mysql.connector import MySQLConnection, Error
 import time
 import temp
+import scenes
 
 hostname = '127.0.0.1'
 username = 'root'
 password = 'root'
 dbname = 'SeniorProject'
 dbtable = 'Addon'
-
-dLights = [0]*25 # This array will hold the dimmed lights so the pins stay dimmed when function is exited.
+conn
 
 #Makes a query request to the database and passes returned data to parser
-def doQuery( conn ):
+def doQuery(  ):
+	global conn
 	cur = conn.cursor(buffered=True)
-	conn.commit()	
-	#For now we are just pulling all the time until we can recompile the newest version of mysql to 5.7 on ARM64.
-	cur.execute( "Select Addon_ID, Addon_Pin, Addon_State, Addon_Host_ID from Addon")
-	#cur.execute( "SELECT Addon_ID, Addon_Name, Addon_Pin, Addon_State FROM %s WHERE EXISTS (Select table_schema,table_name,update_time FROM information_schema.tables WHERE update_time > (NOW() - INTERVAL .15 SECOND) AND table_schema = '%s' AND table_name='%s')" %(dbtable, dbname, dbtable)); #This query might not be needed. The impact would be minimal
+	conn.commit()
+#Starting work on new join statment for cron
+	#cur.execute( "select Scenes.Start_Time, Scenes.End_Time from Scenes INNER JOIN Scene_Assignment on Scenes.Scene_ID = Scene_Assignment.Scene_ID INNER JOIN Addon on Scene_Assignment.Addon_ID = Addon.Addon_ID;")
+ #This query might not be needed. The impact would be minimal
 	if cur.rowcount > 0 : #Check if any rows were returned
 		for Addon_ID, Addon_Pin, Addon_State, Addon_Host_ID in cur.fetchall() :
 			if (Addon_Host_ID == 1):
@@ -30,19 +31,18 @@ def doQuery( conn ):
 		#GPIO(Addon_Pin, Addon_State, Addon_Dim, Addon_dimVal)
 
 #this method will pull from the database every half second and update the GPIO pins
-def dbThread( conn ):
+def dbThread(  ):
 	while 1:
 		time.sleep(.1)
-		#print "Celsius: %s / Far: %s" %(temp.c, temp.f)
-		doQuery( conn )
+		doQuery(  )
 
 
 def MySQLConnect():
 	#print "Using mysql.connector...."
-	myConnection = mysql.connector.connect(host=hostname, user=username, passwd=password, db=dbname)	
+	conn = mysql.connector.connect(host=hostname, user=username, passwd=password, db=dbname)	
 	doQuery( myConnection )
 	# Pull from the database and sync the pin states to that of the database.
-	t = threading.Thread(target=dbThread, args=(myConnection,))
+	t = threading.Thread(target=dbThread,)
 	t.start()
 
 #Sends messages to the GPIO Pins
@@ -75,4 +75,4 @@ def GPIO(id, pinNum, On_Off):
 			dLights[id] = pwm
 
 if __name__ =='__main__':
-	MySQLConnect()
+	#MySQLConnect()

@@ -8,7 +8,7 @@ from mysql.connector import MySQLConnection, Error
 hostname = '127.0.0.1'
 username = 'root'
 password = 'root'
-dbname = 'SeniorProject'
+dbname = 'Senior'
 dbtable = 'Addon'
 
 c = 0
