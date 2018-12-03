@@ -18,7 +18,7 @@ MySQL_Connection conn((Client *)&client);
 bool wificonnect = true;
 bool dbConn = true;
 bool hosting = false;
-int ip[4] = {0, 0, 0, 0};
+int ip[4] = {127, 0, 0, 1};
 int dbQueryCnt = 0;
 String st;
 // For scenes
@@ -30,29 +30,37 @@ char password[32];
 char ipAddr[16];//Pi Access Point IP-Adr.
 int count = 0;
 void parseIP(){
-  if(ipAddr != NULL){
+  String addr(ipAddr);
+  if(addr.length() > 0){
+    Serial.println("parse IP");
   char* newIP = strtok(ipAddr, ".");
   for(int i = 0; i < 4; i++){
     ip[i] = atoi(newIP);
     newIP = strtok(0, ".");
   }
   }else{
-    
+    ip[0] = 127;
+    ip[1] = 0;
+    ip[2] = 0;
+    ip[3] = 1; 
   }
  }
 
-void tryConnDB(){
+bool tryConnDB(){
   parseIP();
   IPAddress server_addr(ip[0], ip[1], ip[2], ip[3]);
   if(WiFi.status() == WL_CONNECTED){
+    Serial.println("Attempting to Conn to DB");
  if (!conn.connect(server_addr, 3306, user, dbpass)){
-    Serial.println(WiFi.status());
-    return;
+    //Serial.println(WiFi.status());
+    Serial.println("no dbconnection");
+    return false;
  }else{
       Serial.println(".");
  MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
- cur_mem->execute("use SeniorProject");
+ cur_mem->execute("use Senior");
  Serial.println("db Conn!");
+ return true;
   }
 }
 }
@@ -77,7 +85,11 @@ bool tryConn(){
     Serial.println("Connected to Wifi!");
     WiFi.softAPdisconnect(true);
     Serial.println("Stopped AP");
-    tryConnDB();
+    if(tryConnDB()){
+      dbConn = true;
+    }else{
+      dbConn = false;
+    }
     hosting = false;
 
 }
@@ -142,16 +154,19 @@ void loop(void){
       hosting = false;
       WiFi.softAPdisconnect(true);
     }
+    if (dbConn){
     //Serial.println("high");
    queryDB(false, false);
    Serial.println(dbQueryCnt);
-   if (dbQueryCnt >= 45){
+   if (dbQueryCnt >= 5){
     Serial.println("new");
    queryDB(true, false);
    Serial.println("start");
    queryDB(false, true);
    Serial.println("end");
    dbQueryCnt = 0;
+   }
+  dbQueryCnt = dbQueryCnt + 1;
    }
    //Check current time against both hashses for collisions
   }else if(!hosting){
@@ -160,7 +175,6 @@ void loop(void){
     tryConn();
   }
   server.handleClient();
-  dbQueryCnt = dbQueryCnt + 1;
 }
 
 
@@ -221,18 +235,14 @@ void queryDB(bool sceneStart, bool sceneEnd){
         // Serial.println(WiFi.macAddress());
         if(mac == WiFi.macAddress()){
           if(sceneStart){
-            Serial.println(row->values[1]);
-            Serial.println(row->values[2]);
-            Serial.println(row->values[3]);
+            Serial.println(row->values[f]);
             gpio(atoi(row->values[1]), 1, row->values[3]);
             String x = "update Addon set Addon_State = 1 where Addon_ID = ";
             x += row->values[4];
             x += ";";
             cur_new->execute(x.c_str());
           }else if(sceneEnd){
-            Serial.println(row->values[1]);
-            Serial.println(row->values[2]);
-            Serial.println(row->values[3]);
+            Serial.println(row->values[f]);
             gpio(atoi(row->values[1]), 0, row->values[3]);
             String x = "update Addon set Addon_State = 1 where Addon_ID = ";
             x += row->values[4];
@@ -243,13 +253,11 @@ void queryDB(bool sceneStart, bool sceneEnd){
          //Serial.println("Made it here");
           }
        }
-        if (f < cols->num_fields-1) {
-         //Serial.print(", ");
-        }
       }
     }
   } while (row != NULL);
   delete cur_mem;
+  Serial.println("Delete Serial");
   delete cur_new;
  }
  }
@@ -306,12 +314,6 @@ void createWebServer(int webtype)
         if (qsid.length() > 0 && qpass.length() > 0) {
           Serial.println("clearing eeprom");
           for (int i = 0; i < 96; ++i) { EEPROM.write(i, 0); }
-          Serial.println(qsid);
-          Serial.println("");
-          Serial.println(qpass);
-          Serial.println("");
-          Serial.println(qip);
-          Serial.println("");
           Serial.println("writing eeprom ssid:");
           writeEEPROM(0,32,qsid);
           Serial.println("writing eeprom pass:");
