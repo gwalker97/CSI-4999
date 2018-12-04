@@ -107,28 +107,19 @@
                 $sql6 = "update Room set Room_gID=2 where Room_gID=" . $val2;
                 $result6 = mysqli_query($conn,$sql6);
 
-                if ($result6 === true) {
+                //User table
+                $sql7 = "update User set User_gID=2 where User_gID=" . $val2;
+                $result7 = mysqli_query($conn,$sql7);
 
-                    //User table
-                    $sql7 = "update User set User_gID=2 where User_gID=" . $val2;
-                    $result7 = mysqli_query($conn,$sql7);
-                    
-                    if (result7 === true) {
-                    
-                        $sql8 = "update Addon set Addon_Group_ID=2 where Addon_Group_ID=" . $val2;
-                        $result8 = mysqli_query($conn,$sql8);
+                $sql8 = "update Addon set Addon_Group_ID=2 where Addon_Group_ID=" . $val2;
+                $result8 = mysqli_query($conn,$sql8);
 
-                        if ($result8 === true) {
+                //safe to remove
+                $sql9 = "delete from Groups where Groups_gID=" . $val2;
+                $result9 = mysqli_query($conn,$sql9);
 
-                            //safe to remove
-                            $sql9 = "delete from Groups where Groups_gID=" . $val2;
-                            $result9 = mysqli_query($conn,$sql9);
-
-                            if ($result9 === true) {
-                                $success = true;
-                            }
-                        }
-                    }
+                if ($result9 === true) {
+                    $success = true;
                 }
 
                 if ($success === false) {
