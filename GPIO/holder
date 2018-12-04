@@ -1,0 +1,3 @@
+javac -cp .:classes:/opt/pi4j/lib/'*' -d . Test.java
+
+sudo java -cp .:classes:/opt/pi4j/lib/'*'
