@@ -23,30 +23,43 @@ As a User, I want to have a back button so that I can return to index if I need 
 
 As a User, I want to have a button so that I can logout.
 
+As a User, I want to have a dropdown on index to filter addons by room.
+
+As a User, I want the addon list to contain only addons I have permission to see.
+
+As an Admin, I want to have a dropdown on component settings pages to change its permission group.
+
 As a User, I want to have a login page so that I can login.
     As a User, I want a button so that I can create a new account.
 
-As a User, I want to have a create-account page so that I can create an account.
+As a User, I want to have a registration page so that I can create an account.
     As a User, I want to have a page to create a new house.
+    As a User, I want to be able to join an existing house.
 
 As a User, I want an account settings page so that I can change my account information.
     As a User, I want an input box so that I can change my username.
     As a User, I want an input box so that I can change my password.
         As a User, I want another input box so that I can confirm my new password.
+    As a User, I want a button so I can save my changes.
 
 As a User, I want a house settings page so that I can change my house information.
     As an Admin, I want an add button so that I can create rooms.     
     As an Admin, I want a delete button so that I can remove rooms.
-    As an Admin, I want a group list so that I can change a room's permission group.
-    As an Admin, I want an input box so that I can change the house name.
+    As an Admin, I want a pop-up to warn me if addons will be deleted when I remove a room.
+    As an Admin, I want a pop-up to warn me if scenes will be affects when I remove a room.
+    As an Admin, I want a group dropdown so that I can change a room's permission group.
     As an Admin, I want an input box so that I can change a room's name.
+    As an Admin, I want an input box so that I can change the house name.
     As a User of a custom group, I want an input box so that I can change the name of rooms in my group.
+    As a User, I want a button so I can save my changes.
 
 As an Admin, I want a group settings page so that I can manage permissions.
     As an Admin, I want a text field so that I can see the house code.
-    As an Admin, I want an add button so that I can create new permission groups.
-    As an Admin, I want a delete button so that I can remove permission groups.
     As an Admin, I want a group list so that I can see the groups associated with the house.
+    As an Admin, I want an add button so that I can create new permission groups.
+    As an Admin, I want a delete button so that I can remove a permission group.
     As an Admin, I want an input box so that I can change a group's name.
     As an Admin, I want an account list so that I can see other accounts associated with the house.
-    As an Admin, I want a delete button so that I can delete accounts associated with the house.
+    As an Admin, I want a group downdown so that I can change another account's permission group.
+    As an Admin, I want a delete button so that I can delete other accounts associated with the house.
+    As a User, I want a button so I can save my changes.
