@@ -8,7 +8,7 @@ from mysql.connector import MySQLConnection, Error
 hostname = '127.0.0.1'
 username = 'root'
 password = 'root'
-dbname = 'Senior'
+dbname = 'SeniorProject'
 dbtable = 'Addon'
 
 c = 0
@@ -60,8 +60,8 @@ def mysqlConn():
 	return myconn
 
 
-def getTemp(int Target_Temp)
-	return (Target_Temp * 9.0 / 5.0 + 32.0)
+def getTemp(Target_Temp):
+	return (int(Target_Temp) * 9.0 / 5.0 + 32.0)
 
 def reading():
 	global coolVal
@@ -75,7 +75,7 @@ def reading():
 			if cur.rowcount > 0 : #Check if any rows were returned
           			for Is_Automated, Target_Temp, Target_Temp_Type in cur.fetchall() :
 					if Is_Automated == 1 :
-						if Target_Temp_Type = "F" :					
+						if Target_Temp_Type == "F" :					
 							coolVal = Target_Temp
 						else:
 							coolVal = getTemp(Target_Temp)
