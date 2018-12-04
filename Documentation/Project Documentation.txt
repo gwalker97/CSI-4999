@@ -1,0 +1,90 @@
+Project Documentations:
+1. Project vision
+1.1. Backgrounds
+1.2. Socio-economic Impact, Business Objectives, and Gap Analysis
+1.3. Security and ethical concerns
+	A. Multiple users?
+	B. 
+1.4. Glossary of Key Terms
+	A. Raspberry Pi
+	B. GPIO Pins
+	C.
+
+2. Project Execution and Planning
+2.1. Team Information
+	A. 2 computer science members and 4 information technology members
+	B. Front-end/back-end: Joe Danz, Graham Walker, Alex Manaila
+	C. Raspberry Pi and server setup: Michael Muller, Alex Manaila
+	D. Documentation: Fady Putrus, Stephen Thai
+2.2. Tools and Technology
+	A. Raspberry Pi
+	B. Kuman LED Kit
+	C. HTML, PHP, Python, Javascript, CSS, Bootstrap
+	D. PhpMyAdmin
+	E. Model House?
+2.3. Project Plan
+2.4. Best standards and Practices
+
+3. System Requirement Analysis
+3.1. Functional Requirements
+3.2. Non-functional Requirements
+3.3. On-Screen Appearance of landing and other pages requirements.
+3.4. Wireframe designs
+
+4. Functional Requirements Specification
+4.1. Stakeholders
+4.2. Actors and Goals
+4.3. User stories, scenarios and Use Cases
+	A. As a user, I want to have an initial design of the screen layout
+	B. As a user, I want to have design standards for UI/UX elements
+	C. As a user, I want to be able to control across multiple devices
+	D. As a user, I want the web page to read the state of appliances
+	E. As a user, I want the web page to dynamically add the appliances associated with my account
+	F. As a user, I want the web page to be able to control appliances
+	G. As a user, I want logging out to turn off all appliances
+	H. 
+4.4. System Sequence / Activity Diagrams
+
+5. User Interface Specifications
+5.1. Preliminary Design
+5.2. User Effort Estimation
+
+6. Static Design
+6.1. Class Model
+6.2. System Operation Contracts
+6.3. Mathematical Model 
+6.4. Entity Relation
+	A. ERD in Sprint 2 presentation
+
+7. Dynamic Design
+7.1. Sequence Diagrams.
+7.2. Interface Specification
+7.3. State Diagrams
+
+8. System Architecture and System Design
+8.1. Subsystems / Component / Design Pattern Identification
+8.2. Mapping Subsystems to Hardware (Deployment Diagram)
+8.3. Persistent Data Storage
+8.4. Network Protocol
+8.5. Global Control Flow
+8.6. Hardware Requirement
+
+9. Algorithms and Data Structures
+9.1. Algorithms
+9.2. Data Structures
+
+10. User Interface Design and Implementation
+10.1. User Interface Design
+10.2. User Interface Implementation
+
+11. Testing
+11.1. Unit Test Architecture and Strategy/Framework
+11.2. Unit test definition, test data selection
+11.3. System Test Specification
+11.4. Test Reports per Spring
+
+12. Project Management
+12.1. 11.1 Project Plan
+12.2. 11.2 Risk management
+
+13. References 
