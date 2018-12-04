@@ -54,16 +54,12 @@ bool tryConnDB(){
     Serial.println("Attempting to Conn to DB");
  if (!conn.connect(server_addr, 3306, user, dbpass)){
     //Serial.println(WiFi.status());
-    if(test >= 2){
     Serial.println("no dbconnection");
     return false;
-    }else{
-      test += 1;
-    }
  }else{
       Serial.println(".");
  MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
- cur_mem->execute("use Senior");
+ cur_mem->execute("use SeniorProject;");
  Serial.println("db Conn!");
  return true;
   }
@@ -163,11 +159,11 @@ void loop(void){
     //Serial.println("high");
    queryDB(false, false);
    Serial.println(dbQueryCnt);
-   if (dbQueryCnt >= 5){
+   if (dbQueryCnt >= 45){
     Serial.println("new");
-   queryDB(true, false);
+   //queryDB(true, false);
    Serial.println("start");
-   queryDB(false, true);
+   //queryDB(false, true);
    Serial.println("end");
    dbQueryCnt = 0;
    }
@@ -209,20 +205,22 @@ void queryDB(bool sceneStart, bool sceneEnd){
   query = "SELECT Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID;";
  // Serial.println("gottem");
   }else if(sceneStart){
- query = "Select Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type, Addon.Addon_ID from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (Start_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW() - INTERVAL 50 SECOND, '%k:%i') <= DATE_FORMAT(Start_Time, '%k:%i'))));";
+ //query = "Select Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type, Addon.Addon_ID from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (Start_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW() - INTERVAL 50 SECOND, '%k:%i') <= DATE_FORMAT(Start_Time, '%k:%i'))));";
   }else if(sceneEnd){
-     query = "Select Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type, Addon.Addon_ID from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (End_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW() - INTERVAL 50 SECOND, '%k:%i') < DATE_FORMAT(End_Time, '%k:%i'))));";
+    // query = "Select Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type, Addon.Addon_ID from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (End_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW() - INTERVAL 50 SECOND, '%k:%i') < DATE_FORMAT(End_Time, '%k:%i'))));";
   }
   cur_mem->execute(query);
   // Fetch the columns and print them
   column_names *cols = cur_mem->get_columns();
   // printing the column names.
+  if(cols != NULL){
   for (int f = 0; f < cols->num_fields; f++) {
    if (sceneStart || sceneEnd){
-    Serial.print(cols->fields[f]->name);
+    //Serial.print(cols->fields[f]->name);
     if (f < cols->num_fields-1) {
-      Serial.print(", ");
+      //Serial.print(", ");
     }
+  }
   }
   }
   // Read the rows and print them
@@ -230,24 +228,16 @@ void queryDB(bool sceneStart, bool sceneEnd){
   do {
     row = cur_mem->get_next_row();
     if (row != NULL) {
-      for (int f = 0; f < cols->num_fields; f++) {
-        // Printing each value. Send the values to the gpio function for pin manipulation
-        // Send specific index to the gpio function. As of now, check the ip, index length-1, and index length-2
-        String mac = row->values[0];
-         //Serial.print("From db: ");
-         //Serial.println(mac);
-        // Serial.println(row->values[1]);
-        // Serial.println(WiFi.macAddress());
+      String mac = row->values[0];
         if(mac == WiFi.macAddress()){
           if(sceneStart){
-            Serial.println(row->values[f]);
+            Serial.println("got here");
             gpio(atoi(row->values[1]), 1, row->values[3]);
             String x = "update Addon set Addon_State = 1 where Addon_ID = ";
             x += row->values[4];
             x += ";";
             cur_new->execute(x.c_str());
           }else if(sceneEnd){
-            Serial.println(row->values[f]);
             gpio(atoi(row->values[1]), 0, row->values[3]);
             String x = "update Addon set Addon_State = 1 where Addon_ID = ";
             x += row->values[4];
@@ -258,37 +248,36 @@ void queryDB(bool sceneStart, bool sceneEnd){
          //Serial.println("Made it here");
           }
        }
-      }
     }
+    if((sceneStart || sceneEnd)){
+      Serial.println("before");
+  delete cur_new;
+  Serial.println("After");
+  if (row == NULL){
+      Serial.println("Breaking");
+      break;
+  }
+    }
+    Serial.println("After breaking");
   } while (row != NULL);
   delete cur_mem;
-  Serial.println("Delete Serial");
-  delete cur_new;
  }
  }
 
 //This function is passed a pin and state to determine if it is to be shut off or turned on.
 void gpio(int pin, float state, String type){
   pinMode(pin, OUTPUT);
-  //Serial.println(type);
-  //Serial.println(state);
   if (type == "F"){
     int turns = state * 10  * 255;
     analogWrite(pin, turns);
   }else{
-     //Serial.println(state);
   if(state == 1 && digitalRead(pin) < 1){
     digitalWrite(pin, HIGH);
-   // Serial.println("Turn on");
   }else if(state == 0 && digitalRead(pin) > 0){
     digitalWrite(pin, LOW);
-   // Serial.println("Turn off");
   }else if(state != 1 && state != 0){
     int turns = state * 255;
-    //Serial.println(pin);
-    //Serial.println("Here at Dim");
     analogWrite(pin, turns);
-    //Serial.println("Dim");
   }
   }
 }

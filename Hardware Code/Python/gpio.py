@@ -16,24 +16,26 @@ dbtable = 'Addon'
 conn
 
 #Makes a query request to the database and passes returned data to parser
-def doQuery(  ):
+def doQuery( start ):
 	global conn
 	cur = conn.cursor(buffered=True)
 	conn.commit()
 #Starting work on new join statment for cron
-	#cur.execute( "select Scenes.Start_Time, Scenes.End_Time from Scenes INNER JOIN Scene_Assignment on Scenes.Scene_ID = Scene_Assignment.Scene_ID INNER JOIN Addon on Scene_Assignment.Addon_ID = Addon.Addon_ID;")
+		if start:
+			cur.execute("Select Addon.Addon_State, Addon.Addon_ID from Addon where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (Is_Automated = 1 AND (Start_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW() - INTERVAL 50 SECOND, '%k:%i') <= DATE_FORMAT(Start_Time, '%k:%i')))));")
+		else:
+			cur.execute("Select Addon.Addon_State, Addon.Addon_ID from Addon where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (Is_Automated = 1 AND (End_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW() - INTERVAL 50 SECOND, '%k:%i') <= DATE_FORMAT(End_Time, '%k:%i')))));")
  #This query might not be needed. The impact would be minimal
 	if cur.rowcount > 0 : #Check if any rows were returned
-		for Addon_ID, Addon_Pin, Addon_State, Addon_Host_ID in cur.fetchall() :
-			if (Addon_Host_ID == 1):
-				GPIO(Addon_ID, Addon_Pin, Addon_State)
+		for Addon_State, Addon_ID in cur.fetchall() :
+				GPIOQ(Addon_ID, Addon_State)
 		#for Addon_Pin, Addon_State, Addon_Dim, Addon_dimVal in cur.fetchall() :
 		#GPIO(Addon_Pin, Addon_State, Addon_Dim, Addon_dimVal)
 
 #this method will pull from the database every half second and update the GPIO pins
 def dbThread(  ):
 	while 1:
-		time.sleep(.1)
+		time.sleep(45)
 		doQuery(  )
 
 
@@ -47,32 +49,10 @@ def MySQLConnect():
 
 #Sends messages to the GPIO Pins
 #Use this header if adding Dim.
-def GPIO(id, pinNum, On_Off):
-	#Setting up the GPIO Pin that is being used
-	global dLights
-	gpio.setmode(gpio.BCM)
-	gpio.setwarnings(False)
-	gpio.setup(pinNum, gpio.OUT)
-	
-	#Checks the value of the pin against current state
-	if On_Off == 1 and gpio.input(pinNum) < 1 :
-		gpio.output(pinNum, gpio.HIGH)
-		if dLights[id] != 0:
-			dLights[id] = 0
-	elif On_Off == 0 and gpio.input(pinNum) > 0:
-		gpio.output(pinNum, gpio.LOW)
-		if dLights[id] != 0:
-			dLights[id] = 0
-	elif On_Off != 1 and On_Off != 0:
-		#At this point the value might be used for dimming (Assume 0 < x < 1)
-		if dLights[id] != 0:
-			pwm = dLights[id]
-			pwm.ChangeDutyCycle(On_Off * 100)
-		else:
-			pwm = gpio.PWM(pinNum, 100)
-			pwm.start(0)
-			pwm.ChangeDutyCycle(On_Off * 100)
-			dLights[id] = pwm
-
+def GPIOQ(id, On_Off):
+	global conn
+	curnew = conn.cursor(buffered=True)
+	conn.commit()
+	curnew.execute("update Addon set Addon_State = %s where Addon_ID = %s;", %(On_Off, id))
 if __name__ =='__main__':
 	#MySQLConnect()
