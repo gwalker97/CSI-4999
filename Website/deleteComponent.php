@@ -5,7 +5,7 @@ $id = mysqli_real_escape_string($conn, $_POST['id']);
 
 $sql = "delete from Scene_Assignment where Addon_ID = " . $id;
 $result = mysqli_query($conn,$sql);
-$sql2 = "DELETE from Addon WHERE Addon_ID = '$id'";
+$sql2 = "delete from Addon where Addon_ID = " . $id;
 $result2 = mysqli_query($conn,$sql2);
 
 if ($result2 === true) {
