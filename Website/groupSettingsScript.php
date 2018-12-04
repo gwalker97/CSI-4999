@@ -112,15 +112,21 @@
                     //User table
                     $sql7 = "update User set User_gID=2 where User_gID=" . $val2;
                     $result7 = mysqli_query($conn,$sql7);
-
-                    if ($result7 === true) {
-
-                        //safe to remove
-                        $sql8 = "delete from Groups where Groups_gID=" . $val2;
+                    
+                    if (result7 === true) {
+                    
+                        $sql8 = "update Addon set Addon_Group_ID=2 where Addon_Group_ID=" . $val2;
                         $result8 = mysqli_query($conn,$sql8);
 
                         if ($result8 === true) {
-                            $success = true;
+
+                            //safe to remove
+                            $sql9 = "delete from Groups where Groups_gID=" . $val2;
+                            $result9 = mysqli_query($conn,$sql9);
+
+                            if ($result9 === true) {
+                                $success = true;
+                            }
                         }
                     }
                 }
@@ -145,14 +151,14 @@
                 $val2 = mysqli_real_escape_string($conn, $val);
 
                 //House_Assignment table
-                $sql9 = "delete from House_Assignment where Assign_User_ID=" . $val2;
-                $result9 = mysqli_query($conn,$sql9);
+                $sql10 = "delete from House_Assignment where Assign_User_ID=" . $val2;
+                $result10 = mysqli_query($conn,$sql10);
 
-                if ($result9 === true) {
-                    $sql10 = "delete from User where User_ID=" . $val2;
-                    $result10 = mysqli_query($conn,$sql10);
+                if ($result10 === true) {
+                    $sql11 = "delete from User where User_ID=" . $val2;
+                    $result11 = mysqli_query($conn,$sql11);
 
-                    if ($result10 === true) {
+                    if ($result11 === true) {
                         $success = true;
                     }
                 }
