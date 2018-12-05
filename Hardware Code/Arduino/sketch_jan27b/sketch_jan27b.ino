@@ -227,8 +227,8 @@ void gpio(int pin, float state, String type){
   Serial.println(type);
   if (type == "F"){
     //Serial.println("Fan");
-    int turns = state * 10  * 255;
-    analogWrite(pin, turns);
+    int turns = state * 1023;
+  analogWrite(pin, turns);
   }else{
   if(state == 1 && digitalRead(pin) < 1){
     digitalWrite(pin, HIGH);
