@@ -224,7 +224,9 @@ void queryDB(bool sceneStart, bool sceneEnd){
 //This function is passed a pin and state to determine if it is to be shut off or turned on.
 void gpio(int pin, float state, String type){
   pinMode(pin, OUTPUT);
+  Serial.println(type);
   if (type == "F"){
+    //Serial.println("Fan");
     int turns = state * 10  * 255;
     analogWrite(pin, turns);
   }else{
