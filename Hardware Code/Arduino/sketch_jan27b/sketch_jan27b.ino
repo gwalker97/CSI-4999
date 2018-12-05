@@ -158,18 +158,7 @@ void loop(void){
     if (dbConn){
     //Serial.println("high");
    queryDB(false, false);
-   Serial.println(dbQueryCnt);
-   if (dbQueryCnt >= 45){
-    Serial.println("new");
-   //queryDB(true, false);
-   Serial.println("start");
-   //queryDB(false, true);
-   Serial.println("end");
-   dbQueryCnt = 0;
    }
-  dbQueryCnt = dbQueryCnt + 1;
-   }
-   //Check current time against both hashses for collisions
   }else if(!hosting){
     hostWifi();
   }else{
@@ -200,14 +189,8 @@ void queryDB(bool sceneStart, bool sceneEnd){
    //Serial.println("\nRunning SELECT and printing results\n");
   // Initiate the query class instance
   MySQL_Cursor *cur_mem = new MySQL_Cursor(&conn);
-  MySQL_Cursor *cur_new = new MySQL_Cursor(&conn);
   if(!sceneStart && !sceneEnd){
   query = "SELECT Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID;";
- // Serial.println("gottem");
-  }else if(sceneStart){
- //query = "Select Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type, Addon.Addon_ID from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (Start_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW() - INTERVAL 50 SECOND, '%k:%i') <= DATE_FORMAT(Start_Time, '%k:%i'))));";
-  }else if(sceneEnd){
-    // query = "Select Hosts.Host_Mac, Addon.Addon_Pin, Addon.Addon_State, Addon.Addon_Type, Addon.Addon_ID from Addon INNER JOIN Hosts on Addon.Addon_Host_ID = Hosts.Host_ID Where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where (End_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW() - INTERVAL 50 SECOND, '%k:%i') < DATE_FORMAT(End_Time, '%k:%i'))));";
   }
   cur_mem->execute(query);
   // Fetch the columns and print them
@@ -230,40 +213,14 @@ void queryDB(bool sceneStart, bool sceneEnd){
     if (row != NULL) {
       String mac = row->values[0];
         if(mac == WiFi.macAddress()){
-          if(sceneStart){
-            Serial.println("got here");
-            gpio(atoi(row->values[1]), 1, row->values[3]);
-            String x = "update Addon set Addon_State = 1 where Addon_ID = ";
-            x += row->values[4];
-            x += ";";
-            cur_new->execute(x.c_str());
-          }else if(sceneEnd){
-            gpio(atoi(row->values[1]), 0, row->values[3]);
-            String x = "update Addon set Addon_State = 1 where Addon_ID = ";
-            x += row->values[4];
-            x += ";";
-            cur_new->execute(x.c_str());
-          }else{
           gpio(atoi(row->values[1]), atof(row->values[2]), row->values[3]);
          //Serial.println("Made it here");
           }
        }
-    }
-    if((sceneStart || sceneEnd)){
-      Serial.println("before");
-  delete cur_new;
-  Serial.println("After");
-  if (row == NULL){
-      Serial.println("Breaking");
-      break;
-  }
-    }
-    Serial.println("After breaking");
   } while (row != NULL);
   delete cur_mem;
  }
- }
-
+}
 //This function is passed a pin and state to determine if it is to be shut off or turned on.
 void gpio(int pin, float state, String type){
   pinMode(pin, OUTPUT);
