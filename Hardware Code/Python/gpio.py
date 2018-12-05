@@ -23,7 +23,7 @@ def doQuery( start, conn ):
 	if start:
 		cur.execute("Select Addon.Addon_State, Addon.Addon_ID from Addon where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where ((Is_Automated = 1) AND (Start_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW() - INTERVAL 50 SECOND, '%k:%i') <= DATE_FORMAT(Start_Time, '%k:%i')))));")
 	else:
-		cur.execute("Select Addon.Addon_State, Addon.Addon_ID from Addon where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where ((Is_Automated = 1) AND (End_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW() - INTERVAL 50 SECOND, '%k:%i') >= DATE_FORMAT(End_Time, '%k:%i')))));")
+		cur.execute("Select Addon.Addon_State, Addon.Addon_ID from Addon where Addon_ID IN (Select Addon_ID from Scene_Assignment where Scene_ID IN (Select Scene_ID from Scenes Where ((Is_Automated = 1) AND (End_Time <= DATE_FORMAT(NOW(), '%k:%i') AND DATE_FORMAT(NOW() - INTERVAL 50 SECOND, '%k:%i') <= DATE_FORMAT(End_Time, '%k:%i')))));")
  #This query might not be needed. The impact would be minimal
 	if cur.rowcount > 0 : #Check if any rows were returned
 		for Addon_State, Addon_ID in cur.fetchall() :
@@ -52,9 +52,9 @@ def GPIOQ(id, conn, start):
 	if start:
 		On_Off = 1
 	curnew = conn.cursor(buffered=True)
-	conn.commit()
 	curnew.execute("update Addon set Addon_State = %s where Addon_ID = %s;", (On_Off, id))
-	print "update Addon set Addon_State = %s where Addon_ID = %s", (On_Off, id)
+	conn.commit()
+	#print "update Addon set Addon_State = %s where Addon_ID = %s", (On_Off, id)
 
 if __name__ =='__main__':
 	MySQLConnect()
