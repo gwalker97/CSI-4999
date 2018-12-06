@@ -327,12 +327,12 @@ if($_SESSION["guest"] == true) {
             );
         }
 
-        //Execute functions every 5 second(s)
+        //Execute functions every 2 second(s)
         window.setInterval(function(){
             checkButtons();
             checkSliders();
             checkTemp();
-        }, 5000);
+        }, 2000);
 
         //When a slider moves
         $(document).ready(function(){
