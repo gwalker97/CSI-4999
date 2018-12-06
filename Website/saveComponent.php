@@ -1,8 +1,6 @@
 <?php
 require('config.php');
 
-$_SESSION['indexMsg'] = "Component updated!";
-
 $id = mysqli_real_escape_string($conn, $_POST['id']);
 $name = mysqli_real_escape_string($conn, $_POST['name']);
 $description = mysqli_real_escape_string($conn, $_POST['description']);
@@ -15,11 +13,22 @@ if ($_SESSION['gID'] == 1) {
     $sql = "UPDATE Addon SET Addon_Name = '$name', Addon_Description = '$description', Addon_Room_ID = '$roomid' WHERE Addon_ID = '$id'";
 }
 
-if ($conn->query($sql) === TRUE) {
-    echo "Page saved!";
+$result = mysqli_query($conn,$sql);
+
+if ($result === true) {
+    if (isset($_SESSION['indexMsg'])) {
+        $_SESSION['indexMsg'] .= "<brComponent updated!";
+    } else {
+        $_SESSION['indexMsg'] = "Component updated!";
+    }
 } else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+    if (isset($_SESSION['indexMsg'])) {
+        $_SESSION['indexMsg'] .= "<br>Component could not be updated!";
+    } else {
+        $_SESSION['indexMsg'] = "Component could not be updated!";
+    }
 }
-$conn->close();
+
+header("Location: index.php");
 ?>
 

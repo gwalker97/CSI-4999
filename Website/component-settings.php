@@ -91,8 +91,9 @@ var componentBehavior = getParameterByName("componentBehavior");
                         echo 'gID: document.getElementById("gIDList").value';
                     }
                 ?>
-			    });	
-			document.location.href = 'index.php';	
+			    });
+        
+            setTimeout(delayedRedirect(), 2);	
 	}
 
 	//Update DB
@@ -106,14 +107,17 @@ var componentBehavior = getParameterByName("componentBehavior");
 		    $.post("deleteComponent.php",
 			    {
 				id: compId,
-			    });	
-			document.location.href = 'index.php';		
+			    });
+            setTimeout(delayedRedirect(), 2);
 		}
         else{
             
         }
 	}
 
+    function delayedRedirect() {
+        document.location.href = 'index.php';
+    }
     </script>
     
     <body class="login-body">

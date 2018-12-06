@@ -9,17 +9,19 @@ $sql2 = "delete from Addon where Addon_ID = " . $id;
 $result2 = mysqli_query($conn,$sql2);
 
 if ($result2 === true) {
-    $_SESSION['indexMsg'] = "Component deleted!";
+    if (isset($_SESSION['indexMsg'])) {
+        $_SESSION['indexMsg'] .= "<brComponent deleted!";
+    } else {
+        $_SESSION['indexMsg'] = "Component deleted!";
+    }
 } else {
-    $_SESSION['indexMsg'] = "Component could not be deleted!";
+    if (isset($_SESSION['indexMsg'])) {
+        $_SESSION['indexMsg'] .= "<br>Component could not be deleted!";
+    } else {
+        $_SESSION['indexMsg'] = "Component could not be deleted!";
+    }
 }
-/*
-if ($conn->query($sql) === TRUE) {
-    echo "Page saved!";
-} else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
-}
-*/
-$conn->close();
+
+header("Location: index.php");
 ?>
 
