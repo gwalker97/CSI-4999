@@ -26,15 +26,17 @@ if($_SESSION["guest"] == true) {
         function fnSwitchClick(clicked_id) {
             var change = document.getElementById(clicked_id);
             var changeID = change.id.substring(1);
-            //Sends the button ID and (minus first character) and 0 to PHP
-            $.post("saveDatabase.php",
-                   {
-                id: change.id.substring(1),
-                state: '0',
-            });
+            
             if (change.innerHTML == "On")
             {
                 change.innerHTML = "Off";
+                
+                //Sends the button ID and (minus first character) and 0 to PHP
+                $.post("saveDatabase.php",
+                       {
+                    id: change.id.substring(1),
+                    state: '0',
+                });
             }
             else {
                 change.innerHTML = "On";
