@@ -18,6 +18,12 @@ Joe Danz, Alex Manaila, Michael Muller, Fady Putrus, Stephen Thai, Graham Walker
 * Import .sql file to database
 * Deploy website by moving files from "Website" to apache directory (default: /var/www/html)
 * Install Python scripts on Raspberry Pi, configure to run at startup - Available in Hardware Code > Python
-* Flash code to Arudino Modules - .ino files are availble in Hardware > Arduino
+* Flash code to Arudino Modules - .ino files are available in Hardware > Arduino
 
-# Wiring
+# Getting Started
+* Wireless controllers will host their own SSID; connect to them and navigate to the default gateway in a web browser
+  - Enter home router SSID/password
+* Create an account on the HARP website (hosted on Raspberry Pi)
+* Add the controller to the website by giving it a name and specifying a MAC address
+* Add appliances by selecting the controller and a GPIO pin
+* Enjoy the additional features of the project
